@@ -3,7 +3,7 @@ package com.myapp.calculator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class Calculator extends AppCompatActivity {
+public class CalculatorActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
