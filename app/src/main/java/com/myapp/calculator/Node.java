@@ -4,6 +4,7 @@ package com.myapp.calculator;
  * Android Calculator App
  */
 
+// A singly linked-list implementation, used for accumulating thunks.
 public class Node<T> {
     private Thunk<T> head;
     private Node<T> tail;

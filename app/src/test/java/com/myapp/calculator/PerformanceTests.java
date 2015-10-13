@@ -12,11 +12,16 @@ import static org.junit.Assert.*;
  */
 public class PerformanceTests {
 
+    private static final int n = 100000;
+
     @Test
-    public void factorial() throws Exception {
+    public void thunkFactorial() throws Exception {
+
+        long start = System.nanoTime();
 
         Node<BigDecimal> list = null;
-        for(int i=1; i<10000; i++) {
+
+        for(int i=1; i<=n; ++i) {
             list = new Node(Number.create(i).getThunk(), list);
         }
 
@@ -45,8 +50,23 @@ public class PerformanceTests {
                 System.out.println("Timed out");
         }
 
-        System.out.println(continuable.get());
+        System.out.println("Time elapsed(ms) = " + (System.nanoTime() - start)/1000000L);
+        System.out.println(n + "! = " + continuable.get());
 
     }
+
+    @Test // Using directly BigDecimal for computation.
+    public void rawFactorial() throws Exception {
+        long start = System.nanoTime();
+        BigDecimal result = BigDecimal.ONE;
+        for (int i=1; i<=n; ++i){
+            result = result.multiply(new BigDecimal(i));
+        }
+
+        System.out.println("Time elapsed(ms) = " + (System.nanoTime() - start)/1000000L);
+        System.out.println(n + "! = " + result.toString());
+    }
+
+
 
 }

@@ -4,6 +4,7 @@ package com.myapp.calculator;
  * Android Calculator App
  */
 
+// Used for accumulating thunks on the heap rather than on the stack.
 public class AccumThunk<L, R> {
     private final Function2<L, R, L> func;
     private volatile ThunkGetter thunkGetter;

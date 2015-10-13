@@ -6,6 +6,8 @@ import java.util.List;
 /**
  *  Android Calculator App
  */
+
+// BigDecimal wrapper that uses Thunks to cache computed results.
 public class Number {
     Thunk<BigDecimal> thunk;
 

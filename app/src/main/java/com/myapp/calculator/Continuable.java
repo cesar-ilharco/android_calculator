@@ -4,6 +4,7 @@ package com.myapp.calculator;
  * Android Calculator App
  */
 
+
 public class Continuable<T> {
     private final Thunk<T> thunk;
 

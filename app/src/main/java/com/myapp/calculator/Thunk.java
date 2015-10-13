@@ -4,6 +4,8 @@ package com.myapp.calculator;
  *  Android Calculator App
  */
 
+// Lazy structure that computes only when required.
+// Thunks can be cached to avoid recomputing results.
 public abstract class Thunk<T> {
     private abstract class ThunkGetter {
         abstract T get();
