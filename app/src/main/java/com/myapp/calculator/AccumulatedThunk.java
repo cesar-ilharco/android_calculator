@@ -5,11 +5,11 @@ package com.myapp.calculator;
  */
 
 // Used for accumulating thunks on the heap rather than on the stack.
-public class AccumThunk<L, R> {
+public class AccumulatedThunk<L, R> {
     private final Function2<L, R, L> func;
     private volatile ThunkGetter thunkGetter;
 
-    public AccumThunk(Function2<L, R, L> func, Thunk<L> init, Node<R> rest) {
+    public AccumulatedThunk(Function2<L, R, L> func, Thunk<L> init, Node<R> rest) {
         this.func = func;
         thunkGetter = new ThunkGetter(init, rest);
     }
