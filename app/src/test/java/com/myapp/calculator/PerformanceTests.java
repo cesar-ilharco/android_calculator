@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,6 +35,12 @@ public class PerformanceTests {
         Assert.assertEquals(resultRaw, resultParallel);
     }
 
+    @Test
+    public void testPartition(){
+        Assert.assertEquals(getPartition(40, 4), Arrays.asList(0, 10, 20, 30, 40));
+        Assert.assertEquals(getPartition(4, 8), Arrays.asList(0, 1, 2, 3, 4));
+    }
+
 
     // Using directly BigDecimal for computation.
     private BigDecimal rawFactorial(int n) throws Exception {
@@ -45,36 +52,17 @@ public class PerformanceTests {
     }
 
     private BigDecimal thunkFactorial(int n) throws Exception {
-
-        Node<BigDecimal> list = null;
-        for(int i=1; i<=n; ++i) {
-            list = new Node(Number.create(i).getThunk(), list);
-        }
-        final AccumulatedThunk<BigDecimal, BigDecimal> thunk = new AccumulatedThunk<>(multiply, Number.ONE.getThunk(), list);
-
-        Continuable<BigDecimal> continuable = new Continuable<>(new Thunk<BigDecimal>() {
-            @Override
-            protected BigDecimal compute() {
-                return thunk.get();
-            }
-        });
-
-        int timeoutMs = 10;
-        while(!continuable.isComputed()) {
-//          System.out.printf("Trying for %d milliseconds\n", timeoutMs);
-            continuable.computeFor(timeoutMs);
-            timeoutMs *= 2;
-//          if(!continuable.isComputed())
-//              System.out.println("Timed out");
-        }
-        return continuable.get();
+        return parallelFactorial(n, 1);
     }
 
     private BigDecimal parallelFactorial(int n) throws Exception {
-
         int numCores = Runtime.getRuntime().availableProcessors();
+        return parallelFactorial(n, numCores);
+    }
 
-        List<Integer> partition = getPartition(n, numCores);
+    private BigDecimal parallelFactorial(int n, int numThreads) throws Exception {
+
+        List<Integer> partition = getPartition(n, numThreads);
         List<Node<BigDecimal>> lists = new ArrayList<>(partition.size()-1);
         for (int p=0; p<partition.size()-1; ++p){
             int start = partition.get(p)+1;
@@ -103,16 +91,17 @@ public class PerformanceTests {
 
         int timeoutMs = 10;
         while(!isComputed(continuables)) {
-            // System.out.printf("Trying for %d milliseconds\n", timeoutMs);
             for (Continuable<BigDecimal> continuable : continuables){
                 continuable.computeFor(timeoutMs);
             }
             timeoutMs *= 2;
         }
+
         BigDecimal result = BigDecimal.ONE;
         for (Continuable<BigDecimal> continuable : continuables){
             result = result.multiply(continuable.get());
         }
+
         return result;
     }
 
@@ -125,7 +114,7 @@ public class PerformanceTests {
         return true;
     }
 
-    // Split evenly numbers from 1 to n, inclusively, in p partitions.
+    // Split numbers from 0 to n, inclusively, in p+1 partitions.
     // TODO: Split evenly according to computing time.
     private List<Integer> getPartition (int n, int p){
         List<Integer> partition = new ArrayList<>();
@@ -137,7 +126,6 @@ public class PerformanceTests {
         }
         return partition;
     }
-
 
     private Function2<BigDecimal,BigDecimal,BigDecimal> multiply = new Function2<BigDecimal, BigDecimal, BigDecimal>() {
         @Override
