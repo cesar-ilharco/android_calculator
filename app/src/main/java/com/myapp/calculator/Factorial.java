@@ -1,49 +1,27 @@
 package com.myapp.calculator;
 
-import junit.framework.Assert;
+import android.support.annotation.VisibleForTesting;
 
-import org.junit.Test;
+import junit.framework.Assert;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
- * To work on unit tests, switch the Test Artifact in the Build Variants view.
+ * Android Calculator App
  */
-public class PerformanceTests {
 
-    @Test
-    public void testFactorial() throws Exception{
+public class Factorial implements Function1<Integer, BigDecimal>{
 
-        final int n = 100000;
-
-        long startNs = System.nanoTime();
-        BigDecimal resultRaw = rawFactorial(n);
-        System.out.println("Raw:      Time elapsed(ms) = " + (System.nanoTime() - startNs)/1000000L);
-
-        startNs = System.nanoTime();
-        BigDecimal resultThunk = thunkFactorial(n);
-        System.out.println("Thunk:    Time elapsed(ms) = " + (System.nanoTime() - startNs)/1000000L);
-
-        startNs = System.nanoTime();
-        BigDecimal resultParallel = parallelFactorial(n);
-        System.out.println("Parallel: Time elapsed(ms) = " + (System.nanoTime() - startNs)/1000000L);
-
-        Assert.assertEquals(resultRaw, resultThunk);
-        Assert.assertEquals(resultRaw, resultParallel);
+    @Override
+    public BigDecimal apply(Integer n) {
+        return parallelFactorial(n);
     }
 
-    @Test
-    public void testPartition(){
-        Assert.assertEquals(getPartition(40, 4), Arrays.asList(0, 10, 20, 30, 40));
-        Assert.assertEquals(getPartition(4, 8), Arrays.asList(0, 1, 2, 3, 4));
-    }
-
-
+    @VisibleForTesting
     // Using directly BigDecimal for computation.
-    private BigDecimal rawFactorial(int n) throws Exception {
+    static BigDecimal rawFactorial(int n){
         BigDecimal result = BigDecimal.ONE;
         for (int i=1; i<=n; ++i){
             result = result.multiply(new BigDecimal(i));
@@ -51,16 +29,19 @@ public class PerformanceTests {
         return result;
     }
 
-    private BigDecimal thunkFactorial(int n) throws Exception {
+    @VisibleForTesting
+    static BigDecimal thunkFactorial(int n){
         return parallelFactorial(n, 1);
     }
 
-    private BigDecimal parallelFactorial(int n) throws Exception {
+    @VisibleForTesting
+    static BigDecimal parallelFactorial(int n){
         int numCores = Runtime.getRuntime().availableProcessors();
+        Assert.assertTrue(numCores >= 1);
         return parallelFactorial(n, numCores);
     }
 
-    private BigDecimal parallelFactorial(int n, int numThreads) throws Exception {
+    private static BigDecimal parallelFactorial(int n, int numThreads) {
 
         List<Integer> partition = getPartition(n, numThreads);
         List<Node<BigDecimal>> lists = new ArrayList<>(partition.size()-1);
@@ -82,11 +63,11 @@ public class PerformanceTests {
         for (int p=0; p<partition.size()-1; ++p) {
             final int i = p;
             continuables.add(new Continuable<>(new Thunk<BigDecimal>() {
-                                    @Override
-                                    protected BigDecimal compute() {
-                                        return thunks.get(i).get();
-                                    }
-                            }));
+                @Override
+                protected BigDecimal compute() {
+                    return thunks.get(i).get();
+                }
+            }));
         }
 
         int timeoutMs = 10;
@@ -105,7 +86,7 @@ public class PerformanceTests {
         return result;
     }
 
-    private <T> boolean isComputed (List<Continuable<T> > continuables){
+    private static <T> boolean isComputed (List<Continuable<T> > continuables){
         for (Continuable<T> continuable : continuables){
             if (!continuable.isComputed()){
                 return false;
@@ -114,9 +95,10 @@ public class PerformanceTests {
         return true;
     }
 
-    // Split numbers from 0 to n, inclusively, in p+1 partitions.
+    // Split numbers from 0 to n, inclusively, in min(n,p) + 1 partitions.
     // TODO: Split evenly according to computing time.
-    private List<Integer> getPartition (int n, int p){
+    @VisibleForTesting
+    static List<Integer> getPartition (int n, int p){
         List<Integer> partition = new ArrayList<>();
         if (n < p){
             p = n;
@@ -127,11 +109,10 @@ public class PerformanceTests {
         return partition;
     }
 
-    private Function2<BigDecimal,BigDecimal,BigDecimal> multiply = new Function2<BigDecimal, BigDecimal, BigDecimal>() {
+    private static Function2<BigDecimal,BigDecimal,BigDecimal> multiply = new Function2<BigDecimal, BigDecimal, BigDecimal>() {
         @Override
         public BigDecimal apply(BigDecimal a, BigDecimal b) {
             return a.multiply(b);
         }
     };
-
 }
