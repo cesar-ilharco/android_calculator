@@ -8,4 +8,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="CalculatorTheme" parent="@style/Theme.AppCompat.NoActionBar" >
+        <item name="android:colorBackground">@color/background_material_dark</item>
+        <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="android:statusBarColor">@color/statusBarColor</item>
+        <item name="android:navigationBarColor">@color/black</item>
+        <item name="android:colorForeground">@color/foreground_material_dark</item>
+    </style>
+
+    <style name="CalculatorTheme2" parent="@android:style/Theme.Holo" />
+
 </resources>
