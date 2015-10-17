@@ -46,7 +46,6 @@ public class Fibonacci implements Function1<Integer, BigDecimal>{
             BigDecimal n2 = fibonacciDynamicProgramming(n/2 + 1);
             return n1.multiply(n1).add(n2.multiply(n2));
         }
-
     }
 
 //  F[0] := 0, F[1] := 1
@@ -54,7 +53,6 @@ public class Fibonacci implements Function1<Integer, BigDecimal>{
 //  F[2n+1] = F[n+1]^2 + F[n]^2
 //  Look at the bits of n, from left to right
 //  If the bit is 1, add then multiply. If it's zero, just multiply.
-
     @VisibleForTesting
     static BigDecimal fibonacciEfficientIteration(int n) {
         if (n == 0){
@@ -66,8 +64,8 @@ public class Fibonacci implements Function1<Integer, BigDecimal>{
         BigDecimal n1 = BigDecimal.ONE;     // F[2]
         BigDecimal n2 = new BigDecimal(2);  // F[3]
         int bit = Integer.highestOneBit(n) >> 1; // Bit after the first set bit.
-        while (bit > 1){
-            if ((n&bit) != 0){
+        while (bit > 1) {
+            if ((n & bit) != 0) {
                 BigDecimal sum = n1.add(n2);
                 n1 = n2;
                 n2 = sum;
@@ -85,6 +83,5 @@ public class Fibonacci implements Function1<Integer, BigDecimal>{
         return Pair.create(n1.multiply(n2.multiply(new BigDecimal(2)).subtract(n1)),
                 n1.multiply(n1).add(n2.multiply(n2)));
     }
-
 
 }
