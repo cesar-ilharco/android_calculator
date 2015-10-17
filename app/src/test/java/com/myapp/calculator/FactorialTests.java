@@ -56,7 +56,7 @@ public class FactorialTests {
         Assert.assertEquals(Factorial.getPartition(4, 8), Arrays.asList(0, 1, 2, 3, 4));
     }
 
-    private boolean factorialAreEqual (int n){
+    private static boolean factorialAreEqual (int n){
         BigDecimal f1 = Factorial.rawFactorial(n);
         BigDecimal f2 = Factorial.rawFactorial(n);
         BigDecimal f3 = Factorial.rawFactorial(n);
