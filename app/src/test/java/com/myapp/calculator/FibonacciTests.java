@@ -17,7 +17,7 @@ public class FibonacciTests {
             BigDecimal n1 = Fibonacci.fibonacciDynamicProgramming(i);
             BigDecimal n2 = Fibonacci.fibonacciEfficientRecursion(i);
             Assert.assertEquals(n1, n2);
-            System.out.println(n1);
+            // System.out.println(n1);
         }
         // TODO: add randomized tests.
     }
@@ -28,4 +28,14 @@ public class FibonacciTests {
         Assert.assertTrue(true);
     }
 
+    @Test
+    public void testDoubleUpdate(){
+        for (int i=0; i<=100; ++i){
+            BigDecimal n1 = Fibonacci.fibonacciDynamicProgramming(i);
+            BigDecimal n2 = Fibonacci.fibonacciDynamicProgramming(i+1);
+            Pair<BigDecimal,BigDecimal> pair = Fibonacci.doubleUpdate(n1,n2);
+            Assert.assertEquals(pair.getFirst(), Fibonacci.fibonacciDynamicProgramming(2*i));
+            Assert.assertEquals(pair.getSecond(), Fibonacci.fibonacciDynamicProgramming(2*i+1));
+        }
+    }
 }
