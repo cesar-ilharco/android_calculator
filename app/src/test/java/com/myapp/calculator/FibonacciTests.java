@@ -29,10 +29,24 @@ public class FibonacciTests {
         }
     }
 
-    // TODO: Add performance tests.
     @Test
     public void testFibonacciPerformance(){
-        Assert.assertTrue(true);
+        final int n = 1000000;
+
+        long startNs = System.nanoTime();
+        BigDecimal resultDP = Fibonacci.fibonacciDynamicProgramming(n);
+        System.out.println("Dynamic Programming: Time elapsed(ms) = " + (System.nanoTime() - startNs)/1000000L);
+
+        startNs = System.nanoTime();
+        BigDecimal resultRec = Fibonacci.fibonacciEfficientRecursion(n);
+        System.out.println("Efficient Recursion: Time elapsed(ms) = " + (System.nanoTime() - startNs)/1000000L);
+
+        startNs = System.nanoTime();
+        BigDecimal resultIt = Fibonacci.fibonacciEfficientIteration(n);
+        System.out.println("Efficient Iteration: Time elapsed(ms) = " + (System.nanoTime() - startNs)/1000000L);
+
+        Assert.assertEquals(resultDP, resultRec);
+        Assert.assertEquals(resultDP, resultIt);
     }
 
     @Test
