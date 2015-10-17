@@ -49,6 +49,7 @@ public class FibonacciTests {
     private static boolean fibonacciAreEqual(int n){
         BigDecimal n1 = Fibonacci.fibonacciDynamicProgramming(n);
         BigDecimal n2 = Fibonacci.fibonacciEfficientRecursion(n);
-        return n1.equals(n2);
+        BigDecimal n3 = Fibonacci.fibonacciEfficientIteration(n);
+        return n1.equals(n2) && n1.equals(n3);
     }
 }

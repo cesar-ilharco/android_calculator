@@ -67,7 +67,15 @@ public class Fibonacci implements Function1<Integer, BigDecimal>{
         BigDecimal n2 = new BigDecimal(2);  // F[3]
         int bit = Integer.highestOneBit(n) >> 1; // Bit after the first set bit.
         while (bit > 1){
-
+            if ((n&bit) != 0){
+                BigDecimal sum = n1.add(n2);
+                n1 = n2;
+                n2 = sum;
+            }
+            Pair<BigDecimal, BigDecimal> pair = doubleUpdate(n1, n2);
+            n1 = pair.getFirst();
+            n2 = pair.getSecond();
+            bit >>= 1;
         }
         return (n&bit) == 0 ? n1 : n2;
     }
@@ -75,7 +83,7 @@ public class Fibonacci implements Function1<Integer, BigDecimal>{
     @VisibleForTesting
     static Pair<BigDecimal, BigDecimal> doubleUpdate (BigDecimal n1, BigDecimal n2) {
         return Pair.create(n1.multiply(n2.multiply(new BigDecimal(2)).subtract(n1)),
-                           n1.multiply(n1).add(n2.multiply(n2)));
+                n1.multiply(n1).add(n2.multiply(n2)));
     }
 
 
