@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
+            android:maxLines="100"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="0"
@@ -34,6 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
+            android:maxLines="10000"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="0"
@@ -69,14 +71,14 @@
             android:text="9" />
 
         <Button
-            android:id="@+id/buttonParOpen"
+            android:id="@+id/buttonOpenP"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="(" />
 
         <Button
-            android:id="@+id/buttonParClose"
+            android:id="@+id/buttonCloseP"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -216,7 +218,7 @@
         android:layout_weight="1" >
 
         <Button
-            android:id="@+id/button."
+            android:id="@+id/buttonDot"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
