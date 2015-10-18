@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -22,14 +24,20 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        // hide the window title.
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // hide the status bar and other OS-level chrome
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_calculator);
 
         expression = (TextView) findViewById(R.id.expressionView);
         result = (TextView) findViewById(R.id.resultView);
 
         // Set buttons, handle land-view only cases.
-        initializeButtons();
-        initializeLandButtons();
+//        initializeButtons();
+//        initializeLandButtons();
     }
 
     @Override

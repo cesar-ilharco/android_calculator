@@ -19,7 +19,7 @@
             android:maxLines="100"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="0"
+            android:text="123456! - Fib(123456)"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="30sp" />
     </LinearLayout>
@@ -38,7 +38,7 @@
             android:maxLines="10000"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="0"
+            android:text="129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389 (Just some random digits)"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="25sp" />
     </LinearLayout>
