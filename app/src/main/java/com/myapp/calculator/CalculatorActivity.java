@@ -22,7 +22,8 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
 
         super.onCreate(savedInstanceState);
 
-        expression = (TextView) findViewById(R.id.textView1);
+        expression = (TextView) findViewById(R.id.expressionView);
+        result = (TextView) findViewById(R.id.resultView);
 
         // Set buttons, handle land-view only cases.
         findViewById(R.id.button0).setOnClickListener(this);
