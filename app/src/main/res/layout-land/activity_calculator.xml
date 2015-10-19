@@ -3,7 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin" >
 
     <LinearLayout
         android:id="@+id/row1"
@@ -11,18 +15,29 @@
         android:layout_height="0dp"
         android:layout_weight="1" >
 
-        <TextView
-            android:id="@+id/expressionView"
-            android:layout_width="match_parent"
+        <ScrollView
+            android:id="@+id/expressionScroller"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:maxLines="100"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="123456! - Fib(123456)"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="30sp" />
+            android:scrollbars="vertical"
+            android:fillViewport="true">
+
+            <TextView
+                android:id="@+id/expressionView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="123456! - Fib(123456)"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="25sp" />
+        </ScrollView>
     </LinearLayout>
+
+    <View android:layout_height="1dip"
+        android:layout_width="fill_parent"
+        android:background="#0084FF" />
 
     <LinearLayout
         android:id="@+id/row2"
@@ -30,17 +45,26 @@
         android:layout_height="0dp"
         android:layout_weight="3" >
 
-        <TextView
-            android:id="@+id/resultView"
-            android:layout_width="match_parent"
+        <ScrollView
+            android:id="@+id/resultScroller"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:maxLines="10000"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389 (Just some random digits)"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="25sp" />
+            android:scrollbars="vertical"
+            android:fillViewport="true">
+
+            <TextView
+                android:id="@+id/resultView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="left"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389 (Just some random digits)"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="20sp"
+                android:layout_weight="1.0"/>
+
+        </ScrollView>
     </LinearLayout>
 
     <LinearLayout

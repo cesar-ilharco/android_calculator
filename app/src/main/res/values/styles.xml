@@ -24,7 +24,9 @@
         <item name="android:colorBackground">@color/background_material_dark</item>
         <item name="android:navigationBarColor">@color/black</item>
         <item name="android:statusBarColor">@color/statusBarColor</item>
-        <item name="android:colorButtonNormal">#2196f3</item>
+        <item name="android:colorButtonNormal">#0084FF</item>
+        <item name="android:colorForeground">@color/foreground_material_dark</item>
+        <item name="android:windowBackground">@color/windowBackground</item>
     </style>
 
 </resources>

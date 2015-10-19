@@ -3,14 +3,14 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="primary_material_dark">#00010e</color>
-    <color name="primary_dark_material_dark">#00010f</color>
+    <color name="primary_material_dark">#000000</color>
+    <color name="primary_dark_material_dark">#000000</color>
     <color name="background_material_dark">#000000</color>
-    <color name="windowBackground">#00010e</color>
-    <color name="statusBarColor">#00010e</color>
-    <color name="black">#00021b</color>
-    <color name="foreground_material_dark">#80cbc4</color>
-    <color name="accent_material_dark">#80cbc4</color>
+    <color name="windowBackground">#2f2f2f</color>
+    <color name="statusBarColor">#000000</color>
+    <color name="black">#000000</color>
+    <color name="foreground_material_dark">#79f4ff</color>
+    <color name="accent_material_dark">#40ffff</color>
     <color name="primary_text_material_light">#80cbc4</color>
     <color name="secondary_text_material_light">#80cbc4</color>
 </resources>
