@@ -6,9 +6,12 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 
@@ -23,9 +26,9 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
 
     @SuppressLint("NewApi")
     @Override
-    protected void onCreate(Bundle bundle) {
+    protected void onCreate(Bundle savedInstanceState) {
 
-        super.onCreate(bundle);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculator);
 
         expression = (TextView) findViewById(R.id.expressionView);
@@ -35,6 +38,9 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             initializeLandscapeButtons();
         }
+
+        ScrollView expressionScroller = (ScrollView) findViewById(R.id.expressionScroller);
+        expression.addTextChangedListener(scrollableWatcher(expressionScroller));
 
     }
 
@@ -96,6 +102,22 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         findViewById(R.id.buttonFib).setOnClickListener(this);
         findViewById(R.id.buttonLog).setOnClickListener(this);
         findViewById(R.id.buttonExp).setOnClickListener(this);
+    }
+
+    // Makes scroll view automatically scroll to the bottom when text is added.
+    private TextWatcher scrollableWatcher (final ScrollView scrollView){
+        return new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {}
+
+            @Override
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2,int arg3) {}
+        };
     }
 
 }
