@@ -86,36 +86,16 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
     }
 
     private void initializeLandscapeButtons(){
-        if (findViewById(R.id.buttonOpenP) != null) {
-            findViewById(R.id.buttonOpenP).setOnClickListener(this);
-        }
-        if (findViewById(R.id.buttonCloseP) != null) {
-            findViewById(R.id.buttonCloseP).setOnClickListener(this);
-        }
-        if (findViewById(R.id.buttonSqrt) != null) {
-            findViewById(R.id.buttonSqrt).setOnClickListener(this);
-        }
-        if (findViewById(R.id.buttonSin) != null) {
-            findViewById(R.id.buttonSin).setOnClickListener(this);
-        }
-        if (findViewById(R.id.buttonCos) != null) {
-            findViewById(R.id.buttonCos).setOnClickListener(this);
-        }
-        if (findViewById(R.id.buttonTan) != null) {
-            findViewById(R.id.buttonTan).setOnClickListener(this);
-        }
-        if (findViewById(R.id.buttonFact) != null) {
-            findViewById(R.id.buttonFact).setOnClickListener(this);
-        }
-        if (findViewById(R.id.buttonFib) != null) {
-            findViewById(R.id.buttonFib).setOnClickListener(this);
-        }
-        if (findViewById(R.id.buttonLog) != null) {
-            findViewById(R.id.buttonLog).setOnClickListener(this);
-        }
-        if (findViewById(R.id.buttonExp) != null) {
-            findViewById(R.id.buttonExp).setOnClickListener(this);
-        }
+        findViewById(R.id.buttonOpenP).setOnClickListener(this);
+        findViewById(R.id.buttonCloseP).setOnClickListener(this);
+        findViewById(R.id.buttonSqrt).setOnClickListener(this);
+        findViewById(R.id.buttonSin).setOnClickListener(this);
+        findViewById(R.id.buttonCos).setOnClickListener(this);
+        findViewById(R.id.buttonTan).setOnClickListener(this);
+        findViewById(R.id.buttonFact).setOnClickListener(this);
+        findViewById(R.id.buttonFib).setOnClickListener(this);
+        findViewById(R.id.buttonLog).setOnClickListener(this);
+        findViewById(R.id.buttonExp).setOnClickListener(this);
     }
 
 }

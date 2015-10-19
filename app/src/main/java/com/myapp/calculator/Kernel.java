@@ -2,8 +2,6 @@ package com.myapp.calculator;
 
 import android.support.annotation.VisibleForTesting;
 
-import java.math.BigDecimal;
-
 /**
  * Android calculator app
  */
@@ -16,7 +14,7 @@ public class Kernel {
         if (! isValid(expression)){
             return "formatting error";
         }
-
+        return "";
     }
 
 
