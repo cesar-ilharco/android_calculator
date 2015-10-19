@@ -25,9 +25,6 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
     @Override
     protected void onCreate(Bundle bundle) {
 
-        // requestWindowFeature(Window.FEATURE_NO_TITLE);
-        // getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         super.onCreate(bundle);
         setContentView(R.layout.activity_calculator);
 
@@ -53,17 +50,19 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
             vibrator.vibrate(25);
         }
     }
-
-    // TODO: Backup data when the view changes.
-    @Override
+    
+    @Override // Backup data before changing view.
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putString("expression", expression.getText().toString());
+        outState.putString("result", result.getText().toString());
     }
 
-    // TODO: Recover data when the view changes.
-    @Override
+    @Override // Recover data after changing view.
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        expression.setText(savedInstanceState.getString("expression", ""));
+        result.setText(savedInstanceState.getString("result", ""));
     }
 
     private void initializeButtons(){
@@ -118,4 +117,5 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
             findViewById(R.id.buttonExp).setOnClickListener(this);
         }
     }
+
 }
