@@ -67,10 +67,11 @@ public class DisplayTests {
                 put(Pair.create("72/", "*"), "72*");
                 put(Pair.create("1/", "/"), "1/");
                 put(Pair.create("2/-", "/"), "2/");
-                put(Pair.create("3/-", "+"), "3+");
+                put(Pair.create("3/-", "+"), "3/");
                 put(Pair.create("4/-", "/"), "4/");
                 put(Pair.create("0+", "/"), "0/");
                 put(Pair.create("1*-", "-"), "1*");
+                put(Pair.create("1/-", "-"), "1/");
             }};
 
             for (Map.Entry<Pair<String, String>, String> entry : tests.entrySet()) {

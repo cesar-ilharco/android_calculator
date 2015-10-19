@@ -21,9 +21,8 @@ public class Display {
     static final Set<String> allowedOpOverlap = new HashSet<>(Arrays.asList("*-", "/-"));
     static final Map<String, String> exceptionOpOverlap = new HashMap<String, String>() {{
         put("--", "+");
-        put("*-", "*-");
         put("*+", "*");
-        put("/-", "/-");
+        put("/+", "/");
     }};
 
     // TODO: Handle edge cases such as '.' + '.' = '.' or '-' + '-' = '+'.

@@ -14,7 +14,7 @@ public class Kernel {
         if (! isValid(expression)){
             return "formatting error";
         }
-        return "";
+        return expression;
     }
 
 
