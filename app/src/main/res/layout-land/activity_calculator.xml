@@ -26,7 +26,7 @@
                 android:id="@+id/expressionView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="left"
+                android:gravity="start"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
                 android:text="123456! - Fib(123456)"
@@ -55,14 +55,13 @@
             <TextView
                 android:id="@+id/resultView"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="left"
+                android:layout_height="wrap_content"
+                android:gravity="start"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
-                android:text="129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389 (Just some random digits)"
+                android:text="129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389 (Just some random digits)"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="20sp"
-                android:layout_weight="1.0"/>
+                android:textSize="20sp"/>
 
         </ScrollView>
     </LinearLayout>
@@ -78,49 +77,49 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="7" />
+            android:text="@string/button7" />
 
         <Button
             android:id="@+id/button8"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="8" />
+            android:text="@string/button8" />
 
         <Button
             android:id="@+id/button9"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="9" />
+            android:text="@string/button9" />
 
         <Button
             android:id="@+id/buttonOpenP"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="(" />
+            android:text="@string/buttonOpenP" />
 
         <Button
             android:id="@+id/buttonCloseP"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text=")" />
+            android:text="@string/buttonCloseP" />
 
         <Button
             android:id="@+id/buttonFact"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="!" />
+            android:text="@string/buttonFact" />
 
         <Button
             android:id="@+id/buttonFib"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Fib" />
+            android:text="@string/buttonFib" />
     </LinearLayout>
 
     <LinearLayout
@@ -134,49 +133,49 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="4" />
+            android:text="@string/button4" />
 
         <Button
             android:id="@+id/button5"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="5" />
+            android:text="@string/button5" />
 
         <Button
             android:id="@+id/button6"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="6" />
+            android:text="@string/button6" />
 
         <Button
             android:id="@+id/buttonMultiply"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="*" />
+            android:text="@string/buttonMultiply" />
 
         <Button
             android:id="@+id/buttonDivide"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="/" />
+            android:text="@string/buttonDivide" />
 
         <Button
             android:id="@+id/buttonLog"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="log" />
+            android:text="@string/buttonLog" />
 
         <Button
             android:id="@+id/buttonExp"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="^" />
+            android:text="@string/buttonExp" />
     </LinearLayout>
 
     <LinearLayout
@@ -190,49 +189,49 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="1" />
+            android:text="@string/button1" />
 
         <Button
             android:id="@+id/button2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="2" />
+            android:text="@string/button2" />
 
         <Button
             android:id="@+id/button3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="3" />
+            android:text="@string/button3" />
 
         <Button
             android:id="@+id/buttonAdd"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="+" />
+            android:text="@string/buttonAdd" />
 
         <Button
             android:id="@+id/buttonSubtract"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="-" />
+            android:text="@string/buttonSubtract" />
 
         <Button
             android:id="@+id/buttonSin"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="sin" />
+            android:text="@string/buttonSin" />
 
         <Button
             android:id="@+id/buttonCos"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="cos" />
+            android:text="@string/buttonCos" />
     </LinearLayout>
 
     <LinearLayout
@@ -246,42 +245,42 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="." />
+            android:text="@string/buttonDot" />
 
         <Button
             android:id="@+id/button0"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="0" />
+            android:text="@string/button0" />
 
         <Button
             android:id="@+id/button00"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="00" />
+            android:text="@string/button00" />
 
         <Button
             android:id="@+id/buttonEquals"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:text="=" />
+            android:text="@string/buttonEquals" />
 
         <Button
             android:id="@+id/buttonSqrt"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="sqrt" />
+            android:text="@string/buttonSqrt" />
 
         <Button
             android:id="@+id/buttonTan"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="tan" />
+            android:text="@string/buttonTan" />
     </LinearLayout>
 
 </LinearLayout>

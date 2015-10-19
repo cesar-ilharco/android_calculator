@@ -26,7 +26,7 @@
                 android:id="@+id/expressionView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="left"
+                android:gravity="start"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
                 android:text="123456! - Fib(123456)"
@@ -55,14 +55,13 @@
             <TextView
                 android:id="@+id/resultView"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="left"
+                android:layout_height="wrap_content"
+                android:gravity="start"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
-                android:text="129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389 (Just some random digits)"
+                android:text="129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389129837819749827349723984792874198741047182301823198248018309182903809182847187401823908180974897389 (Just some random digits)"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="20sp"
-                android:layout_weight="1.0"/>
+                android:textSize="20sp"/>
 
         </ScrollView>
     </LinearLayout>
@@ -80,7 +79,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="7"
+            android:text="@string/button7"
             android:textSize="25sp" />
 
         <Button
@@ -88,7 +87,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="8"
+            android:text="@string/button8"
             android:textSize="25sp" />
 
         <Button
@@ -96,7 +95,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="9"
+            android:text="@string/button9"
             android:textSize="25sp" />
 
         <Button
@@ -104,7 +103,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="/"
+            android:text="@string/buttonDivide"
             android:textSize="25sp" />
     </LinearLayout>
 
@@ -119,7 +118,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="4"
+            android:text="@string/button4"
             android:textSize="25sp" />
 
         <Button
@@ -127,7 +126,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="5"
+            android:text="@string/button5"
             android:textSize="25sp" />
 
         <Button
@@ -135,7 +134,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="6"
+            android:text="@string/button6"
             android:textSize="25sp" />
 
         <Button
@@ -143,7 +142,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="*"
+            android:text="@string/buttonMultiply"
             android:textSize="25sp" />
     </LinearLayout>
 
@@ -158,7 +157,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="1"
+            android:text="@string/button1"
             android:textSize="25sp" />
 
         <Button
@@ -166,7 +165,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="2"
+            android:text="@string/button2"
             android:textSize="25sp" />
 
         <Button
@@ -174,15 +173,15 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="3"
+            android:text="@string/button3"
             android:textSize="25sp" />
 
         <Button
-            android:id="@+id/buttonAdd"
+            android:id="@+id/buttonSubtract"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="-"
+            android:text="@string/buttonSubtract"
             android:textSize="25sp" />
     </LinearLayout>
 
@@ -211,7 +210,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="."
+                    android:text="@string/buttonDot"
                     android:textSize="25sp" />
 
                 <Button
@@ -219,7 +218,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="0"
+                    android:text="@string/button0"
                     android:textSize="25sp" />
 
                 <Button
@@ -227,7 +226,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="00"
+                    android:text="@string/button00"
                     android:textSize="25sp" />
             </LinearLayout>
 
@@ -242,17 +241,17 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="="
+                    android:text="@string/buttonEquals"
                     android:textSize="25sp" />
             </LinearLayout>
         </LinearLayout>
 
         <Button
-            android:id="@+id/buttonPlus"
+            android:id="@+id/buttonAdd"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="+"
+            android:text="@string/buttonAdd"
             android:textSize="25sp" />
     </LinearLayout>
 

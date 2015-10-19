@@ -1,3 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <string name="app_name">Calculator</string>
+    <string name="button1">1</string>
+    <string name="button2">2</string>
+    <string name="button3">3</string>
+    <string name="button4">5</string>
+    <string name="button5">5</string>
+    <string name="button6">6</string>
+    <string name="button7">7</string>
+    <string name="button8">8</string>
+    <string name="button9">9</string>
+    <string name="button0">0</string>
+    <string name="button00">00</string>
+    <string name="buttonDot">.</string>
+    <string name="buttonAdd">+</string>
+    <string name="buttonSubtract">-</string>
+    <string name="buttonMultiply">*</string>
+    <string name="buttonDivide">/</string>
+    <string name="buttonEquals">=</string>
+    <string name="buttonOpenP">(</string>
+    <string name="buttonCloseP">)</string>
+    <string name="buttonFact">!</string>
+    <string name="buttonFib">Fib</string>
+    <string name="buttonLog">log</string>
+    <string name="buttonSin">sin</string>
+    <string name="buttonCos">cos</string>
+    <string name="buttonTan">tan</string>
+    <string name="buttonSqrt">√</string>
+    <string name="buttonExp">^</string>
 </resources>
