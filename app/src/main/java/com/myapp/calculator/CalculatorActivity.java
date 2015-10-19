@@ -50,7 +50,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
             vibrator.vibrate(25);
         }
     }
-    
+
     @Override // Backup data before changing view.
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
