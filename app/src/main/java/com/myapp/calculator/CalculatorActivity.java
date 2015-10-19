@@ -43,7 +43,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         String buttonPressed = ((Button) view).getText().toString();
         if (buttonPressed.equals("=")){
-            result.setText(Display.getResultDisplay(expression.getText().toString()));
+            result.setText(Display.getResultDisplay(Kernel.evaluate(expression.getText().toString())));
             vibrator.vibrate(40);
         } else {
             expression.setText(Display.getExpressionDisplay(expression.getText().toString(), buttonPressed));

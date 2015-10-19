@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 // Helper for displaying input and output correctly.
 public class Display {
 
+    static final boolean expressionDisplayHelper = true;
+
     static final Set<String> basicOperators = new HashSet<>(Arrays.asList("+", "-", "/", "*"));
     static final Map<String, String> operatorsOverlap = new HashMap<String, String>() {{
         put("--", "+");
@@ -25,10 +27,12 @@ public class Display {
 
     // TODO: Handle edge cases such as '.' + '.' = '.' or '-' + '-' = '+'.
     public static String getExpressionDisplay (String expression, String buttonPressed){
-        if (buttonPressed.equals(".")){
-            return addDecimalPoint(expression);
-        } else if (basicOperators.contains(buttonPressed)){
-            return addBasicOperator(expression, buttonPressed);
+        if (expressionDisplayHelper){
+            if (buttonPressed.equals(".")){
+                return addDecimalPoint(expression);
+            } else if (basicOperators.contains(buttonPressed)){
+                return addBasicOperator(expression, buttonPressed);
+            }
         }
         return expression + buttonPressed;
     }
