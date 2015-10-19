@@ -1,7 +1,5 @@
 package com.myapp.calculator;
 
-import android.widget.TextView;
-
 /**
  * Android calculator app
  */
@@ -10,15 +8,13 @@ import android.widget.TextView;
 public class Display {
 
     // TODO: Handle edge cases such as '.' + '.' = '.' or '-' + '-' = '+'.
-    public static TextView updateExpressionDisplay (TextView expression, String buttonPressed){
-        expression.append(buttonPressed);
-        return expression;
+    public static String getExpressionDisplay (String expression, String buttonPressed){
+        return expression + buttonPressed;
     }
 
     // TODO: Handle evaluation exceptions.
-    public static TextView updateResultDisplay (TextView result, String expression){
-        result.setText(Kernel.evaluate(expression).toString());
-        return result;
+    public static String getResultDisplay (String expression){
+        return Kernel.evaluate(expression).toString();
     }
 
 }

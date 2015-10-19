@@ -1,12 +1,13 @@
 package com.myapp.calculator;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -22,31 +23,34 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
 
     @SuppressLint("NewApi")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle bundle) {
 
-        // hide the window title.
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        // hide the status bar and other OS-level chrome
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        super.onCreate(savedInstanceState);
+        super.onCreate(bundle);
         setContentView(R.layout.activity_calculator);
 
         expression = (TextView) findViewById(R.id.expressionView);
         result = (TextView) findViewById(R.id.resultView);
 
-        // Set buttons, handle land-view only cases.
-//        initializeButtons();
-//        initializeLandButtons();
+        initializeButtons();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            initializeLandscapeButtons();
+        }
+
     }
 
     @Override
     public void onClick(View view) {
+        final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         String buttonPressed = ((Button) view).getText().toString();
-        if (buttonPressed.equals('=')){
-            result = Display.updateResultDisplay(result, expression.toString());
+        if (buttonPressed.equals("=")){
+            result.setText(Display.getResultDisplay(expression.getText().toString()));
+            vibrator.vibrate(40);
         } else {
-            expression = Display.updateExpressionDisplay(expression, buttonPressed);
+            expression.setText(Display.getExpressionDisplay(expression.getText().toString(), buttonPressed));
+            vibrator.vibrate(25);
         }
     }
 
@@ -82,7 +86,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         findViewById(R.id.buttonDivide).setOnClickListener(this);
     }
 
-    private void initializeLandButtons(){
+    private void initializeLandscapeButtons(){
         if (findViewById(R.id.buttonOpenP) != null) {
             findViewById(R.id.buttonOpenP).setOnClickListener(this);
         }
