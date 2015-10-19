@@ -19,16 +19,23 @@ public class DisplayTests {
         if (Display.expressionDisplayHelper) {
 
             // True if decimal point insertion is possible, false otherwise.
-            Map<String, Boolean> expressions = new HashMap<>();
-
-            expressions.put("", true);
-            expressions.put("1", true);
-            expressions.put("1234567890", true);
-            expressions.put("log(28", true);
-            expressions.put("1+2", true);
-            expressions.put("10.", false);
-            expressions.put("3.1415926535", false);
-            expressions.put(".1", false);
+            Map<String, Boolean> expressions = new HashMap<String, Boolean>() {{
+                put("", true);
+                put("1", true);
+                put("1234567890", true);
+                put("log(28", true);
+                put("1+2", true);
+                put("10.", false);
+                put("3.1415926535", false);
+                put(".1", false);
+                put(".", false);
+                put("1*", true);
+                put(".5/", true);
+                put("1.23+", true);
+                put("1.23+.", false);
+                put("1.23+.6", false);
+                put("1.23+4.57", false);
+            }};
 
             for (Map.Entry<String, Boolean> entry : expressions.entrySet()) {
                 String append = entry.getValue() ? "." : "";
@@ -53,11 +60,17 @@ public class DisplayTests {
                 put(Pair.create("1+2+", "-"), "1+2-");
                 put(Pair.create("1+2+", "-"), "1+2-");
                 put(Pair.create("1+2+3+4+5+6+7+8+9-", "-"), "1+2+3+4+5+6+7+8+9+");
-                put(Pair.create("-", "-"), "+");
+                put(Pair.create("-", "-"), "");
+                put(Pair.create("1-", "-"), "1+");
                 put(Pair.create("2+", "*"), "2*");
                 put(Pair.create("72/", "*"), "72*");
                 put(Pair.create("72/", "*"), "72*");
                 put(Pair.create("1/", "/"), "1/");
+                put(Pair.create("2/-", "/"), "2/");
+                put(Pair.create("3/-", "+"), "3+");
+                put(Pair.create("4/-", "/"), "4/");
+                put(Pair.create("0+", "/"), "0/");
+                put(Pair.create("1*-", "-"), "1*");
             }};
 
             for (Map.Entry<Pair<String, String>, String> entry : tests.entrySet()) {

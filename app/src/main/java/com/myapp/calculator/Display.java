@@ -18,7 +18,8 @@ public class Display {
     static final boolean expressionDisplayHelper = true;
 
     static final Set<String> basicOperators = new HashSet<>(Arrays.asList("+", "-", "/", "*"));
-    static final Map<String, String> operatorsOverlap = new HashMap<String, String>() {{
+    static final Set<String> allowedOpOverlap = new HashSet<>(Arrays.asList("*-", "/-"));
+    static final Map<String, String> exceptionOpOverlap = new HashMap<String, String>() {{
         put("--", "+");
         put("*-", "*-");
         put("*+", "*");
@@ -39,12 +40,12 @@ public class Display {
 
     // TODO: Handle evaluation exceptions.
     public static String getResultDisplay (String expression){
-        return Kernel.evaluate(expression).toString();
+        return Kernel.evaluate(expression);
     }
 
     // Check if decimal point insertion is valid.
     private static String addDecimalPoint (String expression){
-        String regex = "\\w*\\d*\\.\\d*";
+        String regex = ".*\\.\\d*\\z";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(expression);
         if (matcher.find()){
@@ -64,10 +65,12 @@ public class Display {
         int l = expression.length();
         String lastChar = "" + expression.charAt(l-1);
         if (basicOperators.contains(lastChar)){
-            if (operatorsOverlap.containsKey(lastChar + op)){
-                return expression.substring(0, l-1) + operatorsOverlap.get(lastChar + op);
+            if (allowedOpOverlap.contains(lastChar + op)){
+                return expression + op;
+            } else if (exceptionOpOverlap.containsKey(lastChar + op)){
+                return addBasicOperator(expression.substring(0,l-1), exceptionOpOverlap.get(lastChar + op));
             } else {
-                return expression.substring(0, l-1) + op;
+                return addBasicOperator(expression.substring(0,l-1), op);
             }
         } else {
             return expression + op;
