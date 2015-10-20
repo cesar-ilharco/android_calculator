@@ -1,5 +1,6 @@
 package com.myapp.calculator;
 
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,6 +28,13 @@ public class Display {
 
     // TODO: Handle edge cases such as '.' + '.' = '.' or '-' + '-' = '+'.
     public static String getExpressionDisplay (String expression, String buttonPressed){
+
+        if (buttonPressed.equals("del")){
+            return expression.isEmpty() ? "" : expression.substring(0, expression.length()-1);
+        } else if (buttonPressed.equals("clear")){
+            return "";
+        }
+
         if (expressionDisplayHelper){
             if (buttonPressed.equals(".")){
                 return addDecimalPoint(expression);
@@ -37,7 +45,6 @@ public class Display {
         return expression + buttonPressed;
     }
 
-    // TODO: Handle evaluation exceptions.
     public static String getResultDisplay (String expression){
         return Kernel.evaluate(expression);
     }

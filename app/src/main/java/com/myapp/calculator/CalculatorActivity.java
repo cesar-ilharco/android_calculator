@@ -1,6 +1,8 @@
 package com.myapp.calculator;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -48,12 +50,23 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
     public void onClick(View view) {
         final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         String buttonPressed = ((Button) view).getText().toString();
-        if (buttonPressed.equals("=")){
-            result.setText(Display.getResultDisplay(expression.getText().toString()));
-            vibrator.vibrate(40);
-        } else {
-            expression.setText(Display.getExpressionDisplay(expression.getText().toString(), buttonPressed));
-            vibrator.vibrate(25);
+        switch (buttonPressed) {
+            case "=":
+                result.setText(Display.getResultDisplay(expression.getText().toString()));
+                vibrator.vibrate(40);
+                break;
+            case "copy":
+                copyResult();
+                vibrator.vibrate(30);
+                break;
+            case "paste":
+                pasteExpression();
+                vibrator.vibrate(30);
+                break;
+            default:
+                expression.setText(Display.getExpressionDisplay(expression.getText().toString(), buttonPressed));
+                vibrator.vibrate(25);
+                break;
         }
     }
 
@@ -82,16 +95,20 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         findViewById(R.id.button7).setOnClickListener(this);
         findViewById(R.id.button8).setOnClickListener(this);
         findViewById(R.id.button9).setOnClickListener(this);
-        findViewById(R.id.button00).setOnClickListener(this);
         findViewById(R.id.buttonDot).setOnClickListener(this);
         findViewById(R.id.buttonEquals).setOnClickListener(this);
         findViewById(R.id.buttonAdd).setOnClickListener(this);
         findViewById(R.id.buttonSubtract).setOnClickListener(this);
         findViewById(R.id.buttonMultiply).setOnClickListener(this);
         findViewById(R.id.buttonDivide).setOnClickListener(this);
+        findViewById(R.id.buttonBackspace).setOnClickListener(this);
+        findViewById(R.id.buttonClear).setOnClickListener(this);
+        findViewById(R.id.buttonCopy).setOnClickListener(this);
+        findViewById(R.id.buttonPaste).setOnClickListener(this);
     }
 
     private void initializeLandscapeButtons(){
+        findViewById(R.id.button00).setOnClickListener(this);
         findViewById(R.id.buttonOpenP).setOnClickListener(this);
         findViewById(R.id.buttonCloseP).setOnClickListener(this);
         findViewById(R.id.buttonSqrt).setOnClickListener(this);
@@ -118,6 +135,19 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
             @Override
             public void onTextChanged(CharSequence arg0, int arg1, int arg2,int arg3) {}
         };
+    }
+
+    private void copyResult() {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("result", result.getText());
+        clipboard.setPrimaryClip(clip);
+    }
+
+    private void pasteExpression() {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        if (clipboard.hasPrimaryClip()) {
+            expression.setText(expression.getText().toString() + clipboard.getPrimaryClip().getItemAt(0).getText());
+        }
     }
 
 }

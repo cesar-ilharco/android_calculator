@@ -29,4 +29,10 @@
     <string name="buttonTan">tan</string>
     <string name="buttonSqrt">√</string>
     <string name="buttonExp">^</string>
+    <string name="buttonE">e</string>
+    <string name="buttonPi">π</string>
+    <string name="buttonBackspace">del</string>
+    <string name="buttonClear">clear</string>
+    <string name="buttonCopy">copy</string>
+    <string name="buttonPaste">paste</string>
 </resources>

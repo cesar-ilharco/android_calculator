@@ -283,4 +283,43 @@
             android:text="@string/buttonTan" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/row7"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <Button
+            android:id="@+id/buttonBackspace"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/buttonBackspace"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/buttonClear"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/buttonClear"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/buttonCopy"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/buttonCopy"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/buttonPaste"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/buttonPaste"
+            android:textSize="15sp" />
+    </LinearLayout>
+
 </LinearLayout>

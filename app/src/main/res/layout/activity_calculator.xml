@@ -66,8 +66,6 @@
         </ScrollView>
     </LinearLayout>
 
-
-
     <LinearLayout
         android:id="@+id/row3"
         android:layout_width="match_parent"
@@ -222,11 +220,19 @@
                     android:textSize="25sp" />
 
                 <Button
-                    android:id="@+id/button00"
+                    android:id="@+id/buttonEquals"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/button00"
+                    android:text="@string/buttonEquals"
+                    android:textSize="25sp" />
+
+                <Button
+                    android:id="@+id/buttonAdd"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/buttonAdd"
                     android:textSize="25sp" />
             </LinearLayout>
 
@@ -237,22 +243,40 @@
                 android:layout_weight="1" >
 
                 <Button
-                    android:id="@+id/buttonEquals"
+                    android:id="@+id/buttonBackspace"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/buttonEquals"
-                    android:textSize="25sp" />
+                    android:text="@string/buttonBackspace"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/buttonClear"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/buttonClear"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/buttonCopy"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/buttonCopy"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/buttonPaste"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/buttonPaste"
+                    android:textSize="15sp" />
             </LinearLayout>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/buttonAdd"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/buttonAdd"
-            android:textSize="25sp" />
+
     </LinearLayout>
 
 </LinearLayout>
