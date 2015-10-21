@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import java.util.Stack;
+
 
 /**
  * Android calculator app
@@ -23,8 +25,9 @@ import android.widget.TextView;
 
 public class CalculatorActivity extends AppCompatActivity implements OnClickListener {
 
-    private TextView expression;
-    private TextView result;
+    private Stack<ExpressionUnit> expressionUnits;
+    private TextView expressionView;
+    private TextView resultView;
 
     @SuppressLint("NewApi")
     @Override
@@ -33,8 +36,9 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculator);
 
-        expression = (TextView) findViewById(R.id.expressionView);
-        result = (TextView) findViewById(R.id.resultView);
+        expressionUnits = new Stack<>();
+        expressionView = (TextView) findViewById(R.id.expressionView);
+        resultView = (TextView) findViewById(R.id.resultView);
 
         initializeButtons();
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -42,7 +46,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         }
 
         ScrollView expressionScroller = (ScrollView) findViewById(R.id.expressionScroller);
-        expression.addTextChangedListener(scrollableWatcher(expressionScroller));
+        expressionView.addTextChangedListener(scrollableWatcher(expressionScroller));
 
     }
 
@@ -52,7 +56,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         String buttonPressed = ((Button) view).getText().toString();
         switch (buttonPressed) {
             case "=":
-                result.setText(Display.getResultDisplay(expression.getText().toString()));
+                resultView.setText(DisplayHelper.getResultDisplay(expressionUnits));
                 vibrator.vibrate(40);
                 break;
             case "copy":
@@ -64,7 +68,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
                 vibrator.vibrate(30);
                 break;
             default:
-                expression.setText(Display.getExpressionDisplay(expression.getText().toString(), buttonPressed));
+                expressionView.setText(DisplayHelper.getExpressionDisplay(expressionUnits, buttonPressed));
                 vibrator.vibrate(25);
                 break;
         }
@@ -73,15 +77,15 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
     @Override // Backup data before changing view.
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("expression", expression.getText().toString());
-        outState.putString("result", result.getText().toString());
+        outState.putString("expressionView", expressionView.getText().toString());
+        outState.putString("resultView", resultView.getText().toString());
     }
 
     @Override // Recover data after changing view.
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        expression.setText(savedInstanceState.getString("expression", ""));
-        result.setText(savedInstanceState.getString("result", ""));
+        expressionView.setText(savedInstanceState.getString("expressionView", ""));
+        resultView.setText(savedInstanceState.getString("resultView", ""));
     }
 
     private void initializeButtons(){
@@ -139,14 +143,14 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
 
     private void copyResult() {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText("result", result.getText());
+        ClipData clip = ClipData.newPlainText("resultView", resultView.getText());
         clipboard.setPrimaryClip(clip);
     }
 
     private void pasteExpression() {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if (clipboard.hasPrimaryClip()) {
-            expression.setText(expression.getText().toString() + clipboard.getPrimaryClip().getItemAt(0).getText());
+            expressionView.setText(expressionView.getText().toString() + clipboard.getPrimaryClip().getItemAt(0).getText());
         }
     }
 

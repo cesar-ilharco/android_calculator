@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,10 +15,10 @@ import java.util.regex.Pattern;
  */
 
 // Helper for displaying input and output correctly.
-public class Display {
+public class DisplayHelper {
 
-    static final boolean expressionDisplayHelper = true;
-
+    static final Set<String> numberButtons = new HashSet<>(Arrays.asList(
+            "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "00", "."));
     static final Set<String> basicOperators = new HashSet<>(Arrays.asList("+", "-", "/", "*"));
     static final Set<String> allowedOpOverlap = new HashSet<>(Arrays.asList("*-", "/-"));
     static final Map<String, String> exceptionOpOverlap = new HashMap<String, String>() {{
@@ -27,26 +28,51 @@ public class Display {
     }};
 
     // TODO: Handle edge cases such as '.' + '.' = '.' or '-' + '-' = '+'.
-    public static String getExpressionDisplay (String expression, String buttonPressed){
+    public static String getExpressionDisplay (Stack<ExpressionUnit> expressionUnits, String buttonPressed){
 
         if (buttonPressed.equals("del")){
-            return expression.isEmpty() ? "" : expression.substring(0, expression.length()-1);
+            if (! expressionUnits.isEmpty()){
+                expressionUnits.peek().del();
+                if (expressionUnits.peek().getText().isEmpty()){
+                    expressionUnits.pop();
+                }
+            }
         } else if (buttonPressed.equals("clear")){
-            return "";
-        }
-
-        if (expressionDisplayHelper){
-            if (buttonPressed.equals(".")){
-                return addDecimalPoint(expression);
-            } else if (basicOperators.contains(buttonPressed)){
-                return addBasicOperator(expression, buttonPressed);
+            expressionUnits.clear();
+        } else if (isNumber(buttonPressed)){
+            if (!expressionUnits.isEmpty() && expressionUnits.peek() instanceof NumberUnit){
+                String number = ((NumberUnit) expressionUnits.peek()).getNumber();
+                if (buttonPressed.equals(".")){
+                    number = addDecimalPoint(number);
+                } else {
+                    number = number + buttonPressed;
+                }
+                ((NumberUnit) expressionUnits.peek()).setNumber(number);
+            }
+        } else {
+            if (!expressionUnits.isEmpty() && expressionUnits.peek() instanceof OperatorUnit){
+                String operator = ((OperatorUnit) expressionUnits.peek()).getOperator();
+                operator = addBasicOperator(operator, buttonPressed);
+                ((OperatorUnit) expressionUnits.peek()).setOperator(operator);
+            } else {
+                expressionUnits.push(new OperatorUnit(buttonPressed));
             }
         }
-        return expression + buttonPressed;
+
+        return toString(expressionUnits);
     }
 
-    public static String getResultDisplay (String expression){
-        return Kernel.evaluate(expression);
+    public static String getResultDisplay (Stack<ExpressionUnit> expressionUnits){
+        return Kernel.evaluate(expressionUnits);
+    }
+
+    // Java iterates stack from the bottom to the top.
+    public static String toString (Stack<ExpressionUnit> expressionUnits){
+        StringBuffer stringBuffer = new StringBuffer();
+        for (ExpressionUnit expressionUnit : expressionUnits){
+            stringBuffer.append(expressionUnit.toString());
+        }
+        return stringBuffer.toString();
     }
 
     // Check if decimal point insertion is valid.
@@ -81,6 +107,10 @@ public class Display {
         } else {
             return expression + op;
         }
+    }
+
+    private static boolean isNumber (String buttonPressed){
+        return numberButtons.contains(buttonPressed);
     }
 
 }

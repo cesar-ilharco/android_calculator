@@ -16,7 +16,7 @@ public class DisplayTests {
     @Test
     public void testDisplayInputDecimalPoint(){
 
-        if (Display.expressionDisplayHelper) {
+        if (DisplayHelper.expressionDisplayHelper) {
 
             // True if decimal point insertion is possible, false otherwise.
             Map<String, Boolean> expressions = new HashMap<String, Boolean>() {{
@@ -39,7 +39,7 @@ public class DisplayTests {
 
             for (Map.Entry<String, Boolean> entry : expressions.entrySet()) {
                 String append = entry.getValue() ? "." : "";
-                Assert.assertEquals(entry.getKey() + append, Display.getExpressionDisplay(entry.getKey(), "."));
+                Assert.assertEquals(entry.getKey() + append, DisplayHelper.getExpressionDisplay(entry.getKey(), "."));
             }
         }
     }
@@ -47,7 +47,7 @@ public class DisplayTests {
     @Test // "+", "-", "*", "/".
     public void testDisplayInputBasicOperator(){
 
-        if (Display.expressionDisplayHelper) {
+        if (DisplayHelper.expressionDisplayHelper) {
 
             // Maps Pair<Expression, ButtonOperator> to the expected resulting Expression.
             Map<Pair<String, String>, String> tests = new HashMap<Pair<String, String>, String>() {{
@@ -75,7 +75,7 @@ public class DisplayTests {
             }};
 
             for (Map.Entry<Pair<String, String>, String> entry : tests.entrySet()) {
-                String result = Display.getExpressionDisplay(entry.getKey().getFirst(), entry.getKey().getSecond());
+                String result = DisplayHelper.getExpressionDisplay(entry.getKey().getFirst(), entry.getKey().getSecond());
                 Assert.assertEquals(entry.getValue(), result);
             }
         }
