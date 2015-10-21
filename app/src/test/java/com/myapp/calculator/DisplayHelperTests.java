@@ -149,7 +149,31 @@ public class DisplayHelperTests {
         e.add(new Stack<ExpressionUnit>());
         e.get(i).push(new NumberUnit(Integer.toString(i)));
         e.get(i).push(new OperatorUnit("/"));
-        expressions.put(Pair.create(e.get(i), "-"), Integer.toString(i) + "/-");
+        expressions.put(Pair.create(e.get(i), "-"), Integer.toString(i++) + "/-");
+
+        e.add(new Stack<ExpressionUnit>());
+        e.get(i).push(new NumberUnit(Integer.toString(i)));
+        e.get(i).push(new OperatorUnit("*"));
+        e.get(i).push(new OperatorUnit("-"));
+        expressions.put(Pair.create(e.get(i), "-"), Integer.toString(i++) + "*");
+
+        e.add(new Stack<ExpressionUnit>());
+        e.get(i).push(new NumberUnit(Integer.toString(i)));
+        e.get(i).push(new OperatorUnit("/"));
+        e.get(i).push(new OperatorUnit("-"));
+        expressions.put(Pair.create(e.get(i), "-"), Integer.toString(i++) + "/");
+
+        e.add(new Stack<ExpressionUnit>());
+        e.get(i).push(new NumberUnit(Integer.toString(i)));
+        e.get(i).push(new OperatorUnit("*"));
+        e.get(i).push(new OperatorUnit("-"));
+        expressions.put(Pair.create(e.get(i), "+"), Integer.toString(i++) + "+");
+
+        e.add(new Stack<ExpressionUnit>());
+        e.get(i).push(new NumberUnit(Integer.toString(i)));
+        e.get(i).push(new OperatorUnit("/"));
+        e.get(i).push(new OperatorUnit("-"));
+        expressions.put(Pair.create(e.get(i), "*"), Integer.toString(i) + "*");
 
         for ( Map.Entry<Pair<Stack<ExpressionUnit>, String>, String>  entry : expressions.entrySet()) {
             String result = DisplayHelper.getExpressionDisplay(entry.getKey().getFirst(), entry.getKey().getSecond());

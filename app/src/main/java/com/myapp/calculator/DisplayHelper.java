@@ -18,7 +18,6 @@ public class DisplayHelper {
     static final Set<String> numberButtons = new HashSet<>(Arrays.asList(
             "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "00", "."));
     static final Set<String> basicOperators = new HashSet<>(Arrays.asList("+", "-", "/", "*"));
-    static final Set<String> allowedOpOverlap = new HashSet<>(Arrays.asList("*-", "/-"));
 
     // TODO: Handle edge cases such as '.' + '.' = '.' or '-' + '-' = '+'.
     public static String getExpressionDisplay (Stack<ExpressionUnit> expressionUnits, String buttonPressed){
@@ -70,22 +69,21 @@ public class DisplayHelper {
         if (expressionUnits.peek() instanceof OperatorUnit){
             String prevOp = ((OperatorUnit) expressionUnits.peek()).getOperator();
 
-            if (allowedOpOverlap.contains(prevOp + op)){
-                ((OperatorUnit) expressionUnits.peek()).setOperator(prevOp + op);
-                return;
-            }
-
-            if (prevOp.equals("-") && op.equals("-")){
-                expressionUnits.pop();
-                if (!expressionUnits.isEmpty()){
-                    if (expressionUnits.peek() instanceof NumberUnit){
+            if (op.equals("-")){
+                if (prevOp.equals("*") || prevOp.equals("/")) {
+                    expressionUnits.push(new OperatorUnit("-"));
+                    return;
+                }
+                if (prevOp.equals("-")){
+                    expressionUnits.pop();
+                    if (!expressionUnits.isEmpty() && expressionUnits.peek() instanceof NumberUnit){
                         expressionUnits.push(new OperatorUnit("+"));
                     }
+                    return;
                 }
-                return;
             }
-
-            ((OperatorUnit) expressionUnits.peek()).setOperator(op);
+            expressionUnits.pop();
+            addBasicOperator(expressionUnits, op);
 
         } else {
             expressionUnits.push(new OperatorUnit(op));
