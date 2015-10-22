@@ -2,6 +2,11 @@ package com.myapp.calculator;
 
 import android.support.annotation.VisibleForTesting;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -11,7 +16,15 @@ import java.util.Stack;
 // Process user's input expression and computes the output result.
 public class Kernel {
 
-    // TODO: Implement expression evaluation. Handle exceptions properly.
+    // TODO: Create a global operator precedence and generalize the Syntax Tree construction (parse method).
+    private static final Map<String, Integer> operatorPrecedence = new HashMap<String, Integer>(){{
+        put("+", 1);
+        put("-", 1);
+        put("*", 2);
+        put("/", 3);
+    }};
+
+    // TODO: Implement expression evaluation from Syntax Tree. Handle exceptions properly.
     public static String evaluate (Stack<ExpressionUnit> expressionUnits){
         if (! isValid(expressionUnits)){
             return "formatting error";
@@ -26,10 +39,82 @@ public class Kernel {
         return true;
     }
 
-    // TODO: Create Syntax Tree from list of expression units.
+    // Create Syntax Tree from list of expression units.
     @VisibleForTesting
-    static ExpressionNode parse (Stack<ExpressionUnit> expressionUnits) {
-        return null;
+    public static ExpressionNode parse(final Stack<ExpressionUnit> expressionUnits) throws  IOException {
+        if (expressionUnits.isEmpty()){
+            return null;
+        }
+        List<ExpressionUnit> expressionUnitList = new ArrayList<>(expressionUnits);
+        return parseAddSub(expressionUnitList, new MyInt(-1));
+    }
+
+    private static ExpressionNode parseAddSub(List<ExpressionUnit> expressionUnits, MyInt index) throws IOException {
+        ExpressionNode root = parseMulDiv(expressionUnits, index);
+        if (index.getValue() < expressionUnits.size() - 1) {
+
+            ExpressionUnit expressionUnit = expressionUnits.get(index.increase());
+
+            while (expressionUnit.getText().equals("+") || expressionUnit.getText().equals("-")) {
+                root = new ExpressionNode(expressionUnit, root, parseMulDiv(expressionUnits, index));
+                expressionUnit = expressionUnits.get(index.increase());
+            }
+        }
+        index.decrease();
+        // System.out.println("DEBUG: Exiting ParseAddSub, index = " + index.getValue() + ", root = " + (root == null ? "null" : root.getExpressionUnit().getText()));
+        return root;
+    }
+
+
+    private static ExpressionNode parseMulDiv(List<ExpressionUnit> expressionUnits, MyInt index) throws IOException {
+        ExpressionNode root = parseSimpleTerm(expressionUnits, index);
+
+        if (index.getValue() < expressionUnits.size() - 1) {
+            ExpressionUnit expressionUnit = expressionUnits.get(index.increase());
+
+            while (expressionUnit.getText().equals("*") || expressionUnit.getText().equals("/")) {
+                root = new ExpressionNode(expressionUnit, root, parseSimpleTerm(expressionUnits, index));
+                expressionUnit = expressionUnits.get(index.increase());
+            }
+        }
+        index.decrease();
+        // System.out.println("DEBUG: Exiting ParseMultiDiv, index = " + index.getValue() + ", root = " + (root == null ? "null" : root.getExpressionUnit().getText()));
+        return root;
+    }
+
+    private static ExpressionNode parseSimpleTerm(List<ExpressionUnit> expressionUnits, MyInt index) throws IOException {
+        ExpressionNode root = null;
+
+        if (index.getValue() < expressionUnits.size() - 1) {
+            ExpressionUnit expressionUnit = expressionUnits.get(index.increase());
+            if (expressionUnit instanceof NumberUnit) {
+                root = new ExpressionNode(expressionUnit);
+            } else if (expressionUnit.getText().equals("(")) {
+                root = parseAddSub(expressionUnits, index);
+                expressionUnit = expressionUnits.get(index.increase());
+                if (!expressionUnit.getText().equals(")")) {
+                    throw new IOException("Unbalanced parenthesis count");
+                }
+            }
+        }
+        // System.out.println("DEBUG: Exiting ParseSimpleTerm, index = " + index.getValue() + ", root = " + (root == null ? "null" : root.getExpressionUnit().getText()));
+        return root;
+    }
+
+    private static class MyInt {
+        private int value;
+        public MyInt (int value){
+            this.value = value;
+        }
+        public int getValue(){
+            return value;
+        }
+        public int increase(){
+            return ++value;
+        }
+        public int decrease(){
+            return --value;
+        }
     }
 
 }

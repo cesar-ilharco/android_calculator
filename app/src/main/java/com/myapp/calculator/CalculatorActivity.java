@@ -74,6 +74,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         }
     }
 
+    // TODO: Serialize and backup expressionUnits.
     @Override // Backup data before changing view.
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -81,6 +82,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         outState.putString("resultView", resultView.getText().toString());
     }
 
+    // TODO: Deserialize and restore expressionUnits.
     @Override // Recover data after changing view.
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -137,7 +139,9 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
             public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {}
 
             @Override
-            public void onTextChanged(CharSequence arg0, int arg1, int arg2,int arg3) {}
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2,int arg3) {
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
         };
     }
 
