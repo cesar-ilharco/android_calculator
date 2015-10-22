@@ -3,6 +3,7 @@ package com.myapp.calculator;
 import android.support.annotation.VisibleForTesting;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,13 +26,33 @@ public class Kernel {
     }};
 
     // TODO: Implement expression evaluation from Syntax Tree. Handle exceptions properly.
-    public static String evaluate (Stack<ExpressionUnit> expressionUnits){
+    public static String evaluate (Stack<ExpressionUnit> expressionUnits) {
         if (! isValid(expressionUnits)){
             return "formatting error";
         }
-        return DisplayHelper.toString(expressionUnits);
+        BigDecimal result = null;
+        try {
+            ExpressionNode root = parse(expressionUnits);
+            result = evaluateRecursive(root);
+        } catch (IOException e){
+
+        }
+
+        return result == null ? "" : result.toString();
     }
 
+    private static BigDecimal evaluateRecursive (ExpressionNode root){
+        if (root == null){
+            return null;
+        }
+        switch(root.getExpressionUnit().getText()){
+            case "+": return evaluateRecursive(root.getLeft()).add(evaluateRecursive(root.getRight()));
+            case "-": return evaluateRecursive(root.getLeft()).subtract(evaluateRecursive(root.getRight()));
+            case "*": return evaluateRecursive(root.getLeft()).multiply(evaluateRecursive(root.getRight()));
+            case "/": return evaluateRecursive(root.getLeft()).divide(evaluateRecursive(root.getRight()));
+        }
+        return new BigDecimal(root.getExpressionUnit().getText());
+    }
 
     // TODO: Implement expression verifier.
     @VisibleForTesting

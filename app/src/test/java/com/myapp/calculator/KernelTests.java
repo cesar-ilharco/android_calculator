@@ -5,10 +5,6 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -51,6 +47,23 @@ public class KernelTests {
         Assert.assertEquals("3", expressionNode.getLeft().getRight().getRight().getExpressionUnit().getText());
         Assert.assertEquals("2", expressionNode.getLeft().getRight().getLeft().getExpressionUnit().getText());
 
+    }
+
+    @Test
+    public void testKernelEvaluator() throws IOException{
+        Stack<ExpressionUnit> expressionUnits = new Stack<>();
+        // 1 + 2 = 3
+        expressionUnits.push(new NumberUnit("1"));
+        expressionUnits.push(new OperatorUnit("+"));
+        expressionUnits.push(new NumberUnit("2"));
+        Assert.assertEquals("3", Kernel.evaluate(expressionUnits));
+
+        // 1 + 2 * 4 - 3 = 6
+        expressionUnits.push(new OperatorUnit("*"));
+        expressionUnits.push(new NumberUnit("4"));
+        expressionUnits.push(new OperatorUnit("-"));
+        expressionUnits.push(new NumberUnit("3"));
+        Assert.assertEquals("6", Kernel.evaluate(expressionUnits));
 
     }
 
