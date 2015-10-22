@@ -78,7 +78,12 @@ public class Kernel {
 
             while (expressionUnit.getText().equals("+") || expressionUnit.getText().equals("-")) {
                 root = new ExpressionNode(expressionUnit, root, parseMulDiv(expressionUnits, index));
-                expressionUnit = expressionUnits.get(index.increase());
+                if (index.getValue() < expressionUnits.size() - 1) {
+                    expressionUnit = expressionUnits.get(index.increase());
+                } else {
+                    index.increase();
+                    break;
+                }
             }
         }
         index.decrease();
@@ -95,7 +100,12 @@ public class Kernel {
 
             while (expressionUnit.getText().equals("*") || expressionUnit.getText().equals("/")) {
                 root = new ExpressionNode(expressionUnit, root, parseSimpleTerm(expressionUnits, index));
-                expressionUnit = expressionUnits.get(index.increase());
+                if (index.getValue() < expressionUnits.size() - 1) {
+                    expressionUnit = expressionUnits.get(index.increase());
+                } else {
+                    index.increase();
+                    break;
+                }
             }
         }
         index.decrease();
@@ -112,9 +122,13 @@ public class Kernel {
                 root = new ExpressionNode(expressionUnit);
             } else if (expressionUnit.getText().equals("(")) {
                 root = parseAddSub(expressionUnits, index);
-                expressionUnit = expressionUnits.get(index.increase());
-                if (!expressionUnit.getText().equals(")")) {
-                    throw new IOException("Unbalanced parenthesis count");
+                if (index.getValue() < expressionUnits.size() - 1) {
+                    expressionUnit = expressionUnits.get(index.increase());
+                    if (!expressionUnit.getText().equals(")")) {
+                        throw new IOException("Unbalanced parenthesis count");
+                    }
+                } else {
+                    index.increase();
                 }
             }
         }

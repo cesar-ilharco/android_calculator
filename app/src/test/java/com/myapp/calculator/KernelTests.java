@@ -65,6 +65,32 @@ public class KernelTests {
         expressionUnits.push(new NumberUnit("3"));
         Assert.assertEquals("6", Kernel.evaluate(expressionUnits));
 
+        // 1 * 2 * 3 * 4 * 5 = 120
+        expressionUnits.clear();
+        expressionUnits.push(new NumberUnit("1"));
+        expressionUnits.push(new OperatorUnit("*"));
+        expressionUnits.push(new NumberUnit("2"));
+        expressionUnits.push(new OperatorUnit("*"));
+        expressionUnits.push(new NumberUnit("3"));
+        expressionUnits.push(new OperatorUnit("*"));
+        expressionUnits.push(new NumberUnit("4"));
+        expressionUnits.push(new OperatorUnit("*"));
+        expressionUnits.push(new NumberUnit("5"));
+        Assert.assertEquals("120", Kernel.evaluate(expressionUnits));
+
+        // 1 - 2 * 3 + 4 * 5 = 15
+        expressionUnits.clear();
+        expressionUnits.push(new NumberUnit("1"));
+        expressionUnits.push(new OperatorUnit("-"));
+        expressionUnits.push(new NumberUnit("2"));
+        expressionUnits.push(new OperatorUnit("*"));
+        expressionUnits.push(new NumberUnit("3"));
+        expressionUnits.push(new OperatorUnit("+"));
+        expressionUnits.push(new NumberUnit("4"));
+        expressionUnits.push(new OperatorUnit("*"));
+        expressionUnits.push(new NumberUnit("5"));
+        Assert.assertEquals("15", Kernel.evaluate(expressionUnits));
+
     }
 
 }
