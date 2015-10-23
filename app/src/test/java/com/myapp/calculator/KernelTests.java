@@ -17,18 +17,18 @@ public class KernelTests {
         Stack<ExpressionUnit> expressionUnits = new Stack<>();
 
         // 1+2
-//        Assert.assertEquals(null, Kernel.parse(expressionUnits));
+        Assert.assertEquals(null, Kernel.parse(expressionUnits));
         expressionUnits.push(new NumberUnit("1"));
-//        Assert.assertEquals("1", Kernel.parse(expressionUnits).getExpressionUnit().getText());
+        Assert.assertEquals("1", Kernel.parse(expressionUnits).getExpressionUnit().getText());
         expressionUnits.push(new OperatorUnit("+"));
         expressionUnits.push(new NumberUnit("2"));
         ExpressionNode expressionNode = Kernel.parse(expressionUnits);
         StringBuilder stringBuilder = new StringBuilder();
         printTree(expressionNode, stringBuilder);
         System.out.println(stringBuilder.toString());
-//        Assert.assertEquals("+", expressionNode.getExpressionUnit().getText());
-//        Assert.assertEquals("1", expressionNode.getLeft().getExpressionUnit().getText());
-//        Assert.assertEquals("2", expressionNode.getRight().getExpressionUnit().getText());
+        Assert.assertEquals("+", expressionNode.getExpressionUnit().getText());
+        Assert.assertEquals("1", expressionNode.getLeft().getExpressionUnit().getText());
+        Assert.assertEquals("2", expressionNode.getRight().getExpressionUnit().getText());
 
         // 1+2*3-4
         expressionUnits.push(new OperatorUnit("*"));
@@ -39,13 +39,13 @@ public class KernelTests {
         stringBuilder = new StringBuilder();
         printTree(expressionNode, stringBuilder);
         System.out.println(stringBuilder.toString());
-//        Assert.assertEquals("-", expressionNode.getExpressionUnit().getText());
-//        Assert.assertEquals("4", expressionNode.getRight().getExpressionUnit().getText());
-//        Assert.assertEquals("+", expressionNode.getLeft().getExpressionUnit().getText());
-//        Assert.assertEquals("*", expressionNode.getLeft().getRight().getExpressionUnit().getText());
-//        Assert.assertEquals("1", expressionNode.getLeft().getLeft().getExpressionUnit().getText());
-//        Assert.assertEquals("3", expressionNode.getLeft().getRight().getRight().getExpressionUnit().getText());
-//        Assert.assertEquals("2", expressionNode.getLeft().getRight().getLeft().getExpressionUnit().getText());
+        Assert.assertEquals("-", expressionNode.getExpressionUnit().getText());
+        Assert.assertEquals("4", expressionNode.getRight().getExpressionUnit().getText());
+        Assert.assertEquals("+", expressionNode.getLeft().getExpressionUnit().getText());
+        Assert.assertEquals("*", expressionNode.getLeft().getRight().getExpressionUnit().getText());
+        Assert.assertEquals("1", expressionNode.getLeft().getLeft().getExpressionUnit().getText());
+        Assert.assertEquals("3", expressionNode.getLeft().getRight().getRight().getExpressionUnit().getText());
+        Assert.assertEquals("2", expressionNode.getLeft().getRight().getLeft().getExpressionUnit().getText());
 
     }
 
@@ -56,14 +56,14 @@ public class KernelTests {
         expressionUnits.push(new NumberUnit("1"));
         expressionUnits.push(new OperatorUnit("+"));
         expressionUnits.push(new NumberUnit("2"));
-//        Assert.assertEquals("3", Kernel.evaluate(expressionUnits));
+        Assert.assertEquals("3", Kernel.evaluate(expressionUnits));
 
         // 1 + 2 * 4 - 3 = 6
         expressionUnits.push(new OperatorUnit("*"));
         expressionUnits.push(new NumberUnit("4"));
         expressionUnits.push(new OperatorUnit("-"));
         expressionUnits.push(new NumberUnit("3"));
-//        Assert.assertEquals("6", Kernel.evaluate(expressionUnits));
+        Assert.assertEquals("6", Kernel.evaluate(expressionUnits));
 
         // 1 * 2 * 3 * 4 * 5 = 120
         expressionUnits.clear();
@@ -76,7 +76,7 @@ public class KernelTests {
         expressionUnits.push(new NumberUnit("4"));
         expressionUnits.push(new OperatorUnit("*"));
         expressionUnits.push(new NumberUnit("5"));
-//        Assert.assertEquals("120", Kernel.evaluate(expressionUnits));
+        Assert.assertEquals("120", Kernel.evaluate(expressionUnits));
 
         // 1 - 2 * 3 + 4 * 5 = 15
         expressionUnits.clear();
@@ -89,7 +89,7 @@ public class KernelTests {
         expressionUnits.push(new NumberUnit("4"));
         expressionUnits.push(new OperatorUnit("*"));
         expressionUnits.push(new NumberUnit("5"));
-//        Assert.assertEquals("15", Kernel.evaluate(expressionUnits));
+        Assert.assertEquals("15", Kernel.evaluate(expressionUnits));
 
         expressionUnits.clear();
         expressionUnits.push(new NumberUnit("1"));

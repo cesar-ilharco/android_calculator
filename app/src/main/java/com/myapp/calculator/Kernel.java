@@ -25,8 +25,11 @@ public class Kernel {
         put("/", 3);
     }};
 
-    // TODO: Get scale from a Number Picker.
     private static int scale = 100;
+
+    public static void setScale(int scale) {
+        Kernel.scale = scale;
+    }
 
     // TODO: Implement expression evaluation from Syntax Tree. Handle exceptions properly.
     public static String evaluate (Stack<ExpressionUnit> expressionUnits) {

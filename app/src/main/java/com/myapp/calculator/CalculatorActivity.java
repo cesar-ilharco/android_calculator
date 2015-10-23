@@ -52,6 +52,14 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
 
     @Override
     public void onClick(View view) {
+
+        if (view instanceof MyNumberPicker){
+            MyNumberPicker scalePicker = (MyNumberPicker) view;
+            int scale = scalePicker.getValue();
+            Kernel.setScale(scale);
+            return;
+        }
+
         final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         String buttonPressed = ((Button) view).getText().toString();
         switch (buttonPressed) {
@@ -125,6 +133,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         findViewById(R.id.buttonFib).setOnClickListener(this);
         findViewById(R.id.buttonLog).setOnClickListener(this);
         findViewById(R.id.buttonExp).setOnClickListener(this);
+        findViewById(R.id.scalePicker).setOnClickListener(this);
     }
 
     // Makes scroll view automatically scroll to the bottom when text is added.
