@@ -25,6 +25,9 @@ public class Kernel {
         put("/", 3);
     }};
 
+    // TODO: Get scale from a Number Picker.
+    private static int scale = 100;
+
     // TODO: Implement expression evaluation from Syntax Tree. Handle exceptions properly.
     public static String evaluate (Stack<ExpressionUnit> expressionUnits) {
         if (! isValid(expressionUnits)){
@@ -49,7 +52,7 @@ public class Kernel {
             case "+": return evaluateRecursive(root.getLeft()).add(evaluateRecursive(root.getRight()));
             case "-": return evaluateRecursive(root.getLeft()).subtract(evaluateRecursive(root.getRight()));
             case "*": return evaluateRecursive(root.getLeft()).multiply(evaluateRecursive(root.getRight()));
-            case "/": return evaluateRecursive(root.getLeft()).divide(evaluateRecursive(root.getRight()));
+            case "/": return evaluateRecursive(root.getLeft()).divide(evaluateRecursive(root.getRight()), scale, BigDecimal.ROUND_HALF_EVEN);
         }
         return new BigDecimal(root.getExpressionUnit().getText());
     }

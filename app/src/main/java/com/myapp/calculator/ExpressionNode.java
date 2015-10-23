@@ -47,39 +47,4 @@ public class ExpressionNode {
     public void setRight(ExpressionNode right) {
         this.right = right;
     }
-
-    public void printTree(StringBuilder stringBuilder) throws IOException {
-        if (right != null) {
-            right.printTree(stringBuilder, true, "");
-        }
-        printNodeValue(stringBuilder);
-        if (left != null) {
-            left.printTree(stringBuilder, false, "");
-        }
-    }
-    private void printNodeValue(StringBuilder stringBuilder) throws IOException {
-        if (expressionUnit == null) {
-            stringBuilder.append("<null>");
-        } else {
-            stringBuilder.append(expressionUnit.getText());
-        }
-        stringBuilder.append('\n');
-    }
-
-    private void printTree(StringBuilder stringBuilder, boolean isRight, String indent) throws IOException {
-        if (right != null) {
-            right.printTree(stringBuilder, true, indent + (isRight ? "        " : " |      "));
-        }
-        stringBuilder.append(indent);
-        if (isRight) {
-            stringBuilder.append(" /");
-        } else {
-            stringBuilder.append(" \\");
-        }
-        stringBuilder.append("----- ");
-        printNodeValue(stringBuilder);
-        if (left != null) {
-            left.printTree(stringBuilder, false, indent + (isRight ? " |      " : "        "));
-        }
-    }
 }
