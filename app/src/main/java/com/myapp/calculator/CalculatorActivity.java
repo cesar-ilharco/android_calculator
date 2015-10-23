@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.NumberPicker;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -52,13 +53,6 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
 
     @Override
     public void onClick(View view) {
-
-        if (view instanceof MyNumberPicker){
-            MyNumberPicker scalePicker = (MyNumberPicker) view;
-            int scale = scalePicker.getValue();
-            Kernel.setScale(scale);
-            return;
-        }
 
         final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         String buttonPressed = ((Button) view).getText().toString();
@@ -122,6 +116,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
     }
 
     private void initializeLandscapeButtons(){
+
         findViewById(R.id.button00).setOnClickListener(this);
         findViewById(R.id.buttonOpenP).setOnClickListener(this);
         findViewById(R.id.buttonCloseP).setOnClickListener(this);
@@ -133,7 +128,17 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         findViewById(R.id.buttonFib).setOnClickListener(this);
         findViewById(R.id.buttonLog).setOnClickListener(this);
         findViewById(R.id.buttonExp).setOnClickListener(this);
-        findViewById(R.id.scalePicker).setOnClickListener(this);
+
+        NumberPicker scalePicker = (NumberPicker) findViewById(R.id.scalePicker);
+        scalePicker.setMinValue(0);
+        scalePicker.setMaxValue(100);
+        scalePicker.setValue(Kernel.getScale());
+        scalePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int oldValue, int newValue) {
+                Kernel.setScale(newValue);
+            }
+        });
     }
 
     // Makes scroll view automatically scroll to the bottom when text is added.

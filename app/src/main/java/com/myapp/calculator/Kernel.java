@@ -25,10 +25,13 @@ public class Kernel {
         put("/", 3);
     }};
 
-    private static int scale = 100;
+    private static int scale = 10;
 
     public static void setScale(int scale) {
         Kernel.scale = scale;
+    }
+    public static int getScale() {
+        return scale;
     }
 
     // TODO: Implement expression evaluation from Syntax Tree. Handle exceptions properly.

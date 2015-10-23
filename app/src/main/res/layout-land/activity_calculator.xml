@@ -336,18 +336,40 @@
                     android:text="@string/buttonPaste"
                     android:textSize="15sp" />
 
+                <Button
+                    android:id="@+id/buttonEmpty"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/buttonEmpty2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/buttonEmpty3"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="15sp" />
+
             </LinearLayout>
         </LinearLayout>
 
-        <com.myapp.calculator.MyNumberPicker
+        <NumberPicker
             android:id="@+id/scalePicker"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:orientation="vertical"
-            max="100"
-            min="1" />
+            android:orientation="vertical" />
     </LinearLayout>
 
 </LinearLayout>
