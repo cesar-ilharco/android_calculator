@@ -23,16 +23,22 @@
     <string name="buttonCloseP">)</string>
     <string name="buttonFact">!</string>
     <string name="buttonFib">Fib</string>
+    <string name="buttonLn">ln</string>
     <string name="buttonLog">log</string>
     <string name="buttonSin">sin</string>
     <string name="buttonCos">cos</string>
     <string name="buttonTan">tan</string>
     <string name="buttonSqrt">√</string>
     <string name="buttonExp">^</string>
+    <string name="buttonMod">%</string>
+    <string name="buttonIsPrime">isPrime</string>
     <string name="buttonE">e</string>
     <string name="buttonPi">π</string>
+    <string name="buttonPhi">phi</string>
     <string name="buttonBackspace">del</string>
     <string name="buttonClear">clear</string>
     <string name="buttonCopy">copy</string>
     <string name="buttonPaste">paste</string>
+    <string name="buttonInv">inv</string>
+    <string name="buttonHyp">hyp</string>
 </resources>

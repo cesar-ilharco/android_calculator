@@ -1,5 +1,7 @@
 package com.myapp.calculator;
 
+import com.myapp.calculator.miscellanea.Factorial;
+
 import junit.framework.Assert;
 
 import org.junit.Test;

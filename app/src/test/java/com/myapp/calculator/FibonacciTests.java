@@ -1,5 +1,7 @@
 package com.myapp.calculator;
 
+import com.myapp.calculator.miscellanea.Fibonacci;
+
 import junit.framework.Assert;
 
 import org.junit.Test;

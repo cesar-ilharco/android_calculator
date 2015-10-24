@@ -87,21 +87,21 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" >
 
-                <Button
+                <com.myapp.calculator.buttons.NumericButton
                     android:id="@+id/button7"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/button7" />
 
-                <Button
+                <com.myapp.calculator.buttons.NumericButton
                     android:id="@+id/button8"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/button8" />
 
-                <Button
+                <com.myapp.calculator.buttons.NumericButton
                     android:id="@+id/button9"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -123,18 +123,25 @@
                     android:text="@string/buttonCloseP" />
 
                 <Button
-                    android:id="@+id/buttonFact"
+                    android:id="@+id/buttonSin"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/buttonFact" />
+                    android:text="@string/buttonSin" />
 
                 <Button
-                    android:id="@+id/buttonFib"
+                    android:id="@+id/buttonCos"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/buttonFib" />
+                    android:text="@string/buttonCos" />
+
+                <Button
+                    android:id="@+id/buttonTan"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/buttonTan" />
             </LinearLayout>
 
             <LinearLayout
@@ -143,21 +150,21 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" >
 
-                <Button
+                <com.myapp.calculator.buttons.NumericButton
                     android:id="@+id/button4"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/button4" />
 
-                <Button
+                <com.myapp.calculator.buttons.NumericButton
                     android:id="@+id/button5"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/button5" />
 
-                <Button
+                <com.myapp.calculator.buttons.NumericButton
                     android:id="@+id/button6"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -179,6 +186,13 @@
                     android:text="@string/buttonDivide" />
 
                 <Button
+                    android:id="@+id/buttonLn"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/buttonLn" />
+
+                <Button
                     android:id="@+id/buttonLog"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -186,11 +200,11 @@
                     android:text="@string/buttonLog" />
 
                 <Button
-                    android:id="@+id/buttonExp"
+                    android:id="@+id/buttonSqrt"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/buttonExp" />
+                    android:text="@string/buttonSqrt" />
             </LinearLayout>
 
             <LinearLayout
@@ -199,21 +213,21 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" >
 
-                <Button
+                <com.myapp.calculator.buttons.NumericButton
                     android:id="@+id/button1"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/button1" />
 
-                <Button
+                <com.myapp.calculator.buttons.NumericButton
                     android:id="@+id/button2"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/button2" />
 
-                <Button
+                <com.myapp.calculator.buttons.NumericButton
                     android:id="@+id/button3"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -235,18 +249,25 @@
                     android:text="@string/buttonSubtract" />
 
                 <Button
-                    android:id="@+id/buttonSin"
+                    android:id="@+id/buttonExp"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/buttonSin" />
+                    android:text="@string/buttonExp" />
 
                 <Button
-                    android:id="@+id/buttonCos"
+                    android:id="@+id/buttonMod"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/buttonCos" />
+                    android:text="@string/buttonMod" />
+
+                <Button
+                    android:id="@+id/buttonEmpty"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="" />
             </LinearLayout>
 
             <LinearLayout
@@ -255,21 +276,21 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" >
 
-                <Button
+                <com.myapp.calculator.buttons.NumericButton
                     android:id="@+id/buttonDot"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/buttonDot" />
 
-                <Button
+                <com.myapp.calculator.buttons.NumericButton
                     android:id="@+id/button0"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/button0" />
 
-                <Button
+                <com.myapp.calculator.buttons.NumericButton
                     android:id="@+id/button00"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -284,18 +305,25 @@
                     android:text="@string/buttonEquals" />
 
                 <Button
-                    android:id="@+id/buttonSqrt"
+                    android:id="@+id/buttonPi"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/buttonSqrt" />
+                    android:text="@string/buttonPi" />
 
                 <Button
-                    android:id="@+id/buttonTan"
+                    android:id="@+id/buttonE"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/buttonTan" />
+                    android:text="@string/buttonE" />
+
+                <Button
+                    android:id="@+id/buttonPhi"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/buttonPhi" />
             </LinearLayout>
 
             <LinearLayout
@@ -329,35 +357,43 @@
                     android:textSize="15sp" />
 
                 <Button
-                    android:id="@+id/buttonPaste"
+                    android:id="@+id/buttonInv"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="@string/buttonPaste"
+                    android:text="@string/buttonInv"
                     android:textSize="15sp" />
 
                 <Button
-                    android:id="@+id/buttonEmpty"
+                    android:id="@+id/buttonHyp"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text=""
+                    android:text="@string/buttonHyp"
                     android:textSize="15sp" />
 
                 <Button
-                    android:id="@+id/buttonEmpty2"
+                    android:id="@+id/buttonFact"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text=""
+                    android:text="@string/buttonFact"
                     android:textSize="15sp" />
 
                 <Button
-                    android:id="@+id/buttonEmpty3"
+                    android:id="@+id/buttonFib"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text=""
+                    android:text="@string/buttonFib"
+                    android:textSize="15sp" />
+
+                <Button
+                    android:id="@+id/buttonIsPrime"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/buttonIsPrime"
                     android:textSize="15sp" />
 
             </LinearLayout>

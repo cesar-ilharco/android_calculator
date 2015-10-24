@@ -72,7 +72,7 @@
         android:layout_height="0dp"
         android:layout_weight="1" >
 
-        <Button
+        <com.myapp.calculator.buttons.NumericButton
             android:id="@+id/button7"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -80,7 +80,7 @@
             android:text="@string/button7"
             android:textSize="25sp" />
 
-        <Button
+        <com.myapp.calculator.buttons.NumericButton
             android:id="@+id/button8"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -88,7 +88,7 @@
             android:text="@string/button8"
             android:textSize="25sp" />
 
-        <Button
+        <com.myapp.calculator.buttons.NumericButton
             android:id="@+id/button9"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -111,7 +111,7 @@
         android:layout_height="0dp"
         android:layout_weight="1" >
 
-        <Button
+        <com.myapp.calculator.buttons.NumericButton
             android:id="@+id/button4"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -119,7 +119,7 @@
             android:text="@string/button4"
             android:textSize="25sp" />
 
-        <Button
+        <com.myapp.calculator.buttons.NumericButton
             android:id="@+id/button5"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -127,7 +127,7 @@
             android:text="@string/button5"
             android:textSize="25sp" />
 
-        <Button
+        <com.myapp.calculator.buttons.NumericButton
             android:id="@+id/button6"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -150,7 +150,7 @@
         android:layout_height="0dp"
         android:layout_weight="1" >
 
-        <Button
+        <com.myapp.calculator.buttons.NumericButton
             android:id="@+id/button1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -158,7 +158,7 @@
             android:text="@string/button1"
             android:textSize="25sp" />
 
-        <Button
+        <com.myapp.calculator.buttons.NumericButton
             android:id="@+id/button2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -166,7 +166,7 @@
             android:text="@string/button2"
             android:textSize="25sp" />
 
-        <Button
+        <com.myapp.calculator.buttons.NumericButton
             android:id="@+id/button3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -203,7 +203,7 @@
                 android:layout_weight="1"
                 android:textSize="25sp" >
 
-                <Button
+                <com.myapp.calculator.buttons.NumericButton
                     android:id="@+id/buttonDot"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -211,7 +211,7 @@
                     android:text="@string/buttonDot"
                     android:textSize="25sp" />
 
-                <Button
+                <com.myapp.calculator.buttons.NumericButton
                     android:id="@+id/button0"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
