@@ -21,7 +21,6 @@ public class DisplayHelper {
 
     // TODO: Handle edge cases such as '.' + '.' = '.' or '-' + '-' = '+'.
     public static String getExpressionDisplay (Stack<ExpressionUnit> expressionUnits, String buttonPressed){
-
         if (buttonPressed.equals("del")){
             if (! expressionUnits.isEmpty()){
                 expressionUnits.peek().del();
@@ -33,8 +32,10 @@ public class DisplayHelper {
             expressionUnits.clear();
         } else if (isNumber(buttonPressed)){
             addDigit(expressionUnits, buttonPressed);
-        } else {
+        } else if (basicOperators.contains(buttonPressed)){
             addBasicOperator(expressionUnits, buttonPressed);
+        } else {
+            expressionUnits.push(new OperatorUnit(buttonPressed));
         }
 
         return toString(expressionUnits);

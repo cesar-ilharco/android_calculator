@@ -1,5 +1,6 @@
 package com.myapp.calculator;
 
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -19,6 +20,7 @@ public class DisplayHelperTests {
 
     @Test
     public void testDisplayHelperInputDecimalPoint(){
+
         // True if decimal point insertion is possible, false otherwise.
         Map<Stack<ExpressionUnit>, Boolean> expressions = new HashMap<>();
 

@@ -30,6 +30,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
     private TextView expressionView;
     private TextView resultView;
 
+
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,22 +56,23 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
     public void onClick(View view) {
 
         final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        String buttonPressed = ((Button) view).getText().toString();
-        switch (buttonPressed) {
-            case "=":
+
+        int buttonId = view.getId();
+        switch (buttonId) {
+            case R.id.buttonEquals:
                 resultView.setText(DisplayHelper.getResultDisplay(expressionUnits));
                 vibrator.vibrate(40);
                 break;
-            case "copy":
+            case R.id.buttonCopy:
                 copyResult();
                 vibrator.vibrate(30);
                 break;
-            case "paste":
+            case R.id.buttonPaste:
                 pasteExpression();
                 vibrator.vibrate(30);
                 break;
             default:
-                expressionView.setText(DisplayHelper.getExpressionDisplay(expressionUnits, buttonPressed));
+                expressionView.setText(DisplayHelper.getExpressionDisplay(expressionUnits, ((Button)view).getText().toString()));
                 vibrator.vibrate(25);
                 break;
         }
@@ -112,7 +114,6 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         findViewById(R.id.buttonBackspace).setOnClickListener(this);
         findViewById(R.id.buttonClear).setOnClickListener(this);
         findViewById(R.id.buttonCopy).setOnClickListener(this);
-        findViewById(R.id.buttonPaste).setOnClickListener(this);
     }
 
     private void initializeLandscapeButtons(){
@@ -120,14 +121,22 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         findViewById(R.id.button00).setOnClickListener(this);
         findViewById(R.id.buttonOpenP).setOnClickListener(this);
         findViewById(R.id.buttonCloseP).setOnClickListener(this);
-        findViewById(R.id.buttonSqrt).setOnClickListener(this);
         findViewById(R.id.buttonSin).setOnClickListener(this);
         findViewById(R.id.buttonCos).setOnClickListener(this);
         findViewById(R.id.buttonTan).setOnClickListener(this);
+        findViewById(R.id.buttonLn).setOnClickListener(this);
+        findViewById(R.id.buttonLog).setOnClickListener(this);
+        findViewById(R.id.buttonSqrt).setOnClickListener(this);
+        findViewById(R.id.buttonExp).setOnClickListener(this);
+        findViewById(R.id.buttonMod).setOnClickListener(this);
         findViewById(R.id.buttonFact).setOnClickListener(this);
         findViewById(R.id.buttonFib).setOnClickListener(this);
-        findViewById(R.id.buttonLog).setOnClickListener(this);
-        findViewById(R.id.buttonExp).setOnClickListener(this);
+        findViewById(R.id.buttonPi).setOnClickListener(this);
+        findViewById(R.id.buttonPhi).setOnClickListener(this);
+        findViewById(R.id.buttonE).setOnClickListener(this);
+        findViewById(R.id.buttonIsPrime).setOnClickListener(this);
+        findViewById(R.id.buttonInv).setOnClickListener(this);
+        findViewById(R.id.buttonHyp).setOnClickListener(this);
 
         NumberPicker scalePicker = (NumberPicker) findViewById(R.id.scalePicker);
         scalePicker.setMinValue(0);
