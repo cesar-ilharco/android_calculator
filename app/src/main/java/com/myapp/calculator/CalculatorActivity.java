@@ -29,6 +29,8 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
     private Stack<ExpressionUnit> expressionUnits;
     private TextView expressionView;
     private TextView resultView;
+    private boolean isHyp;
+    private boolean isInv;
 
 
     @SuppressLint("NewApi")
@@ -41,10 +43,11 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         expressionUnits = new Stack<>();
         expressionView = (TextView) findViewById(R.id.expressionView);
         resultView = (TextView) findViewById(R.id.resultView);
+        isHyp = false;
+        isInv = false;
 
-        initializeButtons();
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            initializeLandscapeButtons();
+            initializeScalePicker();
         }
 
         ScrollView expressionScroller = (ScrollView) findViewById(R.id.expressionScroller);
@@ -71,6 +74,14 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
                 pasteExpression();
                 vibrator.vibrate(30);
                 break;
+            case R.id.buttonInv:
+                switchInv();
+                vibrator.vibrate(30);
+                break;
+            case R.id.buttonHyp:
+                switchHyp();
+                vibrator.vibrate(30);
+                break;
             default:
                 expressionView.setText(DisplayHelper.getExpressionDisplay(expressionUnits, ((Button)view).getText().toString()));
                 vibrator.vibrate(25);
@@ -94,49 +105,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         resultView.setText(savedInstanceState.getString("resultView", ""));
     }
 
-    private void initializeButtons(){
-        findViewById(R.id.button0).setOnClickListener(this);
-        findViewById(R.id.button1).setOnClickListener(this);
-        findViewById(R.id.button2).setOnClickListener(this);
-        findViewById(R.id.button3).setOnClickListener(this);
-        findViewById(R.id.button4).setOnClickListener(this);
-        findViewById(R.id.button5).setOnClickListener(this);
-        findViewById(R.id.button6).setOnClickListener(this);
-        findViewById(R.id.button7).setOnClickListener(this);
-        findViewById(R.id.button8).setOnClickListener(this);
-        findViewById(R.id.button9).setOnClickListener(this);
-        findViewById(R.id.buttonDot).setOnClickListener(this);
-        findViewById(R.id.buttonEquals).setOnClickListener(this);
-        findViewById(R.id.buttonAdd).setOnClickListener(this);
-        findViewById(R.id.buttonSubtract).setOnClickListener(this);
-        findViewById(R.id.buttonMultiply).setOnClickListener(this);
-        findViewById(R.id.buttonDivide).setOnClickListener(this);
-        findViewById(R.id.buttonBackspace).setOnClickListener(this);
-        findViewById(R.id.buttonClear).setOnClickListener(this);
-        findViewById(R.id.buttonCopy).setOnClickListener(this);
-    }
-
-    private void initializeLandscapeButtons(){
-
-        findViewById(R.id.button00).setOnClickListener(this);
-        findViewById(R.id.buttonOpenP).setOnClickListener(this);
-        findViewById(R.id.buttonCloseP).setOnClickListener(this);
-        findViewById(R.id.buttonSin).setOnClickListener(this);
-        findViewById(R.id.buttonCos).setOnClickListener(this);
-        findViewById(R.id.buttonTan).setOnClickListener(this);
-        findViewById(R.id.buttonLn).setOnClickListener(this);
-        findViewById(R.id.buttonLog).setOnClickListener(this);
-        findViewById(R.id.buttonSqrt).setOnClickListener(this);
-        findViewById(R.id.buttonExp).setOnClickListener(this);
-        findViewById(R.id.buttonMod).setOnClickListener(this);
-        findViewById(R.id.buttonFact).setOnClickListener(this);
-        findViewById(R.id.buttonFib).setOnClickListener(this);
-        findViewById(R.id.buttonPi).setOnClickListener(this);
-        findViewById(R.id.buttonPhi).setOnClickListener(this);
-        findViewById(R.id.buttonE).setOnClickListener(this);
-        findViewById(R.id.buttonIsPrime).setOnClickListener(this);
-        findViewById(R.id.buttonInv).setOnClickListener(this);
-        findViewById(R.id.buttonHyp).setOnClickListener(this);
+    private void initializeScalePicker(){
 
         NumberPicker scalePicker = (NumberPicker) findViewById(R.id.scalePicker);
         scalePicker.setMinValue(0);
@@ -178,6 +147,33 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if (clipboard.hasPrimaryClip()) {
             expressionView.setText(expressionView.getText().toString() + clipboard.getPrimaryClip().getItemAt(0).getText());
+        }
+    }
+
+    private void switchInv() {
+        isInv = ! isInv;
+        updateButtonNames();
+    }
+
+    private void switchHyp() {
+        isHyp = ! isHyp;
+        updateButtonNames();
+    }
+
+    private void updateButtonNames() {
+        String prefix = isInv ? "" : "arc";
+        String suffix = isHyp ? "" : "h";
+        ((Button) findViewById(R.id.buttonSin)).setText(prefix + "sin" + suffix);
+        ((Button) findViewById(R.id.buttonCos)).setText(prefix + "cos" + suffix);
+        ((Button) findViewById(R.id.buttonTan)).setText(prefix + "tan" + suffix);
+        if (isInv){
+            ((Button) findViewById(R.id.buttonLn)).setText("e^x");
+            ((Button) findViewById(R.id.buttonLog)).setText("10^x");
+            ((Button) findViewById(R.id.buttonSqrt)).setText("x^2");
+        } else {
+            ((Button) findViewById(R.id.buttonLn)).setText("ln");
+            ((Button) findViewById(R.id.buttonLog)).setText("log");
+            ((Button) findViewById(R.id.buttonSqrt)).setText("√");
         }
     }
 
