@@ -12,23 +12,25 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.ScrollView;
-import android.widget.TextView;
+
+import com.myapp.calculator.utils.AutoResizeTextView;
 
 import java.util.Stack;
 
 
 /**
- * Android calculator app
+ * Android calculator App
  */
 
 public class CalculatorActivity extends AppCompatActivity implements OnClickListener {
 
     private Stack<ExpressionUnit> expressionUnits;
-    private TextView expressionView;
-    private TextView resultView;
+    private AutoResizeTextView expressionView;
+    private AutoResizeTextView resultView;
     private boolean isHyp;
     private boolean isInv;
 
@@ -41,8 +43,8 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         setContentView(R.layout.activity_calculator);
 
         expressionUnits = new Stack<>();
-        expressionView = (TextView) findViewById(R.id.expressionView);
-        resultView = (TextView) findViewById(R.id.resultView);
+        expressionView = (AutoResizeTextView) findViewById(R.id.expressionView);
+        resultView = (AutoResizeTextView) findViewById(R.id.resultView);
         isHyp = false;
         isInv = false;
 
@@ -52,6 +54,9 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
 
         ScrollView expressionScroller = (ScrollView) findViewById(R.id.expressionScroller);
         expressionView.addTextChangedListener(scrollableWatcher(expressionScroller));
+
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     }
 
@@ -161,8 +166,8 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
     }
 
     private void updateButtonNames() {
-        String prefix = isInv ? "" : "arc";
-        String suffix = isHyp ? "" : "h";
+        String prefix = isInv ? "arc" : "";
+        String suffix = isHyp ? "h"   : "";
         ((Button) findViewById(R.id.buttonSin)).setText(prefix + "sin" + suffix);
         ((Button) findViewById(R.id.buttonCos)).setText(prefix + "cos" + suffix);
         ((Button) findViewById(R.id.buttonTan)).setText(prefix + "tan" + suffix);

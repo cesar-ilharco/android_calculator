@@ -17,7 +17,14 @@ public class DisplayHelper {
 
     static final Set<String> numberButtons = new HashSet<>(Arrays.asList(
             "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "00", "."));
+
     static final Set<String> basicOperators = new HashSet<>(Arrays.asList("+", "-", "/", "*"));
+
+    static final Set<String> function1Operators = new HashSet<>(Arrays.asList(
+            "ln", "log", "sin", "cos", "tan", "Fib", "isPrime", "sinh", "cosh", "tanh",
+            "arcsin", "arccos", "arctan", "arcsinh", "arccosh", "arctanh" ));
+
+    static final Set<String> expOperators = new HashSet<>(Arrays.asList("e^x", "10^x", "x^2"));
 
     // TODO: Handle edge cases such as '.' + '.' = '.' or '-' + '-' = '+'.
     public static String getExpressionDisplay (Stack<ExpressionUnit> expressionUnits, String buttonPressed){
@@ -34,11 +41,27 @@ public class DisplayHelper {
             addDigit(expressionUnits, buttonPressed);
         } else if (basicOperators.contains(buttonPressed)){
             addBasicOperator(expressionUnits, buttonPressed);
+        } else if (expOperators.contains(buttonPressed)) {
+            addExpOperator(expressionUnits, buttonPressed);
+        } else if (function1Operators.contains(buttonPressed)) {
+            expressionUnits.push(new OperatorUnit(buttonPressed + "("));
         } else {
             expressionUnits.push(new OperatorUnit(buttonPressed));
         }
 
         return toString(expressionUnits);
+    }
+
+    private static void addExpOperator(Stack<ExpressionUnit> expressionUnits, String buttonPressed) {
+        if (buttonPressed.equals("e^x")){
+            expressionUnits.push(new OperatorUnit("exp("));
+        } else if (buttonPressed.equals("10^x")){
+            expressionUnits.push(new NumberUnit("10"));
+            expressionUnits.push(new OperatorUnit("^"));
+        } else {
+            expressionUnits.push(new OperatorUnit("^"));
+            expressionUnits.push(new NumberUnit("2"));
+        }
     }
 
     public static String getResultDisplay (Stack<ExpressionUnit> expressionUnits){
@@ -60,14 +83,14 @@ public class DisplayHelper {
     // -- = + , *- = *-,  *+ = +, /- = /-
     private static void addBasicOperator (Stack<ExpressionUnit> expressionUnits,  String op){
 
-        if (expressionUnits.isEmpty()){
+        if (expressionUnits.isEmpty() || endsWithOpenParenthesis(expressionUnits.peek().getText())){
             if (op.equals("-")){
                 expressionUnits.push(new OperatorUnit("-"));
             }
             return;
         }
 
-        if (expressionUnits.peek() instanceof OperatorUnit){
+        if (basicOperators.contains(expressionUnits.peek().getText())){
             String prevOp = ((OperatorUnit) expressionUnits.peek()).getOperator();
 
             if (op.equals("-")){
@@ -119,6 +142,10 @@ public class DisplayHelper {
 
     private static boolean isNumber (String buttonPressed){
         return numberButtons.contains(buttonPressed);
+    }
+
+    private static boolean endsWithOpenParenthesis (String s){
+        return s.charAt(s.length() - 1) == '(';
     }
 
 }

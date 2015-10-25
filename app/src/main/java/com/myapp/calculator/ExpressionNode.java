@@ -1,6 +1,5 @@
 package com.myapp.calculator;
 
-import java.io.IOException;
 
 /**
  * Android calculator app
