@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class DisplayHelper {
 
     static final Set<String> numberButtons = new HashSet<>(Arrays.asList(
-            "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "00", "."));
+            "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."));
 
     static final Set<String> basicOperators = new HashSet<>(Arrays.asList("+", "-", "/", "*"));
 

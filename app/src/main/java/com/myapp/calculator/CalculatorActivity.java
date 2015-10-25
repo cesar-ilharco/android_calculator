@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.ScrollView;
+import android.graphics.Typeface;
 
 import com.myapp.calculator.utils.AutoResizeTextView;
 
@@ -75,8 +77,8 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
                 copyResult();
                 vibrator.vibrate(30);
                 break;
-            case R.id.buttonPaste:
-                pasteExpression();
+            case R.id.buttonUndo:
+                // TODO: Implement button undo.
                 vibrator.vibrate(30);
                 break;
             case R.id.buttonInv:
@@ -148,38 +150,56 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         clipboard.setPrimaryClip(clip);
     }
 
-    private void pasteExpression() {
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        if (clipboard.hasPrimaryClip()) {
-            expressionView.setText(expressionView.getText().toString() + clipboard.getPrimaryClip().getItemAt(0).getText());
-        }
-    }
-
     private void switchInv() {
         isInv = ! isInv;
-        updateButtonNames();
+        updateButtons();
     }
 
     private void switchHyp() {
         isHyp = ! isHyp;
-        updateButtonNames();
+        updateButtons();
     }
 
-    private void updateButtonNames() {
+    private void updateButtons() {
+
         String prefix = isInv ? "arc" : "";
         String suffix = isHyp ? "h"   : "";
         ((Button) findViewById(R.id.buttonSin)).setText(prefix + "sin" + suffix);
         ((Button) findViewById(R.id.buttonCos)).setText(prefix + "cos" + suffix);
         ((Button) findViewById(R.id.buttonTan)).setText(prefix + "tan" + suffix);
+
+        int trigonometricColor = isHyp || isInv ? Color.BLACK : Color.WHITE;
+        int logExpColor =  isInv ? Color.BLACK : Color.WHITE;
+
         if (isInv){
+            ((Button) findViewById(R.id.buttonInv)).setTextColor(Color.BLACK);
+            ((Button) findViewById(R.id.buttonInv)).setTypeface(null, Typeface.BOLD);
             ((Button) findViewById(R.id.buttonLn)).setText("e^x");
             ((Button) findViewById(R.id.buttonLog)).setText("10^x");
             ((Button) findViewById(R.id.buttonSqrt)).setText("x^2");
+
         } else {
+            ((Button) findViewById(R.id.buttonInv)).setTextColor(Color.WHITE);
+            ((Button) findViewById(R.id.buttonInv)).setTypeface(null, Typeface.NORMAL);
             ((Button) findViewById(R.id.buttonLn)).setText("ln");
             ((Button) findViewById(R.id.buttonLog)).setText("log");
             ((Button) findViewById(R.id.buttonSqrt)).setText("√");
         }
+
+        if (isHyp){
+            ((Button) findViewById(R.id.buttonHyp)).setTextColor(Color.BLACK);
+            ((Button) findViewById(R.id.buttonHyp)).setTypeface(null, Typeface.BOLD);
+        } else {
+            ((Button) findViewById(R.id.buttonHyp)).setTextColor(Color.WHITE);
+            ((Button) findViewById(R.id.buttonHyp)).setTypeface(null, Typeface.NORMAL);
+        }
+
+        ((Button) findViewById(R.id.buttonLn)).setTextColor(logExpColor);
+        ((Button) findViewById(R.id.buttonLog)).setTextColor(logExpColor);
+        ((Button) findViewById(R.id.buttonSqrt)).setTextColor(logExpColor);
+        ((Button) findViewById(R.id.buttonSin)).setTextColor(trigonometricColor);
+        ((Button) findViewById(R.id.buttonCos)).setTextColor(trigonometricColor);
+        ((Button) findViewById(R.id.buttonTan)).setTextColor(trigonometricColor);
     }
 
 }

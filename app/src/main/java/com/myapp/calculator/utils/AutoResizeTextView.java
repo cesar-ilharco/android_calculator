@@ -141,8 +141,7 @@ public class AutoResizeTextView extends TextView {
             r = Resources.getSystem();
         else
             r = c.getResources();
-        mMaxTextSize = TypedValue.applyDimension(unit, size,
-                r.getDisplayMetrics());
+        mMaxTextSize = TypedValue.applyDimension(unit, size, r.getDisplayMetrics());
         mTextCachedSizes.clear();
         adjustTextSize(getText().toString());
     }
@@ -163,15 +162,13 @@ public class AutoResizeTextView extends TextView {
         if (!mInitiallized) {
             return;
         }
-        int startSize = (int) mMinTextSize;
         int heightLimit = getMeasuredHeight() - getCompoundPaddingBottom()
                 - getCompoundPaddingTop();
-        mWidthLimit = getMeasuredWidth() - getCompoundPaddingLeft()
-                - getCompoundPaddingRight();
+        mWidthLimit = getMeasuredWidth() - getCompoundPaddingLeft() - getCompoundPaddingRight();
         mAvailableSpaceRect.right = mWidthLimit;
         mAvailableSpaceRect.bottom = heightLimit;
 
-        int size = efficientTextSizeSearch(startSize, (int) mMaxTextSize,
+        int size = efficientTextSizeSearch((int) mMinTextSize, (int) mMaxTextSize,
                 mSizeTester, mAvailableSpaceRect);
 
         super.setTextSize(TypedValue.COMPLEX_UNIT_PX, Math.max(size, mMinTextSize));
@@ -288,11 +285,6 @@ public class AutoResizeTextView extends TextView {
         if (width != oldwidth || height != oldheight) {
             reAdjust();
         }
-    }
-
-    private static float PXtoSP(Context context, float px) {
-        float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
-        return px / scaledDensity;
     }
 
     private static float SPtoPX(Context context, float sp) {
