@@ -221,7 +221,7 @@
                     android:background="#01C5FF"
                     android:textStyle="bold"
                     android:onClick="onClick"
-                    android:textSize="15sp"
+                    android:textSize="18sp"
                     android:text="@string/buttonMultiply" />
 
                 <Button
@@ -324,39 +324,41 @@
                     android:background="#01C5FF"
                     android:textStyle="bold"
                     android:onClick="onClick"
-                    android:textSize="15sp"
+                    android:textSize="18sp"
                     android:text="@string/buttonSubtract" />
 
                 <Button
-                    android:id="@+id/buttonExp"
+                    android:id="@+id/buttonFact"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:onClick="onClick"
-                    android:background="#FF38BB98"
                     android:textStyle="bold"
-                    android:textSize="15sp"
-                    android:text="@string/buttonExp" />
+                    android:text="@string/buttonFact"
+                    android:background="#FF38BB98"
+                    android:textSize="15sp" />
 
                 <Button
-                    android:id="@+id/buttonMod"
+                    android:id="@+id/buttonFib"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:textAllCaps="false"
                     android:onClick="onClick"
+                    android:text="@string/buttonFib"
                     android:background="#FF38BB98"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:text="@string/buttonMod" />
+                    android:textSize="15sp" />
 
                 <Button
-                    android:id="@+id/buttonEmpty"
+                    android:id="@+id/buttonIsPrime"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:textAllCaps="false"
                     android:onClick="onClick"
+                    android:text="@string/buttonIsPrime"
                     android:background="#FF38BB98"
-                    android:text="" />
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -386,24 +388,36 @@
                     android:text="@string/button0" />
 
                 <Button
-                    android:id="@+id/buttonCopy"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="#3B5998"
-                    android:onClick="onClick"
-                    android:textSize="12sp"
-                    android:text="@string/buttonCopy" />
-
-                <Button
                     android:id="@+id/buttonEquals"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
+                    android:background="#0084FF"
+                    android:onClick="onClick"
+                    android:textSize="24sp"
+                    android:text="@string/buttonEquals" />
+
+                <Button
+                    android:id="@+id/buttonExp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:background="#01C5FF"
                     android:onClick="onClick"
-                    android:text="@string/buttonEquals"
-                    android:textSize="24sp"/>
+                    android:textStyle="bold"
+                    android:text="@string/buttonExp"
+                    android:textSize="18sp"/>
+
+                <Button
+                    android:id="@+id/buttonMod"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#01C5FF"
+                    android:onClick="onClick"
+                    android:textStyle="bold"
+                    android:text="@string/buttonMod"
+                    android:textSize="15sp"/>
 
                 <Button
                     android:id="@+id/buttonPi"
@@ -476,14 +490,24 @@
                     android:textSize="12sp" />
 
                 <Button
+                    android:id="@+id/buttonCopy"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="onClick"
+                    android:background="#3B5998"
+                    android:text="@string/buttonCopy"
+                    android:textSize="12sp" />
+
+                <Button
                     android:id="@+id/buttonInv"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:onClick="onClick"
-                    android:background="#01C5FF"
+                    android:background="#3B5998"
                     android:text="@string/buttonInv"
-                    android:textSize="15sp" />
+                    android:textSize="13sp" />
 
                 <Button
                     android:id="@+id/buttonHyp"
@@ -491,42 +515,31 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:onClick="onClick"
-                    android:background="#01C5FF"
+                    android:background="#3B5998"
                     android:text="@string/buttonHyp"
-                    android:textSize="15sp" />
+                    android:textSize="13sp" />
 
                 <Button
-                    android:id="@+id/buttonFact"
+                    android:id="@+id/buttonBackward"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:onClick="onClick"
                     android:textStyle="bold"
-                    android:text="@string/buttonFact"
-                    android:background="#FF38BB98"
-                    android:textSize="15sp" />
+                    android:background="#3B5998"
+                    android:text="@string/buttonBackward"
+                    android:textSize="21sp" />
 
                 <Button
-                    android:id="@+id/buttonFib"
+                    android:id="@+id/buttonForward"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textAllCaps="false"
                     android:onClick="onClick"
-                    android:text="@string/buttonFib"
-                    android:background="#FF38BB98"
-                    android:textSize="15sp" />
-
-                <Button
-                    android:id="@+id/buttonIsPrime"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textAllCaps="false"
-                    android:onClick="onClick"
-                    android:text="@string/buttonIsPrime"
-                    android:background="#FF38BB98"
-                    android:textSize="12sp" />
+                    android:textStyle="bold"
+                    android:background="#3B5998"
+                    android:text="@string/buttonForward"
+                    android:textSize="21sp" />
 
             </LinearLayout>
         </LinearLayout>

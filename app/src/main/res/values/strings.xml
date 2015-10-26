@@ -40,4 +40,6 @@
     <string name="buttonInv">inv</string>
     <string name="buttonHyp">hyp</string>
     <string name="buttonUndo">undo</string>
+    <string name="buttonBackward">«</string>
+    <string name="buttonForward">»</string>
 </resources>
