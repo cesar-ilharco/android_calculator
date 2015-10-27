@@ -206,4 +206,7 @@ public class DisplayHelperTests {
             Assert.assertEquals(entry.getValue(), result);
         }
     }
+
+    // TODO: Add tests for insertion in positions other than the end of the expression.
+
 }

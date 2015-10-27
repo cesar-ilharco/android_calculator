@@ -69,33 +69,41 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
     public void onClick(View view) {
 
         final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(25);
 
         int buttonId = view.getId();
         switch (buttonId) {
             case R.id.buttonEquals:
                 resultView.setText(DisplayHelper.getResultDisplay(expressionUnits));
-                vibrator.vibrate(40);
+                vibrator.vibrate(25);
                 break;
             case R.id.buttonCopy:
                 copyResult();
-                vibrator.vibrate(30);
                 break;
             case R.id.buttonUndo:
                 // TODO: Implement button undo.
-                vibrator.vibrate(30);
+                break;
+            case R.id.buttonBackward:
+                if (cursorPosition.getValue() > 0){
+                    cursorPosition.decreaseAndGet();
+                    expressionView.setText(DisplayHelper.toString(expressionUnits, cursorPosition));
+                }
+                break;
+            case R.id.buttonForward:
+                if (cursorPosition.getValue() < expressionUnits.size()){
+                    cursorPosition.increaseAndGet();
+                    expressionView.setText(DisplayHelper.toString(expressionUnits, cursorPosition));
+                }
                 break;
             case R.id.buttonInv:
                 switchInv();
-                vibrator.vibrate(30);
                 break;
             case R.id.buttonHyp:
                 switchHyp();
-                vibrator.vibrate(30);
                 break;
             default:
                 expressionView.setText(DisplayHelper.getExpressionDisplay(
                                expressionUnits, cursorPosition, ((Button)view).getText().toString()));
-                vibrator.vibrate(25);
                 break;
         }
     }
