@@ -37,12 +37,16 @@ public class Kernel {
 
     // TODO: Implement expression evaluation from Syntax Tree. Handle exceptions properly.
     public static String evaluate (LinkedList<ExpressionUnit> expressionUnits) {
-        if (! isValid(expressionUnits)){
+
+        List<ExpressionUnit>  convertedList= digitsToNumber(expressionUnits);
+
+        if (! isValid(convertedList)){
             return "formatting error";
         }
+
         BigDecimal result = null;
         try {
-            ExpressionNode root = parse(expressionUnits);
+            ExpressionNode root = parse(convertedList);
             result = evaluateRecursive(root);
         } catch (IOException e){
 
@@ -65,22 +69,19 @@ public class Kernel {
     }
 
     // TODO: Implement expression verifier.
-    @VisibleForTesting
-    static boolean isValid (LinkedList<ExpressionUnit> expressionUnits){
+    static boolean isValid (final List<ExpressionUnit> expressionUnits){
         return true;
     }
 
     // Create Syntax Tree from list of expression units.
-    @VisibleForTesting
-    public static ExpressionNode parse(final LinkedList<ExpressionUnit> expressionUnits) throws  IOException {
+    public static ExpressionNode parse(final List<ExpressionUnit> expressionUnits) throws  IOException {
         if (expressionUnits.isEmpty()){
             return null;
         }
-        List<ExpressionUnit> expressionUnitList = new ArrayList<>(expressionUnits);
-        return parseAddSub(expressionUnitList, new MyInt(-1));
+        return parseAddSub(expressionUnits, new MyInt(-1));
     }
 
-    private static ExpressionNode parseAddSub(List<ExpressionUnit> expressionUnits, MyInt index) throws IOException {
+    private static ExpressionNode parseAddSub(final List<ExpressionUnit> expressionUnits, MyInt index) throws IOException {
         ExpressionNode root = parseMulDiv(expressionUnits, index);
         if (index.getValue() < expressionUnits.size() - 1) {
 
@@ -102,7 +103,7 @@ public class Kernel {
     }
 
 
-    private static ExpressionNode parseMulDiv(List<ExpressionUnit> expressionUnits, MyInt index) throws IOException {
+    private static ExpressionNode parseMulDiv(final List<ExpressionUnit> expressionUnits, MyInt index) throws IOException {
         ExpressionNode root = parseSimpleTerm(expressionUnits, index);
 
         if (index.getValue() < expressionUnits.size() - 1) {
@@ -123,7 +124,7 @@ public class Kernel {
         return root;
     }
 
-    private static ExpressionNode parseSimpleTerm(List<ExpressionUnit> expressionUnits, MyInt index) throws IOException {
+    private static ExpressionNode parseSimpleTerm(final List<ExpressionUnit> expressionUnits, MyInt index) throws IOException {
         ExpressionNode root = null;
 
         if (index.getValue() < expressionUnits.size() - 1) {
@@ -145,5 +146,38 @@ public class Kernel {
         // System.out.println("DEBUG: Exiting ParseSimpleTerm, index = " + index.getValue() + ", root = " + (root == null ? "null" : root.getExpressionUnit().getText()));
         return root;
     }
+
+    // Convert DigitUnits into NumberInit and return it as an ArrayList.
+    public static List<ExpressionUnit> digitsToNumber (LinkedList<ExpressionUnit> expressionUnits){
+        List<ExpressionUnit> result = new ArrayList<>();
+
+        StringBuilder currentNumber = new StringBuilder();
+        for (ExpressionUnit expressionUnit : expressionUnits){
+            if (expressionUnit instanceof OperatorUnit){
+                // Operator "-" can sometimes be the prefix of a negative number.
+                if (expressionUnit.getText().equals("-") && currentNumber.length() == 0){
+                    currentNumber.append("-");
+                }
+                // Check if a number was being built. If so, add it to the result.
+                else {
+                    if (currentNumber.length() > 0){
+                        result.add(new NumberUnit(currentNumber.toString()));
+                        currentNumber = new StringBuilder();
+                    }
+                    result.add(expressionUnit);
+                }
+            }
+            // If it's a digit, append it to the currentNumber.
+            else {
+                currentNumber.append(expressionUnit.getText());
+            }
+        }
+        // Add last number if existent.
+        if (currentNumber.length() > 0){
+            result.add(new NumberUnit(currentNumber.toString()));
+        }
+        return result;
+    }
+
 
 }
