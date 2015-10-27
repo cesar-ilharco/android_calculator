@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -21,7 +22,7 @@ public class Kernel {
     private static final Map<String, Integer> operatorPrecedence = new HashMap<String, Integer>(){{
         put("+", 1);
         put("-", 1);
-        put("*", 2);
+        put("×", 2);
         put("/", 3);
     }};
 
@@ -35,7 +36,7 @@ public class Kernel {
     }
 
     // TODO: Implement expression evaluation from Syntax Tree. Handle exceptions properly.
-    public static String evaluate (Stack<ExpressionUnit> expressionUnits) {
+    public static String evaluate (LinkedList<ExpressionUnit> expressionUnits) {
         if (! isValid(expressionUnits)){
             return "formatting error";
         }
@@ -57,7 +58,7 @@ public class Kernel {
         switch(root.getExpressionUnit().getText()){
             case "+": return evaluateRecursive(root.getLeft()).add(evaluateRecursive(root.getRight()));
             case "-": return evaluateRecursive(root.getLeft()).subtract(evaluateRecursive(root.getRight()));
-            case "*": return evaluateRecursive(root.getLeft()).multiply(evaluateRecursive(root.getRight()));
+            case "×": return evaluateRecursive(root.getLeft()).multiply(evaluateRecursive(root.getRight()));
             case "/": return evaluateRecursive(root.getLeft()).divide(evaluateRecursive(root.getRight()), scale, BigDecimal.ROUND_HALF_EVEN);
         }
         return new BigDecimal(root.getExpressionUnit().getText());
@@ -65,13 +66,13 @@ public class Kernel {
 
     // TODO: Implement expression verifier.
     @VisibleForTesting
-    static boolean isValid (Stack<ExpressionUnit> expressionUnits){
+    static boolean isValid (LinkedList<ExpressionUnit> expressionUnits){
         return true;
     }
 
     // Create Syntax Tree from list of expression units.
     @VisibleForTesting
-    public static ExpressionNode parse(final Stack<ExpressionUnit> expressionUnits) throws  IOException {
+    public static ExpressionNode parse(final LinkedList<ExpressionUnit> expressionUnits) throws  IOException {
         if (expressionUnits.isEmpty()){
             return null;
         }
@@ -83,19 +84,19 @@ public class Kernel {
         ExpressionNode root = parseMulDiv(expressionUnits, index);
         if (index.getValue() < expressionUnits.size() - 1) {
 
-            ExpressionUnit expressionUnit = expressionUnits.get(index.increase());
+            ExpressionUnit expressionUnit = expressionUnits.get(index.increaseAndGet());
 
             while (expressionUnit.getText().equals("+") || expressionUnit.getText().equals("-")) {
                 root = new ExpressionNode(expressionUnit, root, parseMulDiv(expressionUnits, index));
                 if (index.getValue() < expressionUnits.size() - 1) {
-                    expressionUnit = expressionUnits.get(index.increase());
+                    expressionUnit = expressionUnits.get(index.increaseAndGet());
                 } else {
-                    index.increase();
+                    index.increaseAndGet();
                     break;
                 }
             }
         }
-        index.decrease();
+        index.decreaseAndGet();
         // System.out.println("DEBUG: Exiting ParseAddSub, index = " + index.getValue() + ", root = " + (root == null ? "null" : root.getExpressionUnit().getText()));
         return root;
     }
@@ -105,19 +106,19 @@ public class Kernel {
         ExpressionNode root = parseSimpleTerm(expressionUnits, index);
 
         if (index.getValue() < expressionUnits.size() - 1) {
-            ExpressionUnit expressionUnit = expressionUnits.get(index.increase());
+            ExpressionUnit expressionUnit = expressionUnits.get(index.increaseAndGet());
 
-            while (expressionUnit.getText().equals("*") || expressionUnit.getText().equals("/")) {
+            while (expressionUnit.getText().equals("×") || expressionUnit.getText().equals("/")) {
                 root = new ExpressionNode(expressionUnit, root, parseSimpleTerm(expressionUnits, index));
                 if (index.getValue() < expressionUnits.size() - 1) {
-                    expressionUnit = expressionUnits.get(index.increase());
+                    expressionUnit = expressionUnits.get(index.increaseAndGet());
                 } else {
-                    index.increase();
+                    index.increaseAndGet();
                     break;
                 }
             }
         }
-        index.decrease();
+        index.decreaseAndGet();
         // System.out.println("DEBUG: Exiting ParseMultiDiv, index = " + index.getValue() + ", root = " + (root == null ? "null" : root.getExpressionUnit().getText()));
         return root;
     }
@@ -126,39 +127,23 @@ public class Kernel {
         ExpressionNode root = null;
 
         if (index.getValue() < expressionUnits.size() - 1) {
-            ExpressionUnit expressionUnit = expressionUnits.get(index.increase());
+            ExpressionUnit expressionUnit = expressionUnits.get(index.increaseAndGet());
             if (expressionUnit instanceof NumberUnit) {
                 root = new ExpressionNode(expressionUnit);
             } else if (expressionUnit.getText().equals("(")) {
                 root = parseAddSub(expressionUnits, index);
                 if (index.getValue() < expressionUnits.size() - 1) {
-                    expressionUnit = expressionUnits.get(index.increase());
+                    expressionUnit = expressionUnits.get(index.increaseAndGet());
                     if (!expressionUnit.getText().equals(")")) {
                         throw new IOException("Unbalanced parenthesis count");
                     }
                 } else {
-                    index.increase();
+                    index.increaseAndGet();
                 }
             }
         }
         // System.out.println("DEBUG: Exiting ParseSimpleTerm, index = " + index.getValue() + ", root = " + (root == null ? "null" : root.getExpressionUnit().getText()));
         return root;
-    }
-
-    private static class MyInt {
-        private int value;
-        public MyInt (int value){
-            this.value = value;
-        }
-        public int getValue(){
-            return value;
-        }
-        public int increase(){
-            return ++value;
-        }
-        public int decrease(){
-            return --value;
-        }
     }
 
 }

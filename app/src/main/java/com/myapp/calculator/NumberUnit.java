@@ -5,17 +5,9 @@ package com.myapp.calculator;
  */
 public class NumberUnit implements ExpressionUnit {
 
-    String number;
+    final String number;
 
     public NumberUnit(String number) {
-        this.number = number;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
         this.number = number;
     }
 
@@ -24,10 +16,4 @@ public class NumberUnit implements ExpressionUnit {
         return number;
     }
 
-    @Override
-    public void del() {
-        if (!number.isEmpty()){
-            number = number.substring(0, number.length() - 1);
-        }
-    }
 }

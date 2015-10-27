@@ -21,8 +21,7 @@ import android.graphics.Typeface;
 
 import com.myapp.calculator.utils.AutoResizeTextView;
 
-import java.util.Stack;
-
+import java.util.LinkedList;
 
 /**
  * Android calculator App
@@ -30,9 +29,11 @@ import java.util.Stack;
 
 public class CalculatorActivity extends AppCompatActivity implements OnClickListener {
 
-    private Stack<ExpressionUnit> expressionUnits;
+    // TODO: Create a class to insert and remove in constant time regardless the position.
+    private LinkedList<ExpressionUnit> expressionUnits;
     private AutoResizeTextView expressionView;
     private AutoResizeTextView resultView;
+    private MyInt cursorPosition;
     private boolean isHyp;
     private boolean isInv;
 
@@ -44,7 +45,9 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculator);
 
-        expressionUnits = new Stack<>();
+        expressionUnits = new LinkedList<>();
+        cursorPosition = new MyInt(0);
+
         expressionView = (AutoResizeTextView) findViewById(R.id.expressionView);
         resultView = (AutoResizeTextView) findViewById(R.id.resultView);
         isHyp = false;
@@ -90,7 +93,8 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
                 vibrator.vibrate(30);
                 break;
             default:
-                expressionView.setText(DisplayHelper.getExpressionDisplay(expressionUnits, ((Button)view).getText().toString()));
+                expressionView.setText(DisplayHelper.getExpressionDisplay(
+                               expressionUnits, cursorPosition, ((Button)view).getText().toString()));
                 vibrator.vibrate(25);
                 break;
         }
@@ -176,7 +180,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
             ((Button) findViewById(R.id.buttonInv)).setTypeface(null, Typeface.BOLD);
             ((Button) findViewById(R.id.buttonLn)).setText("e^x");
             ((Button) findViewById(R.id.buttonLog)).setText("10^x");
-            ((Button) findViewById(R.id.buttonSqrt)).setText("x^2");
+            ((Button) findViewById(R.id.buttonSqrt)).setText("x²");
 
         } else {
             ((Button) findViewById(R.id.buttonInv)).setTextColor(Color.WHITE);

@@ -6,5 +6,4 @@ package com.myapp.calculator;
 
 public interface ExpressionUnit {
     String getText();
-    void del();
 }
