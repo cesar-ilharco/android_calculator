@@ -100,7 +100,7 @@ public class DisplayHelper {
     // -- = + , *- = *-,  *+ = +, /- = /-
     private static void addBasicOperator (LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition,  String op){
 
-        if (expressionUnits.isEmpty() || endsWithOpenParenthesis(expressionUnits.get(cursorPosition.getValue() - 1).getText())){
+        if (cursorPosition.getValue() == 0 || endsWithOpenParenthesis(expressionUnits.get(cursorPosition.getValue() - 1).getText())){
             if (op.equals("-")){
                 expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit("-"));
             }
@@ -117,7 +117,7 @@ public class DisplayHelper {
                 }
                 if (prevOp.equals("-")){
                     expressionUnits.remove(cursorPosition.decreaseAndGet());
-                    if (!expressionUnits.isEmpty() && expressionUnits.get(cursorPosition.getValue() - 1) instanceof DigitUnit){
+                    if (cursorPosition.getValue() > 0 && expressionUnits.get(cursorPosition.getValue() - 1) instanceof DigitUnit){
                         expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit("+"));
                     }
                     return;
@@ -132,7 +132,7 @@ public class DisplayHelper {
     }
 
     private static void addDigit (LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition, String digit){
-        if (digit.equals(".") && isDotInsertionAllowed(toString(expressionUnits))){
+        if (digit.equals(".") && isDotInsertionAllowed(expressionUnits, cursorPosition.getValue())){
             expressionUnits.add(cursorPosition.getAndIncrease(), new DigitUnit("."));
         } else if (! digit.equals(".")){
             expressionUnits.add(cursorPosition.getAndIncrease(), new DigitUnit(digit));
@@ -140,10 +140,15 @@ public class DisplayHelper {
     }
 
     // Check if decimal point insertion is valid.
-    private static boolean isDotInsertionAllowed (String expression){
-        String regex = ".*\\.\\d*\\z";
+    private static boolean isDotInsertionAllowed (LinkedList<ExpressionUnit> expressionUnits, int location){
+
+        LinkedList<ExpressionUnit> copy = new LinkedList<>(expressionUnits);
+        copy.add(location, new DigitUnit("."));
+        String resultantExpression = toString(copy);
+
+        String regex = "\\.\\d*\\.";
         Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(expression);
+        Matcher matcher = pattern.matcher(resultantExpression);
         return ! matcher.find();
     }
 
