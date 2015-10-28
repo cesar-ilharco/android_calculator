@@ -56,7 +56,7 @@ public class AutoResizeTextView extends TextView {
     private static final int NO_LINE_LIMIT = -1;
     private int mMaxLines = 1;
 
-    private boolean mEnableSizeCache = true;
+    private boolean mEnableSizeCache = false;
     private boolean mInitiallized;
 
     public AutoResizeTextView(Context context) {

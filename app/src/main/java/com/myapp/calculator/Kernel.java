@@ -161,7 +161,12 @@ public class Kernel {
                 // Check if a number was being built. If so, add it to the result.
                 else {
                     if (currentNumber.length() > 0){
-                        result.add(new NumberUnit(currentNumber.toString()));
+                        // "-" might negate an expression rather then a number, e.g. 1*-(2+3)
+                        if (currentNumber.equals("-")){
+                            result.add(new OperatorUnit("-"));
+                        } else {
+                            result.add(new NumberUnit(currentNumber.toString()));
+                        }
                         currentNumber = new StringBuilder();
                     }
                     result.add(expressionUnit);
