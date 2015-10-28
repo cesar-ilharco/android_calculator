@@ -6,20 +6,25 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.ScrollView;
 import android.graphics.Typeface;
+import android.widget.TextView;
 
-import com.myapp.calculator.utils.AutoResizeTextView;
 
 import java.util.LinkedList;
 
@@ -31,8 +36,8 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
 
     // TODO: Create a class to insert and remove in constant time regardless the position.
     private LinkedList<ExpressionUnit> expressionUnits;
-    private AutoResizeTextView expressionView;
-    private AutoResizeTextView resultView;
+    private TextView expressionView;
+    private TextView resultView;
     private MyInt cursorPosition;
     private boolean isHyp;
     private boolean isInv;
@@ -48,18 +53,22 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         expressionUnits = new LinkedList<>();
         cursorPosition = new MyInt(0);
 
-        expressionView = (AutoResizeTextView) findViewById(R.id.expressionView);
-        resultView = (AutoResizeTextView) findViewById(R.id.resultView);
+        expressionView = (TextView) findViewById(R.id.expressionView);
+        resultView = (TextView) findViewById(R.id.resultView);
         isHyp = false;
         isInv = false;
-
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            initializeScalePicker();
-        }
 
         ScrollView expressionScroller = (ScrollView) findViewById(R.id.expressionScroller);
         expressionView.addTextChangedListener(scrollableWatcher(expressionScroller));
 
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            initializeScalePicker();
+            expressionView.addTextChangedListener(textSizeWatcher(expressionView, 25, 55));
+            resultView.addTextChangedListener(textSizeWatcher(resultView, 25, 70));
+        } else {
+            expressionView.addTextChangedListener(textSizeWatcher(expressionView, 25, 70));
+            resultView.addTextChangedListener(textSizeWatcher(resultView, 25, 120));
+        }
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -156,6 +165,59 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         };
     }
 
+    private TextWatcher textSizeWatcher(final TextView view, final int MIN_SP, final int MAX_SP) {
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                final int widthLimitPixels = view.getWidth() - view.getPaddingRight() - view.getPaddingLeft();
+                Paint paint = new Paint();
+                float fontSizeSP = pixelsToSp(view.getTextSize());
+                paint.setTextSize(spToPixels(fontSizeSP));
+
+                String viewText = view.getText().toString();
+
+                float widthPixels = paint.measureText(viewText);
+
+                // Increase font size if necessary.
+                if (widthPixels < widthLimitPixels){
+                    while (widthPixels < widthLimitPixels && fontSizeSP <= MAX_SP){
+                        ++fontSizeSP;
+                        paint.setTextSize(spToPixels(fontSizeSP));
+                        widthPixels = paint.measureText(viewText);
+                    }
+                    --fontSizeSP;
+                }
+                // Decrease font size if necessary.
+                else {
+                    while (widthPixels > widthLimitPixels || fontSizeSP > MAX_SP) {
+                        if (fontSizeSP < MIN_SP) {
+                            fontSizeSP = MIN_SP;
+                            break;
+                        }
+                        --fontSizeSP;
+                        paint.setTextSize(spToPixels(fontSizeSP));
+                        widthPixels = paint.measureText(viewText);
+                    }
+                }
+
+                view.setTextSize(fontSizeSP);
+
+            }
+        };
+    }
+
+
     private void copyResult() {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("resultView", resultView.getText());
@@ -212,6 +274,16 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         ((Button) findViewById(R.id.buttonSin)).setTextColor(trigonometricColor);
         ((Button) findViewById(R.id.buttonCos)).setTextColor(trigonometricColor);
         ((Button) findViewById(R.id.buttonTan)).setTextColor(trigonometricColor);
+    }
+
+    private float pixelsToSp(float px) {
+        float scaledDensity = getResources().getDisplayMetrics().scaledDensity;
+        return px/scaledDensity;
+    }
+
+    private float spToPixels(float sp) {
+        float scaledDensity = getResources().getDisplayMetrics().scaledDensity;
+        return sp * scaledDensity;
     }
 
 }

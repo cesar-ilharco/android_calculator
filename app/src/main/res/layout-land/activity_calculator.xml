@@ -23,7 +23,7 @@
             android:fillViewport="true"
             android:fadeScrollbars="false">
 
-            <com.myapp.calculator.utils.AutoResizeTextView
+            <TextView
                 android:id="@+id/expressionView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
             android:fillViewport="true"
             android:fadeScrollbars="false">
 
-            <com.myapp.calculator.utils.AutoResizeTextView
+            <TextView
                 android:id="@+id/resultView"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
