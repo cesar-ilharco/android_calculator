@@ -7,19 +7,15 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.ScrollView;
 import android.graphics.Typeface;
@@ -63,11 +59,11 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             initializeScalePicker();
-            expressionView.addTextChangedListener(textSizeWatcher(expressionView, 25, 55));
-            resultView.addTextChangedListener(textSizeWatcher(resultView, 25, 70));
+            expressionView.addTextChangedListener(textAutoResizeWatcher(expressionView, 25, 55));
+            resultView.addTextChangedListener(textAutoResizeWatcher(resultView, 25, 70));
         } else {
-            expressionView.addTextChangedListener(textSizeWatcher(expressionView, 25, 70));
-            resultView.addTextChangedListener(textSizeWatcher(resultView, 25, 120));
+            expressionView.addTextChangedListener(textAutoResizeWatcher(expressionView, 25, 70));
+            resultView.addTextChangedListener(textAutoResizeWatcher(resultView, 25, 120));
         }
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -123,6 +119,8 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         super.onSaveInstanceState(outState);
         outState.putString("expressionView", expressionView.getText().toString());
         outState.putString("resultView", resultView.getText().toString());
+        outState.putBoolean("isHyp", isHyp);
+        outState.putBoolean("isInv", isInv);
     }
 
     // TODO: Deserialize and restore expressionUnits.
@@ -131,6 +129,11 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         super.onRestoreInstanceState(savedInstanceState);
         expressionView.setText(savedInstanceState.getString("expressionView", ""));
         resultView.setText(savedInstanceState.getString("resultView", ""));
+        isHyp = savedInstanceState.getBoolean("isHyp");
+        isInv = savedInstanceState.getBoolean("isInv");
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            updateButtons();
+        }
     }
 
     private void initializeScalePicker(){
@@ -165,7 +168,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         };
     }
 
-    private TextWatcher textSizeWatcher(final TextView view, final int MIN_SP, final int MAX_SP) {
+    private TextWatcher textAutoResizeWatcher(final TextView view, final int MIN_SP, final int MAX_SP) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
