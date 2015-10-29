@@ -31,7 +31,7 @@ import java.util.LinkedList;
 public class CalculatorActivity extends AppCompatActivity implements OnClickListener {
 
     // TODO: Create a class to insert and remove in constant time regardless the position.
-    private LinkedList<ExpressionUnit> expressionUnits;
+    private Expression expression;
     private TextView expressionView;
     private TextView resultView;
     private MyInt cursorPosition;
@@ -46,7 +46,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculator);
 
-        expressionUnits = new LinkedList<>();
+        expression = new Expression();
         cursorPosition = new MyInt(0);
 
         expressionView = (TextView) findViewById(R.id.expressionView);
@@ -66,6 +66,19 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
             resultView.addTextChangedListener(textAutoResizeWatcher(resultView, 25, 120));
         }
 
+        if (savedInstanceState != null){
+            super.onRestoreInstanceState(savedInstanceState);
+            expression = (Expression) savedInstanceState.getSerializable("expression");
+            cursorPosition = new MyInt(savedInstanceState.getInt("cursorPosition"));
+            expressionView.setText(DisplayHelper.toString(expression.getUnits(), cursorPosition));
+            resultView.setText(savedInstanceState.getString("resultView", ""));
+            isHyp = savedInstanceState.getBoolean("isHyp");
+            isInv = savedInstanceState.getBoolean("isInv");
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                updateButtons();
+            }
+        }
+
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     }
@@ -79,7 +92,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         int buttonId = view.getId();
         switch (buttonId) {
             case R.id.buttonEquals:
-                resultView.setText(DisplayHelper.getResultDisplay(expressionUnits));
+                resultView.setText(DisplayHelper.getResultDisplay(expression.getUnits()));
                 vibrator.vibrate(25);
                 break;
             case R.id.buttonCopy:
@@ -91,13 +104,13 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
             case R.id.buttonBackward:
                 if (cursorPosition.getValue() > 0){
                     cursorPosition.decreaseAndGet();
-                    expressionView.setText(DisplayHelper.toString(expressionUnits, cursorPosition));
+                    expressionView.setText(DisplayHelper.toString(expression.getUnits(), cursorPosition));
                 }
                 break;
             case R.id.buttonForward:
-                if (cursorPosition.getValue() < expressionUnits.size()){
+                if (cursorPosition.getValue() < expression.getUnits().size()){
                     cursorPosition.increaseAndGet();
-                    expressionView.setText(DisplayHelper.toString(expressionUnits, cursorPosition));
+                    expressionView.setText(DisplayHelper.toString(expression.getUnits(), cursorPosition));
                 }
                 break;
             case R.id.buttonInv:
@@ -108,7 +121,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
                 break;
             default:
                 expressionView.setText(DisplayHelper.getExpressionDisplay(
-                               expressionUnits, cursorPosition, ((Button)view).getText().toString()));
+                        expression.getUnits(), cursorPosition, ((Button)view).getText().toString()));
                 break;
         }
     }
@@ -117,23 +130,11 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
     @Override // Backup data before changing view.
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("expressionView", expressionView.getText().toString());
+        outState.putSerializable("expression", expression);
         outState.putString("resultView", resultView.getText().toString());
         outState.putBoolean("isHyp", isHyp);
         outState.putBoolean("isInv", isInv);
-    }
-
-    // TODO: Deserialize and restore expressionUnits.
-    @Override // Recover data after changing view.
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        expressionView.setText(savedInstanceState.getString("expressionView", ""));
-        resultView.setText(savedInstanceState.getString("resultView", ""));
-        isHyp = savedInstanceState.getBoolean("isHyp");
-        isInv = savedInstanceState.getBoolean("isInv");
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            updateButtons();
-        }
+        outState.putInt("cursorPosition", cursorPosition.getValue());
     }
 
     private void initializeScalePicker(){
@@ -182,42 +183,44 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
 
             @Override
             public void afterTextChanged(Editable editable) {
-
-                final int widthLimitPixels = view.getWidth() - view.getPaddingRight() - view.getPaddingLeft();
-                Paint paint = new Paint();
-                float fontSizeSP = pixelsToSp(view.getTextSize());
-                paint.setTextSize(spToPixels(fontSizeSP));
-
-                String viewText = view.getText().toString();
-
-                float widthPixels = paint.measureText(viewText);
-
-                // Increase font size if necessary.
-                if (widthPixels < widthLimitPixels){
-                    while (widthPixels < widthLimitPixels && fontSizeSP <= MAX_SP){
-                        ++fontSizeSP;
-                        paint.setTextSize(spToPixels(fontSizeSP));
-                        widthPixels = paint.measureText(viewText);
-                    }
-                    --fontSizeSP;
-                }
-                // Decrease font size if necessary.
-                else {
-                    while (widthPixels > widthLimitPixels || fontSizeSP > MAX_SP) {
-                        if (fontSizeSP < MIN_SP) {
-                            fontSizeSP = MIN_SP;
-                            break;
-                        }
-                        --fontSizeSP;
-                        paint.setTextSize(spToPixels(fontSizeSP));
-                        widthPixels = paint.measureText(viewText);
-                    }
-                }
-
-                view.setTextSize(fontSizeSP);
-
+                adjustTextSize(view, MIN_SP, MAX_SP);
             }
         };
+    }
+
+    public void adjustTextSize(TextView view, int MIN_SP, int MAX_SP){
+        final int widthLimitPixels = view.getWidth() - view.getPaddingRight() - view.getPaddingLeft();
+        Paint paint = new Paint();
+        float fontSizeSP = pixelsToSp(view.getTextSize());
+        paint.setTextSize(spToPixels(fontSizeSP));
+
+        String viewText = view.getText().toString();
+
+        float widthPixels = paint.measureText(viewText);
+
+        // Increase font size if necessary.
+        if (widthPixels < widthLimitPixels){
+            while (widthPixels < widthLimitPixels && fontSizeSP <= MAX_SP){
+                ++fontSizeSP;
+                paint.setTextSize(spToPixels(fontSizeSP));
+                widthPixels = paint.measureText(viewText);
+            }
+            --fontSizeSP;
+        }
+        // Decrease font size if necessary.
+        else {
+            while (widthPixels > widthLimitPixels || fontSizeSP > MAX_SP) {
+                if (fontSizeSP < MIN_SP) {
+                    fontSizeSP = MIN_SP;
+                    break;
+                }
+                --fontSizeSP;
+                paint.setTextSize(spToPixels(fontSizeSP));
+                widthPixels = paint.measureText(viewText);
+            }
+        }
+
+        view.setTextSize(fontSizeSP);
     }
 
 
