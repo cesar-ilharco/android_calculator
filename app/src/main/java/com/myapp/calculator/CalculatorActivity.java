@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -38,6 +39,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
     private MyInt cursorPosition;
     private boolean isHyp;
     private boolean isInv;
+    private boolean isCursorVisible;
 
     static private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0F);
 
@@ -56,6 +58,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         resultView = (TextView) findViewById(R.id.resultView);
         isHyp = false;
         isInv = false;
+        isCursorVisible = true;
 
         ScrollView expressionScroller = (ScrollView) findViewById(R.id.expressionScroller);
         expressionView.addTextChangedListener(scrollableWatcher(expressionScroller));
@@ -74,7 +77,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
             super.onRestoreInstanceState(savedInstanceState);
             expression = (Expression) savedInstanceState.getSerializable("expression");
             cursorPosition = new MyInt(savedInstanceState.getInt("cursorPosition"));
-            updateExpressionView();
+            updateExpressionViewVisibleCursor();
             resultView.setText(savedInstanceState.getString("resultView", ""));
             isHyp = savedInstanceState.getBoolean("isHyp");
             isInv = savedInstanceState.getBoolean("isInv");
@@ -82,7 +85,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
                 updateButtons();
             }
         }
-
+        blinkCursor();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     }
@@ -97,7 +100,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
                     int line = layout.getLineForVertical(y);
                     int offset = layout.getOffsetForHorizontal(line, x);
                     cursorPosition.setValue(offset);
-                    updateExpressionView();
+                    updateExpressionViewVisibleCursor();
                 }
                 return true;
             }
@@ -126,13 +129,13 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
             case R.id.buttonBackward:
                 if (cursorPosition.getValue() > 0){
                     cursorPosition.decreaseAndGet();
-                    updateExpressionView();
+                    updateExpressionViewVisibleCursor();
                 }
                 break;
             case R.id.buttonForward:
                 if (cursorPosition.getValue() < expression.getUnits().size()){
                     cursorPosition.increaseAndGet();
-                    updateExpressionView();
+                    updateExpressionViewVisibleCursor();
                 }
                 break;
             case R.id.buttonInv:
@@ -159,8 +162,36 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         outState.putInt("cursorPosition", cursorPosition.getValue());
     }
 
-    private void updateExpressionView() {
-        expressionView.setText(DisplayHelper.toString(expression.getUnits(), cursorPosition));
+    private void updateExpressionViewVisibleCursor() {
+        expressionView.setText(DisplayHelper.toString(expression.getUnits(), cursorPosition, true));
+    }
+
+    private void updateExpressionViewInvisibleCursor() {
+        expressionView.setText(DisplayHelper.toString(expression.getUnits(), cursorPosition, false));
+    }
+
+    private void blinkCursor(){
+        final Handler handler = new Handler();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int timeToBlinkMs = 500;
+                try{Thread.sleep(timeToBlinkMs);}catch (Exception e) {}
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(isCursorVisible){
+                            isCursorVisible = false;
+                            updateExpressionViewInvisibleCursor();
+                        }else{
+                            isCursorVisible = true;
+                            updateExpressionViewVisibleCursor();
+                        }
+                        blinkCursor();
+                    }
+                });
+            }
+        }).start();
     }
 
     private void initializeScalePicker(){

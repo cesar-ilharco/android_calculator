@@ -48,7 +48,7 @@ public class DisplayHelper {
             expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit(buttonPressed));
         }
 
-        return toString(expressionUnits, cursorPosition);
+        return toString(expressionUnits, cursorPosition, true);
     }
 
     private static void addExpOperator(LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition,String buttonPressed) {
@@ -69,18 +69,19 @@ public class DisplayHelper {
     }
 
     // Java iterates stack from the bottom to the top. Method adds the cursor character.
-    public static String toString (LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition){
+    public static String toString (LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition, boolean isCursorVisible){
+        String cursor = isCursorVisible ? "|" : " ";
         StringBuffer stringBuffer = new StringBuffer();
         int size = expressionUnits.size();
         Iterator<ExpressionUnit> iterator = expressionUnits.iterator();
         for (int i=0; i<size; ++i){
             if (cursorPosition.getValue() == i){
-                stringBuffer.append("¦");
+                stringBuffer.append(cursor);
             }
             stringBuffer.append(iterator.next().getText());
         }
         if (cursorPosition.getValue() == size){
-            stringBuffer.append("¦");
+            stringBuffer.append(cursor);
         }
         return stringBuffer.toString();
     }
