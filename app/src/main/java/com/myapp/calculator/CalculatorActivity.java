@@ -25,6 +25,8 @@ import android.widget.ScrollView;
 import android.graphics.Typeface;
 import android.widget.TextView;
 
+import java.util.Iterator;
+
 
 /**
  * Android calculator App
@@ -92,23 +94,6 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
 
     }
 
-    private View.OnTouchListener onTouchUpdateCursor() {
-        return new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                Layout layout = ((TextView) v).getLayout();
-                int x = (int)event.getX();
-                int y = (int)event.getY();
-                if (layout!=null){
-                    int line = layout.getLineForVertical(y);
-                    int offset = layout.getOffsetForHorizontal(line, x);
-                    cursorPosition.setValue(Math.min(offset, expression.getUnits().size()));
-                    updateExpressionViewVisibleCursor();
-                }
-                return true;
-            }
-        };
-    }
-
     @Override
     public void onClick(View view) {
 
@@ -167,6 +152,40 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
     private void updateExpressionViewVisibleCursor() {
         expressionView.setText(DisplayHelper.toString(expression.getUnits(), cursorPosition, true));
     }
+
+    private View.OnTouchListener onTouchUpdateCursor() {
+        return new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                Layout layout = ((TextView) v).getLayout();
+                int x = (int)event.getX();
+                int y = (int)event.getY();
+                if (layout!=null){
+                    int line = layout.getLineForVertical(y);
+                    int offset = layout.getOffsetForHorizontal(line, x);
+                    cursorPosition.setValue(findBlockPosition(offset));
+                    updateExpressionViewVisibleCursor();
+                }
+                return true;
+            }
+
+            private int findBlockPosition(int offset) {
+                int blockPosition = 0;
+                int accumulatedLength = 0;
+                Iterator<ExpressionUnit> iterator = expression.getUnits().iterator();
+                String textBlock = iterator.next().getText();
+                while (accumulatedLength + textBlock.length() <= offset){
+                    accumulatedLength += textBlock.length();
+                    ++blockPosition;
+                    if (!iterator.hasNext()){
+                        break;
+                    }
+                    textBlock = iterator.next().getText();
+                }
+                return blockPosition;
+            }
+        };
+    }
+
 
     private void blinkCursor(){
         final Handler handler = new Handler();
