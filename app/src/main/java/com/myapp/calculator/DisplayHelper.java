@@ -44,6 +44,7 @@ public class DisplayHelper {
             addExpOperator(expressionUnits, cursorPosition, buttonPressed);
         } else if (function1Operators.contains(buttonPressed)) {
             expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit(buttonPressed + "("));
+            expressionUnits.add(cursorPosition.getValue(), new OperatorUnit(")"));
         } else {
             expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit(buttonPressed));
         }
@@ -54,6 +55,7 @@ public class DisplayHelper {
     private static void addExpOperator(LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition,String buttonPressed) {
         if (buttonPressed.equals("e^x")){
             expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit("exp("));
+            expressionUnits.add(cursorPosition.getValue(), new OperatorUnit(")"));
         } else if (buttonPressed.equals("10^x")){
             expressionUnits.add(cursorPosition.getAndIncrease(), new DigitUnit("1"));
             expressionUnits.add(cursorPosition.getAndIncrease(), new DigitUnit("0"));

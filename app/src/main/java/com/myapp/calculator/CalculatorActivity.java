@@ -40,6 +40,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
     private boolean isHyp;
     private boolean isInv;
     private boolean isCursorVisible;
+    private boolean refreshResultView;
 
     static private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0F);
 
@@ -59,6 +60,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         isHyp = false;
         isInv = false;
         isCursorVisible = true;
+        refreshResultView = true;
 
         ScrollView expressionScroller = (ScrollView) findViewById(R.id.expressionScroller);
         expressionView.addTextChangedListener(scrollableWatcher(expressionScroller));
@@ -99,7 +101,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
                 if (layout!=null){
                     int line = layout.getLineForVertical(y);
                     int offset = layout.getOffsetForHorizontal(line, x);
-                    cursorPosition.setValue(offset);
+                    cursorPosition.setValue(Math.min(offset, expression.getUnits().size()));
                     updateExpressionViewVisibleCursor();
                 }
                 return true;
@@ -166,10 +168,6 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         expressionView.setText(DisplayHelper.toString(expression.getUnits(), cursorPosition, true));
     }
 
-    private void updateExpressionViewInvisibleCursor() {
-        expressionView.setText(DisplayHelper.toString(expression.getUnits(), cursorPosition, false));
-    }
-
     private void blinkCursor(){
         final Handler handler = new Handler();
         new Thread(new Runnable() {
@@ -183,13 +181,25 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
                         if(isCursorVisible){
                             isCursorVisible = false;
                             updateExpressionViewInvisibleCursor();
-                        }else{
+                        } else{
                             isCursorVisible = true;
                             updateExpressionViewVisibleCursor();
+                        }
+                        if (refreshResultView){
+                            refreshResultView = false;
+                            refreshResultView();
                         }
                         blinkCursor();
                     }
                 });
+            }
+
+            private void refreshResultView() {
+                resultView.setText(resultView.getText().toString());
+            }
+
+            private void updateExpressionViewInvisibleCursor() {
+                expressionView.setText(DisplayHelper.toString(expression.getUnits(), cursorPosition, false));
             }
         }).start();
     }
