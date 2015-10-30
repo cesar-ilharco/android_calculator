@@ -24,4 +24,5 @@ public class MyInt {
         return value--;
     }
     public void reset() {value = 0;}
+    public void setValue(int value){this.value = value;}
 }

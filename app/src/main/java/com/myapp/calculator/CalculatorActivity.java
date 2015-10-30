@@ -11,18 +11,19 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.ScrollView;
 import android.graphics.Typeface;
 import android.widget.TextView;
 
-
-import java.util.LinkedList;
 
 /**
  * Android calculator App
@@ -37,6 +38,8 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
     private MyInt cursorPosition;
     private boolean isHyp;
     private boolean isInv;
+
+    static private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0F);
 
 
     @SuppressLint("NewApi")
@@ -56,6 +59,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
 
         ScrollView expressionScroller = (ScrollView) findViewById(R.id.expressionScroller);
         expressionView.addTextChangedListener(scrollableWatcher(expressionScroller));
+        expressionView.setOnTouchListener(onTouchUpdateCursor());
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             initializeScalePicker();
@@ -70,7 +74,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
             super.onRestoreInstanceState(savedInstanceState);
             expression = (Expression) savedInstanceState.getSerializable("expression");
             cursorPosition = new MyInt(savedInstanceState.getInt("cursorPosition"));
-            expressionView.setText(DisplayHelper.toString(expression.getUnits(), cursorPosition));
+            updateExpressionView();
             resultView.setText(savedInstanceState.getString("resultView", ""));
             isHyp = savedInstanceState.getBoolean("isHyp");
             isInv = savedInstanceState.getBoolean("isInv");
@@ -83,11 +87,29 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
 
     }
 
+    private View.OnTouchListener onTouchUpdateCursor() {
+        return new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                Layout layout = ((TextView) v).getLayout();
+                int x = (int)event.getX();
+                int y = (int)event.getY();
+                if (layout!=null){
+                    int line = layout.getLineForVertical(y);
+                    int offset = layout.getOffsetForHorizontal(line, x);
+                    cursorPosition.setValue(offset);
+                    updateExpressionView();
+                }
+                return true;
+            }
+        };
+    }
+
     @Override
     public void onClick(View view) {
 
         final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(25);
+        view.startAnimation(buttonClick);
 
         int buttonId = view.getId();
         switch (buttonId) {
@@ -104,13 +126,13 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
             case R.id.buttonBackward:
                 if (cursorPosition.getValue() > 0){
                     cursorPosition.decreaseAndGet();
-                    expressionView.setText(DisplayHelper.toString(expression.getUnits(), cursorPosition));
+                    updateExpressionView();
                 }
                 break;
             case R.id.buttonForward:
                 if (cursorPosition.getValue() < expression.getUnits().size()){
                     cursorPosition.increaseAndGet();
-                    expressionView.setText(DisplayHelper.toString(expression.getUnits(), cursorPosition));
+                    updateExpressionView();
                 }
                 break;
             case R.id.buttonInv:
@@ -137,11 +159,15 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         outState.putInt("cursorPosition", cursorPosition.getValue());
     }
 
+    private void updateExpressionView() {
+        expressionView.setText(DisplayHelper.toString(expression.getUnits(), cursorPosition));
+    }
+
     private void initializeScalePicker(){
 
         NumberPicker scalePicker = (NumberPicker) findViewById(R.id.scalePicker);
         scalePicker.setMinValue(0);
-        scalePicker.setMaxValue(100);
+        scalePicker.setMaxValue(1000);
         scalePicker.setValue(Kernel.getScale());
         scalePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
@@ -188,7 +214,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         };
     }
 
-    public void adjustTextSize(TextView view, int MIN_SP, int MAX_SP){
+    private void adjustTextSize(TextView view, int MIN_SP, int MAX_SP){
         final int widthLimitPixels = view.getWidth() - view.getPaddingRight() - view.getPaddingLeft();
         Paint paint = new Paint();
         float fontSizeSP = pixelsToSp(view.getTextSize());
