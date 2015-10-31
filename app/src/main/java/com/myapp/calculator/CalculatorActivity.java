@@ -138,14 +138,16 @@ public class CalculatorActivity extends AppCompatActivity{
     private View.OnTouchListener onTouchUpdateCursor() {
         return new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                Layout layout = ((TextView) v).getLayout();
-                int x = (int)event.getX();
-                int y = (int)event.getY();
-                if (layout!=null){
-                    int line = layout.getLineForVertical(y);
-                    int offset = layout.getOffsetForHorizontal(line, x);
-                    state.getCursorPosition().setValue(findBlockPosition(offset));
-                    updateExpressionViewVisibleCursor();
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    Layout layout = ((TextView) v).getLayout();
+                    int x = (int) event.getX();
+                    int y = (int) event.getY();
+                    if (layout != null) {
+                        int line = layout.getLineForVertical(y);
+                        int offset = layout.getOffsetForHorizontal(line, x);
+                        state.getCursorPosition().setValue(findBlockPosition(offset));
+                        updateExpressionViewVisibleCursor();
+                    }
                 }
                 return true;
             }
