@@ -133,8 +133,7 @@ public class CalculatorActivity extends AppCompatActivity{
 
 
     private void updateExpressionView(boolean cursorVisible) {
-        CharSequence text = DisplayHelper.convertToString(state.getExpression().getUnits(), state.getCursorPosition(), cursorVisible);
-        expressionView.setText(text);
+        expressionView.setText(wrapText(cursorVisible));
     }
 
     private View.OnTouchListener onTouchUpdateCursor() {
@@ -159,7 +158,7 @@ public class CalculatorActivity extends AppCompatActivity{
                 int accumulatedLength = 0;
                 Iterator<ExpressionUnit> iterator = state.getExpression().getUnits().iterator();
                 String textBlock = iterator.next().getText();
-                while (accumulatedLength + textBlock.length() <= offset){
+                while (accumulatedLength + (textBlock.length()+1)/2 <= offset){
                     accumulatedLength += textBlock.length();
                     ++blockPosition;
                     if (!iterator.hasNext()){
@@ -277,6 +276,41 @@ public class CalculatorActivity extends AppCompatActivity{
         }
 
         view.setTextSize(fontSizeSP);
+    }
+
+    private String wrapText(boolean cursorVisible){
+
+        int widthLimitPixels = expressionView.getWidth() - expressionView.getPaddingLeft() - expressionView.getPaddingRight();
+
+        Paint paint = new Paint();
+        paint.setTextSize(expressionView.getTextSize());
+
+        String accumulatedText = "";
+        String line = "";
+        int i = 0;
+
+        Iterator<ExpressionUnit> iterator = state.getExpression().getUnits().iterator();
+
+        while (iterator.hasNext()){
+            String blockText;
+            if (state.getCursorPosition().getValue() == i){
+                blockText = cursorVisible ? "|" : " ";
+            } else {
+                blockText = iterator.next().getText();
+            }
+            // Break line when the current width overcomes the limit:
+            if (paint.measureText(line + blockText) > widthLimitPixels){
+                line = "";
+                accumulatedText += "\n";
+            }
+
+            line += blockText;
+            accumulatedText += blockText;
+
+            ++i;
+        }
+
+        return accumulatedText;
     }
 
 
