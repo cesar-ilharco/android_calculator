@@ -66,7 +66,7 @@ public class CalculatorActivity extends AppCompatActivity{
         if (savedInstanceState != null){
             super.onRestoreInstanceState(savedInstanceState);
             state = (CalculatorState) savedInstanceState.getSerializable("state");
-            updateExpressionViewVisibleCursor();
+            updateExpressionView(true);
             resultView.setText(savedInstanceState.getString("resultView", ""));
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 updateButtons();
@@ -108,13 +108,13 @@ public class CalculatorActivity extends AppCompatActivity{
             case R.id.buttonBackward:
                 if (state.getCursorPosition().getValue() > 0){
                     state.getCursorPosition().decreaseAndGet();
-                    updateExpressionViewVisibleCursor();
+                    updateExpressionView(true);
                 }
                 break;
             case R.id.buttonForward:
                 if (state.getCursorPosition().getValue() < state.getExpression().getUnits().size()){
                     state.getCursorPosition().increaseAndGet();
-                    updateExpressionViewVisibleCursor();
+                    updateExpressionView(true);
                 }
                 break;
             case R.id.buttonInv:
@@ -132,8 +132,9 @@ public class CalculatorActivity extends AppCompatActivity{
     }
 
 
-    private void updateExpressionViewVisibleCursor() {
-        expressionView.setText(DisplayHelper.convertToString(state.getExpression().getUnits(), state.getCursorPosition(), true));
+    private void updateExpressionView(boolean cursorVisible) {
+        CharSequence text = DisplayHelper.convertToString(state.getExpression().getUnits(), state.getCursorPosition(), cursorVisible);
+        expressionView.setText(text);
     }
 
     private View.OnTouchListener onTouchUpdateCursor() {
@@ -147,7 +148,7 @@ public class CalculatorActivity extends AppCompatActivity{
                         int line = layout.getLineForVertical(y);
                         int offset = layout.getOffsetForHorizontal(line, x);
                         state.getCursorPosition().setValue(findBlockPosition(offset));
-                        updateExpressionViewVisibleCursor();
+                        updateExpressionView(true);
                     }
                 }
                 return true;
@@ -184,10 +185,10 @@ public class CalculatorActivity extends AppCompatActivity{
                     public void run() {
                         if (state.isCursorVisible()) {
                             state.setCursorVisible(false);
-                            updateExpressionViewInvisibleCursor();
+                            updateExpressionView(false);
                         } else {
                             state.setCursorVisible(true);
-                            updateExpressionViewVisibleCursor();
+                            updateExpressionView(true);
                         }
                         if (state.isRefreshResultView()) {
                             state.setRefreshResultView(false);
@@ -200,10 +201,6 @@ public class CalculatorActivity extends AppCompatActivity{
 
             private void refreshResultView() {
                 resultView.setText(resultView.getText().toString());
-            }
-
-            private void updateExpressionViewInvisibleCursor() {
-                expressionView.setText(DisplayHelper.convertToString(state.getExpression().getUnits(), state.getCursorPosition(), false));
             }
         }).start();
     }
