@@ -54,7 +54,7 @@ public class DisplayHelper {
             expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit(buttonPressed));
         }
 
-        return toString(expressionUnits, cursorPosition, true);
+        return convertToString(expressionUnits, cursorPosition, true);
     }
 
     private static void addExpOperator(LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition,String buttonPressed) {
@@ -76,7 +76,7 @@ public class DisplayHelper {
     }
 
     // Java iterates stack from the bottom to the top. Method adds the cursor character.
-    public static String toString (LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition, boolean isCursorVisible){
+    public static String convertToString(LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition, boolean isCursorVisible){
         String cursor = isCursorVisible ? "|" : " ";
         StringBuffer stringBuffer = new StringBuffer();
         int size = expressionUnits.size();
@@ -94,7 +94,7 @@ public class DisplayHelper {
     }
 
     // Method does not add the cursor character.
-    public static String toString (LinkedList<ExpressionUnit> expressionUnits){
+    public static String convertToString(LinkedList<ExpressionUnit> expressionUnits){
         StringBuffer stringBuffer = new StringBuffer();
         for (ExpressionUnit expressionUnit : expressionUnits){
             stringBuffer.append(expressionUnit.getText());
@@ -152,7 +152,7 @@ public class DisplayHelper {
 
         LinkedList<ExpressionUnit> copy = new LinkedList<>(expressionUnits);
         copy.add(location, new DigitUnit("."));
-        String resultantExpression = toString(copy);
+        String resultantExpression = convertToString(copy);
 
         String regex = "\\.\\d*\\.";
         Pattern pattern = Pattern.compile(regex);

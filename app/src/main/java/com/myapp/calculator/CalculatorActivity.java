@@ -132,7 +132,7 @@ public class CalculatorActivity extends AppCompatActivity{
 
 
     private void updateExpressionViewVisibleCursor() {
-        expressionView.setText(DisplayHelper.toString(state.getExpression().getUnits(), state.getCursorPosition(), true));
+        expressionView.setText(DisplayHelper.convertToString(state.getExpression().getUnits(), state.getCursorPosition(), true));
     }
 
     private View.OnTouchListener onTouchUpdateCursor() {
@@ -200,7 +200,7 @@ public class CalculatorActivity extends AppCompatActivity{
             }
 
             private void updateExpressionViewInvisibleCursor() {
-                expressionView.setText(DisplayHelper.toString(state.getExpression().getUnits(), state.getCursorPosition(), false));
+                expressionView.setText(DisplayHelper.convertToString(state.getExpression().getUnits(), state.getCursorPosition(), false));
             }
         }).start();
     }
