@@ -1,6 +1,7 @@
 package com.myapp.calculator;
 
 import com.myapp.calculator.miscellanea.Fibonacci;
+import com.myapp.calculator.utils.Pair;
 
 import junit.framework.Assert;
 

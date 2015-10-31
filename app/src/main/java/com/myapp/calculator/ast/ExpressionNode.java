@@ -1,4 +1,4 @@
-package com.myapp.calculator;
+package com.myapp.calculator.ast;
 
 
 /**

@@ -1,6 +1,10 @@
 package com.myapp.calculator;
 
-import android.support.annotation.VisibleForTesting;
+import com.myapp.calculator.ast.ExpressionNode;
+import com.myapp.calculator.ast.ExpressionUnit;
+import com.myapp.calculator.ast.NumberUnit;
+import com.myapp.calculator.ast.OperatorUnit;
+import com.myapp.calculator.utils.MyInt;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -9,7 +13,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 /**
  * Android calculator app

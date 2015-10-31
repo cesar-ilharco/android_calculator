@@ -1,7 +1,6 @@
-package com.myapp.calculator;
+package com.myapp.calculator.laziness;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  *  Android Calculator App

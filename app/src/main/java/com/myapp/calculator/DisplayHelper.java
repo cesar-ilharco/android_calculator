@@ -1,6 +1,11 @@
 package com.myapp.calculator;
 
 
+import com.myapp.calculator.ast.DigitUnit;
+import com.myapp.calculator.ast.ExpressionUnit;
+import com.myapp.calculator.ast.OperatorUnit;
+import com.myapp.calculator.utils.MyInt;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;

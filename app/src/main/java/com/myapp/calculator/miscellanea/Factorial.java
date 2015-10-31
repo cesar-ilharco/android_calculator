@@ -1,7 +1,12 @@
 package com.myapp.calculator.miscellanea;
 
-import com.myapp.calculator.*;
-import com.myapp.calculator.Number;
+import com.myapp.calculator.laziness.Number;
+import com.myapp.calculator.laziness.AccumulatedThunk;
+import com.myapp.calculator.laziness.Continuable;
+import com.myapp.calculator.laziness.Node;
+import com.myapp.calculator.laziness.Thunk;
+import com.myapp.calculator.utils.Function1;
+import com.myapp.calculator.utils.Function2;
 
 import junit.framework.Assert;
 
@@ -48,16 +53,16 @@ public class Factorial implements Function1<Integer, BigDecimal> {
             int end = partition.get(p+1);
             lists.add(null);
             for(int i=start; i<=end; ++i) {
-                lists.set(p, new Node(com.myapp.calculator.Number.create(i).getThunk(), lists.get(p)));
+                lists.set(p, new Node(Number.create(i).getThunk(), lists.get(p)));
             }
         }
 
-        final List<AccumulatedThunk<BigDecimal, BigDecimal> > thunks = new ArrayList<>(partition.size()-1);
+        final List<AccumulatedThunk<BigDecimal, BigDecimal>> thunks = new ArrayList<>(partition.size()-1);
         for (int p=0; p<partition.size()-1; ++p) {
             thunks.add(new AccumulatedThunk<>(multiply, Number.ONE.getThunk(), lists.get(p)));
         }
 
-        List<Continuable<BigDecimal> > continuables = new ArrayList<>(partition.size()-1);
+        List<Continuable<BigDecimal>> continuables = new ArrayList<>(partition.size()-1);
         for (int p=0; p<partition.size()-1; ++p) {
             final int i = p;
             continuables.add(new Continuable<>(new Thunk<BigDecimal>() {

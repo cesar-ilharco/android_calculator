@@ -1,4 +1,6 @@
-package com.myapp.calculator;
+package com.myapp.calculator.laziness;
+
+import com.myapp.calculator.utils.Function2;
 
 /**
  * Android Calculator App

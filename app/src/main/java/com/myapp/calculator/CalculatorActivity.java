@@ -25,6 +25,10 @@ import android.widget.ScrollView;
 import android.graphics.Typeface;
 import android.widget.TextView;
 
+import com.myapp.calculator.ast.Expression;
+import com.myapp.calculator.ast.ExpressionUnit;
+import com.myapp.calculator.utils.MyInt;
+
 import java.util.Iterator;
 
 
@@ -133,7 +137,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
                 break;
             default:
                 expressionView.setText(DisplayHelper.getExpressionDisplay(
-                        expression.getUnits(), cursorPosition, ((Button)view).getText().toString()));
+                        expression.getUnits(), cursorPosition, ((Button) view).getText().toString()));
                 break;
         }
     }

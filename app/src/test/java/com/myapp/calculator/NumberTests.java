@@ -1,9 +1,9 @@
 package com.myapp.calculator;
 
+import com.myapp.calculator.laziness.Number;
+
 import org.junit.Test;
 
-import java.math.BigDecimal;
-import java.util.InputMismatchException;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -18,7 +18,7 @@ public class NumberTests {
         Random random = new Random(4903230525L);
 
         for(int i=0; i<10; i++) {
-            Number a = nextNumber(random);
+            com.myapp.calculator.laziness.Number a = nextNumber(random);
             Number b = nextNumber(random);
             Number c = nextNumber(random);
 

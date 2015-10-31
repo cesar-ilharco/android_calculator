@@ -1,5 +1,11 @@
 package com.myapp.calculator;
 
+import com.myapp.calculator.ast.DigitUnit;
+import com.myapp.calculator.ast.ExpressionNode;
+import com.myapp.calculator.ast.ExpressionUnit;
+import com.myapp.calculator.ast.NumberUnit;
+import com.myapp.calculator.ast.OperatorUnit;
+
 import junit.framework.Assert;
 
 import org.junit.Test;

@@ -1,4 +1,6 @@
-package com.myapp.calculator;
+package com.myapp.calculator.ast;
+
+import com.myapp.calculator.ast.ExpressionUnit;
 
 /**
  * Android calculator app

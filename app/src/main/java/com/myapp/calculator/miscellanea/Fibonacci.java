@@ -1,8 +1,8 @@
 package com.myapp.calculator.miscellanea;
 
 
-import com.myapp.calculator.Function1;
-import com.myapp.calculator.Pair;
+import com.myapp.calculator.utils.Function1;
+import com.myapp.calculator.utils.Pair;
 
 import java.math.BigDecimal;
 

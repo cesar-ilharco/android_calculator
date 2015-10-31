@@ -1,6 +1,12 @@
 package com.myapp.calculator;
 
 
+import com.myapp.calculator.ast.DigitUnit;
+import com.myapp.calculator.ast.ExpressionUnit;
+import com.myapp.calculator.ast.OperatorUnit;
+import com.myapp.calculator.utils.MyInt;
+import com.myapp.calculator.utils.Pair;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -105,9 +111,9 @@ public class DisplayHelperTests {
 
         for (Map.Entry<LinkedList<ExpressionUnit>, Boolean> entry : expressions.entrySet()) {
             String append = entry.getValue() ? "." : "";
-            String expected = DisplayHelper.toString(entry.getKey()) + append;
+            String expected = DisplayHelper.convertToString(entry.getKey()) + append;
             DisplayHelper.getExpressionDisplay(entry.getKey(), new MyInt(entry.getKey().size()), ".");
-            String actual = DisplayHelper.toString(entry.getKey());
+            String actual = DisplayHelper.convertToString(entry.getKey());
             Assert.assertEquals(expected, actual);
         }
     }
@@ -202,7 +208,7 @@ public class DisplayHelperTests {
         for ( Map.Entry<Pair<LinkedList<ExpressionUnit>, String>, String>  entry : expressions.entrySet()) {
             DisplayHelper.getExpressionDisplay(entry.getKey().getFirst(),
                           new MyInt(entry.getKey().getFirst().size()), entry.getKey().getSecond());
-            String result = DisplayHelper.toString(entry.getKey().getFirst());
+            String result = DisplayHelper.convertToString(entry.getKey().getFirst());
             Assert.assertEquals(entry.getValue(), result);
         }
     }
