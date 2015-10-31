@@ -97,7 +97,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#0084FF"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp"
                     android:text="@string/button7" />
 
@@ -107,7 +107,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#0084FF"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp"
                     android:text="@string/button8" />
 
@@ -117,7 +117,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#0084FF"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp"
                     android:text="@string/button9" />
 
@@ -128,7 +128,7 @@
                     android:layout_weight="1"
                     android:background="#01C5FF"
                     android:textStyle="bold"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp"
                     android:text="@string/buttonOpenP" />
 
@@ -139,7 +139,7 @@
                     android:layout_weight="1"
                     android:background="#01C5FF"
                     android:textStyle="bold"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp"
                     android:text="@string/buttonCloseP" />
 
@@ -149,7 +149,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textAllCaps="false"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:background="#FF38BB98"
                     android:textSize="15sp"
                     android:text="@string/buttonSin" />
@@ -160,7 +160,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textAllCaps="false"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:background="#FF38BB98"
                     android:textSize="15sp"
                     android:text="@string/buttonCos" />
@@ -171,7 +171,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textAllCaps="false"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:background="#FF38BB98"
                     android:textSize="15sp"
                     android:text="@string/buttonTan" />
@@ -189,7 +189,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#0084FF"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp"
                     android:text="@string/button4" />
 
@@ -199,7 +199,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#0084FF"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp"
                     android:text="@string/button5" />
 
@@ -209,7 +209,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#0084FF"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp"
                     android:text="@string/button6" />
 
@@ -220,7 +220,7 @@
                     android:layout_weight="1"
                     android:background="#01C5FF"
                     android:textStyle="bold"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="18sp"
                     android:text="@string/buttonMultiply" />
 
@@ -231,7 +231,7 @@
                     android:layout_weight="1"
                     android:background="#01C5FF"
                     android:textStyle="bold"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp"
                     android:text="@string/buttonDivide" />
 
@@ -241,7 +241,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textAllCaps="false"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:background="#FF38BB98"
                     android:textSize="15sp"
                     android:text="@string/buttonLn" />
@@ -252,7 +252,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textAllCaps="false"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:background="#FF38BB98"
                     android:textSize="15sp"
                     android:text="@string/buttonLog" />
@@ -263,7 +263,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textAllCaps="false"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:background="#FF38BB98"
                     android:textSize="15sp"
                     android:text="@string/buttonSqrt" />
@@ -281,7 +281,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#0084FF"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp"
                     android:text="@string/button1" />
 
@@ -291,7 +291,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#0084FF"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp"
                     android:text="@string/button2" />
 
@@ -301,7 +301,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#0084FF"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp"
                     android:text="@string/button3" />
 
@@ -312,7 +312,7 @@
                     android:layout_weight="1"
                     android:background="#01C5FF"
                     android:textStyle="bold"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp"
                     android:text="@string/buttonAdd" />
 
@@ -323,7 +323,7 @@
                     android:layout_weight="1"
                     android:background="#01C5FF"
                     android:textStyle="bold"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="18sp"
                     android:text="@string/buttonSubtract" />
 
@@ -332,7 +332,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textStyle="bold"
                     android:text="@string/buttonFact"
                     android:background="#FF38BB98"
@@ -344,7 +344,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textAllCaps="false"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:text="@string/buttonFib"
                     android:background="#FF38BB98"
                     android:textSize="15sp" />
@@ -355,7 +355,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textAllCaps="false"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:text="@string/buttonIsPrime"
                     android:background="#FF38BB98"
                     android:textSize="12sp" />
@@ -372,7 +372,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:background="#0084FF"
                     android:textSize="20sp"
                     android:text="@string/buttonDot" />
@@ -383,7 +383,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#0084FF"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp"
                     android:text="@string/button0" />
 
@@ -393,7 +393,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#0084FF"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="24sp"
                     android:text="@string/buttonEquals" />
 
@@ -403,7 +403,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#01C5FF"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textStyle="bold"
                     android:text="@string/buttonExp"
                     android:textSize="18sp"/>
@@ -414,7 +414,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#01C5FF"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textStyle="bold"
                     android:text="@string/buttonMod"
                     android:textSize="15sp"/>
@@ -425,7 +425,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textAllCaps="false"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp"
                     android:background="#FF38BB98"
                     android:text="@string/buttonPi" />
@@ -436,7 +436,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textAllCaps="false"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp"
                     android:background="#FF38BB98"
                     android:text="@string/buttonE" />
@@ -447,7 +447,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textAllCaps="false"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp"
                     android:background="#FF38BB98"
                     android:text="@string/buttonPhi" />
@@ -464,7 +464,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:background="#3B5998"
                     android:text="@string/buttonBackspace"
                     android:textSize="12sp" />
@@ -474,7 +474,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:text="@string/buttonClear"
                     android:background="#3B5998"
                     android:textSize="12sp" />
@@ -484,7 +484,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:text="@string/buttonUndo"
                     android:background="#3B5998"
                     android:textSize="12sp" />
@@ -494,7 +494,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:background="#3B5998"
                     android:text="@string/buttonCopy"
                     android:textSize="12sp" />
@@ -504,7 +504,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:background="#3B5998"
                     android:text="@string/buttonInv"
                     android:textSize="13sp" />
@@ -514,7 +514,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:background="#3B5998"
                     android:text="@string/buttonHyp"
                     android:textSize="13sp" />
@@ -524,7 +524,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textStyle="bold"
                     android:background="#3B5998"
                     android:text="@string/buttonBackward"
@@ -535,7 +535,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:onClick="onClick"
+                    android:onClick="handleOnClick"
                     android:textStyle="bold"
                     android:background="#3B5998"
                     android:text="@string/buttonForward"

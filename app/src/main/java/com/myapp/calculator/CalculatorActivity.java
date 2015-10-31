@@ -33,7 +33,7 @@ import java.util.Iterator;
  * Android calculator App
  */
 
-public class CalculatorActivity extends AppCompatActivity implements View.OnClickListener{
+public class CalculatorActivity extends AppCompatActivity{
 
     private TextView resultView;
     private TextView expressionView;
@@ -88,8 +88,7 @@ public class CalculatorActivity extends AppCompatActivity implements View.OnClic
         outState.putString("resultView", resultView.getText().toString());
     }
 
-    @Override
-    public void onClick(View view){
+    public void handleOnClick(View view){
         final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(25);
         view.startAnimation(buttonClick);
