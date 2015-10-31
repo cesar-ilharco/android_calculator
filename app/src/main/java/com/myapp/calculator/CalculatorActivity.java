@@ -227,7 +227,7 @@ public class CalculatorActivity extends AppCompatActivity{
         scrollView.fullScroll(ScrollView.FOCUS_DOWN);
     }
 
-    private TextWatcher textAutoResizeWatcher(final TextView view, final int MIN_SP, final int MAX_SP) {
+    private TextWatcher textAutoResizeWatcher(final TextView view, final int minSp, final int maxSp) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -241,14 +241,15 @@ public class CalculatorActivity extends AppCompatActivity{
 
             @Override
             public void afterTextChanged(Editable editable) {
-                adjustTextSize(view, MIN_SP, MAX_SP);
+                adjustTextSize(view, minSp, maxSp);
             }
         };
     }
 
-    private void adjustTextSize(TextView view, int MIN_SP, int MAX_SP){
+    private void adjustTextSize(TextView view, int minSp, int maxSp){
         final int widthLimitPixels = view.getWidth() - view.getPaddingRight() - view.getPaddingLeft();
         Paint paint = new Paint();
+
         float fontSizeSP = pixelsToSp(view.getTextSize());
         paint.setTextSize(spToPixels(fontSizeSP));
 
@@ -258,7 +259,7 @@ public class CalculatorActivity extends AppCompatActivity{
 
         // Increase font size if necessary.
         if (widthPixels < widthLimitPixels){
-            while (widthPixels < widthLimitPixels && fontSizeSP <= MAX_SP){
+            while (widthPixels < widthLimitPixels && fontSizeSP <= maxSp){
                 ++fontSizeSP;
                 paint.setTextSize(spToPixels(fontSizeSP));
                 widthPixels = paint.measureText(viewText);
@@ -267,9 +268,9 @@ public class CalculatorActivity extends AppCompatActivity{
         }
         // Decrease font size if necessary.
         else {
-            while (widthPixels > widthLimitPixels || fontSizeSP > MAX_SP) {
-                if (fontSizeSP < MIN_SP) {
-                    fontSizeSP = MIN_SP;
+            while (widthPixels > widthLimitPixels || fontSizeSP > maxSp) {
+                if (fontSizeSP < minSp) {
+                    fontSizeSP = minSp;
                     break;
                 }
                 --fontSizeSP;
