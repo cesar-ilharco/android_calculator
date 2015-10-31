@@ -126,6 +126,7 @@ public class CalculatorActivity extends AppCompatActivity{
             default:
                 expressionView.setText(DisplayHelper.getExpressionDisplay(
                         state.getExpression().getUnits(), state.getCursorPosition(), ((Button) view).getText().toString()));
+                scrollDown(expressionScroller);
                 break;
         }
     }
@@ -222,21 +223,8 @@ public class CalculatorActivity extends AppCompatActivity{
     }
 
     // Makes scroll view automatically scroll to the bottom when text is added.
-    private TextWatcher scrollableWatcher (final ScrollView scrollView){
-        return new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable arg0) {
-                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {}
-
-            @Override
-            public void onTextChanged(CharSequence arg0, int arg1, int arg2,int arg3) {
-                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-            }
-        };
+    private void scrollDown(ScrollView scrollView){
+        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
     }
 
     private TextWatcher textAutoResizeWatcher(final TextView view, final int MIN_SP, final int MAX_SP) {
