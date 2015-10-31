@@ -16,7 +16,6 @@ import android.text.Layout;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
@@ -25,9 +24,7 @@ import android.widget.ScrollView;
 import android.graphics.Typeface;
 import android.widget.TextView;
 
-import com.myapp.calculator.ast.Expression;
 import com.myapp.calculator.ast.ExpressionUnit;
-import com.myapp.calculator.utils.MyInt;
 
 import java.util.Iterator;
 
@@ -36,20 +33,13 @@ import java.util.Iterator;
  * Android calculator App
  */
 
-public class CalculatorActivity extends AppCompatActivity implements OnClickListener {
+public class CalculatorActivity extends AppCompatActivity implements View.OnClickListener{
 
-    // TODO: Create a class to insert and remove in constant time regardless the position.
-    private Expression expression;
-    private TextView expressionView;
     private TextView resultView;
-    private MyInt cursorPosition;
-    private boolean isHyp;
-    private boolean isInv;
-    private boolean isCursorVisible;
-    private boolean refreshResultView;
-
+    private TextView expressionView;
+    ScrollView expressionScroller;
+    private CalculatorState state;
     static private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0F);
-
 
     @SuppressLint("NewApi")
     @Override
@@ -58,18 +48,10 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculator);
 
-        expression = new Expression();
-        cursorPosition = new MyInt(0);
-
         expressionView = (TextView) findViewById(R.id.expressionView);
         resultView = (TextView) findViewById(R.id.resultView);
-        isHyp = false;
-        isInv = false;
-        isCursorVisible = true;
-        refreshResultView = true;
 
-        ScrollView expressionScroller = (ScrollView) findViewById(R.id.expressionScroller);
-        expressionView.addTextChangedListener(scrollableWatcher(expressionScroller));
+        expressionScroller = (ScrollView) findViewById(R.id.expressionScroller);
         expressionView.setOnTouchListener(onTouchUpdateCursor());
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -83,24 +65,31 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
 
         if (savedInstanceState != null){
             super.onRestoreInstanceState(savedInstanceState);
-            expression = (Expression) savedInstanceState.getSerializable("expression");
-            cursorPosition = new MyInt(savedInstanceState.getInt("cursorPosition"));
+            state = (CalculatorState) savedInstanceState.getSerializable("state");
             updateExpressionViewVisibleCursor();
             resultView.setText(savedInstanceState.getString("resultView", ""));
-            isHyp = savedInstanceState.getBoolean("isHyp");
-            isInv = savedInstanceState.getBoolean("isInv");
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 updateButtons();
             }
+        } else {
+            state = new CalculatorState();
         }
+
         blinkCursor();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     }
 
-    @Override
-    public void onClick(View view) {
+    // TODO: Serialize and backup expressionUnits.
+    @Override // Backup data before changing view.
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("state", state);
+        outState.putString("resultView", resultView.getText().toString());
+    }
 
+    @Override
+    public void onClick(View view){
         final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(25);
         view.startAnimation(buttonClick);
@@ -108,7 +97,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
         int buttonId = view.getId();
         switch (buttonId) {
             case R.id.buttonEquals:
-                resultView.setText(DisplayHelper.getResultDisplay(expression.getUnits()));
+                resultView.setText(DisplayHelper.getResultDisplay(state.getExpression().getUnits()));
                 vibrator.vibrate(25);
                 break;
             case R.id.buttonCopy:
@@ -118,14 +107,14 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
                 // TODO: Implement button undo.
                 break;
             case R.id.buttonBackward:
-                if (cursorPosition.getValue() > 0){
-                    cursorPosition.decreaseAndGet();
+                if (state.getCursorPosition().getValue() > 0){
+                    state.getCursorPosition().decreaseAndGet();
                     updateExpressionViewVisibleCursor();
                 }
                 break;
             case R.id.buttonForward:
-                if (cursorPosition.getValue() < expression.getUnits().size()){
-                    cursorPosition.increaseAndGet();
+                if (state.getCursorPosition().getValue() < state.getExpression().getUnits().size()){
+                    state.getCursorPosition().increaseAndGet();
                     updateExpressionViewVisibleCursor();
                 }
                 break;
@@ -137,24 +126,14 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
                 break;
             default:
                 expressionView.setText(DisplayHelper.getExpressionDisplay(
-                        expression.getUnits(), cursorPosition, ((Button) view).getText().toString()));
+                        state.getExpression().getUnits(), state.getCursorPosition(), ((Button) view).getText().toString()));
                 break;
         }
     }
 
-    // TODO: Serialize and backup expressionUnits.
-    @Override // Backup data before changing view.
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable("expression", expression);
-        outState.putString("resultView", resultView.getText().toString());
-        outState.putBoolean("isHyp", isHyp);
-        outState.putBoolean("isInv", isInv);
-        outState.putInt("cursorPosition", cursorPosition.getValue());
-    }
 
     private void updateExpressionViewVisibleCursor() {
-        expressionView.setText(DisplayHelper.toString(expression.getUnits(), cursorPosition, true));
+        expressionView.setText(DisplayHelper.toString(state.getExpression().getUnits(), state.getCursorPosition(), true));
     }
 
     private View.OnTouchListener onTouchUpdateCursor() {
@@ -166,7 +145,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
                 if (layout!=null){
                     int line = layout.getLineForVertical(y);
                     int offset = layout.getOffsetForHorizontal(line, x);
-                    cursorPosition.setValue(findBlockPosition(offset));
+                    state.getCursorPosition().setValue(findBlockPosition(offset));
                     updateExpressionViewVisibleCursor();
                 }
                 return true;
@@ -175,7 +154,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
             private int findBlockPosition(int offset) {
                 int blockPosition = 0;
                 int accumulatedLength = 0;
-                Iterator<ExpressionUnit> iterator = expression.getUnits().iterator();
+                Iterator<ExpressionUnit> iterator = state.getExpression().getUnits().iterator();
                 String textBlock = iterator.next().getText();
                 while (accumulatedLength + textBlock.length() <= offset){
                     accumulatedLength += textBlock.length();
@@ -201,15 +180,15 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if(isCursorVisible){
-                            isCursorVisible = false;
+                        if (state.isCursorVisible()) {
+                            state.setCursorVisible(false);
                             updateExpressionViewInvisibleCursor();
-                        } else{
-                            isCursorVisible = true;
+                        } else {
+                            state.setCursorVisible(true);
                             updateExpressionViewVisibleCursor();
                         }
-                        if (refreshResultView){
-                            refreshResultView = false;
+                        if (state.isRefreshResultView()) {
+                            state.setRefreshResultView(false);
                             refreshResultView();
                         }
                         blinkCursor();
@@ -222,7 +201,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
             }
 
             private void updateExpressionViewInvisibleCursor() {
-                expressionView.setText(DisplayHelper.toString(expression.getUnits(), cursorPosition, false));
+                expressionView.setText(DisplayHelper.toString(state.getExpression().getUnits(), state.getCursorPosition(), false));
             }
         }).start();
     }
@@ -321,27 +300,27 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
     }
 
     private void switchInv() {
-        isInv = ! isInv;
+        state.setInv(!state.isInv());
         updateButtons();
     }
 
     private void switchHyp() {
-        isHyp = ! isHyp;
+        state.setHyp(!state.isHyp());
         updateButtons();
     }
 
     private void updateButtons() {
 
-        String prefix = isInv ? "arc" : "";
-        String suffix = isHyp ? "h"   : "";
+        String prefix = state.isInv() ? "arc" : "";
+        String suffix = state.isHyp() ? "h"   : "";
         ((Button) findViewById(R.id.buttonSin)).setText(prefix + "sin" + suffix);
         ((Button) findViewById(R.id.buttonCos)).setText(prefix + "cos" + suffix);
         ((Button) findViewById(R.id.buttonTan)).setText(prefix + "tan" + suffix);
 
-        int trigonometricColor = isHyp || isInv ? Color.BLACK : Color.WHITE;
-        int logExpColor =  isInv ? Color.BLACK : Color.WHITE;
+        int trigonometricColor = state.isHyp() || state.isInv() ? Color.BLACK : Color.WHITE;
+        int logExpColor =  state.isInv() ? Color.BLACK : Color.WHITE;
 
-        if (isInv){
+        if (state.isInv()){
             ((Button) findViewById(R.id.buttonInv)).setTextColor(Color.BLACK);
             ((Button) findViewById(R.id.buttonInv)).setTypeface(null, Typeface.BOLD);
             ((Button) findViewById(R.id.buttonLn)).setText("e^x");
@@ -356,7 +335,7 @@ public class CalculatorActivity extends AppCompatActivity implements OnClickList
             ((Button) findViewById(R.id.buttonSqrt)).setText("√");
         }
 
-        if (isHyp){
+        if (state.isHyp()){
             ((Button) findViewById(R.id.buttonHyp)).setTextColor(Color.BLACK);
             ((Button) findViewById(R.id.buttonHyp)).setTypeface(null, Typeface.BOLD);
         } else {
