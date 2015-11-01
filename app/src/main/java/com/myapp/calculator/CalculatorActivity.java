@@ -22,6 +22,7 @@ import android.widget.NumberPicker;
 import android.widget.ScrollView;
 import android.graphics.Typeface;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.myapp.calculator.ast.ExpressionUnit;
 
@@ -118,8 +119,8 @@ public class CalculatorActivity extends AppCompatActivity{
                 vibrator.vibrate(25);
                 break;
             case R.id.buttonCopy:
-                // TODO: pop up "Copied to clipboard message"
                 copyResult();
+                displayCopyMessage();
                 break;
             case R.id.buttonUndo:
                 // TODO: Implement button undo.
@@ -330,6 +331,10 @@ public class CalculatorActivity extends AppCompatActivity{
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("resultView", resultView.getText());
         clipboard.setPrimaryClip(clip);
+    }
+
+    private void displayCopyMessage (){
+        Toast.makeText(getApplicationContext(), R.string.copyMessage, Toast.LENGTH_SHORT).show();
     }
 
     private void switchInv() {

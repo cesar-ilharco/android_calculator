@@ -42,4 +42,5 @@
     <string name="buttonUndo">undo</string>
     <string name="buttonBackward">«</string>
     <string name="buttonForward">»</string>
-</resources>
+    <string name="copyMessage">Result copied to the clipboard.</string>
+    </resources>
