@@ -154,6 +154,9 @@ public class CalculatorActivity extends AppCompatActivity{
             }
 
             private int findBlockPosition(int offset) {
+                if (state.getExpression().getUnits().isEmpty()){
+                    return 0;
+                }
                 int blockPosition = 0;
                 int accumulatedLength = 0;
                 Iterator<ExpressionUnit> iterator = state.getExpression().getUnits().iterator();
