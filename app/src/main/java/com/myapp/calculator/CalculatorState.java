@@ -39,6 +39,18 @@ public class CalculatorState implements Serializable{
         this.cursorPosition = cursorPosition;
     }
 
+    public void moveCursorForwards(){
+        if (cursorPosition.getValue() < expression.getUnits().size()){
+            cursorPosition.increaseAndGet();
+        }
+    }
+
+    public void moveCursorBackwards(){
+        if (cursorPosition.getValue() > 0){
+            cursorPosition.decreaseAndGet();
+        }
+    }
+
     public boolean isHyp() {
         return hyp;
     }

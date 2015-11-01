@@ -124,21 +124,15 @@ public class CalculatorActivity extends AppCompatActivity{
             case R.id.buttonUndo:
                 // TODO: Implement button undo.
                 break;
-            case R.id.buttonBackward:
-                // TODO: Move the logic to CalculatorState.
-                if (state.getCursorPosition().getValue() > 0){
-                    state.getCursorPosition().decreaseAndGet();
-                    cursorVisible = true;
-                    updateExpressionView();
-                }
-                break;
             case R.id.buttonForward:
-                // TODO: Move the logic to CalculatorState.
-                if (state.getCursorPosition().getValue() < state.getExpression().getUnits().size()){
-                    state.getCursorPosition().increaseAndGet();
-                    cursorVisible = true;
-                    updateExpressionView();
-                }
+                state.moveCursorForwards();
+                cursorVisible = true;
+                updateExpressionView();
+                break;
+            case R.id.buttonBackward:
+                state.moveCursorBackwards();
+                cursorVisible = true;
+                updateExpressionView();
                 break;
             case R.id.buttonInv:
                 switchInv();
