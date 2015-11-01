@@ -29,6 +29,7 @@ public class Kernel {
         put("/", 3);
     }};
 
+    // TODO: Remove scale member.
     private static int scale = 10;
 
     public static void setScale(int scale) {
@@ -41,7 +42,7 @@ public class Kernel {
     // TODO: Implement expression evaluation from Syntax Tree. Handle exceptions properly.
     public static String evaluate (LinkedList<ExpressionUnit> expressionUnits) {
 
-        List<ExpressionUnit>  convertedList= digitsToNumber(expressionUnits);
+        List<ExpressionUnit>  convertedList = digitsToNumber(expressionUnits);
 
         if (! isValid(convertedList)){
             return "formatting error";
@@ -150,6 +151,7 @@ public class Kernel {
         return root;
     }
 
+    // TODO: Interpret sign - always as an operator (subtraction or negation).
     // Convert DigitUnits into NumberInit and return it as an ArrayList.
     public static List<ExpressionUnit> digitsToNumber (LinkedList<ExpressionUnit> expressionUnits){
         List<ExpressionUnit> result = new ArrayList<>();

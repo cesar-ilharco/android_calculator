@@ -5,6 +5,7 @@ package com.myapp.calculator.ast;
  * Android calculator app
  */
 
+// TODO: Make this an interface, implemented by operators and number.
 // Used to build a Syntax Tree.
 public class ExpressionNode {
     private ExpressionUnit expressionUnit;
