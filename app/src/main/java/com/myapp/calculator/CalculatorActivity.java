@@ -66,7 +66,7 @@ public class CalculatorActivity extends AppCompatActivity{
         if (savedInstanceState != null){
             super.onRestoreInstanceState(savedInstanceState);
             state = (CalculatorState) savedInstanceState.getSerializable("state");
-            updateExpressionView(true);
+            updateExpressionView();
             resultView.setText(savedInstanceState.getString("resultView", ""));
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 updateButtons();
@@ -108,13 +108,15 @@ public class CalculatorActivity extends AppCompatActivity{
             case R.id.buttonBackward:
                 if (state.getCursorPosition().getValue() > 0){
                     state.getCursorPosition().decreaseAndGet();
-                    updateExpressionView(true);
+                    state.setCursorVisible(true);
+                    updateExpressionView();
                 }
                 break;
             case R.id.buttonForward:
                 if (state.getCursorPosition().getValue() < state.getExpression().getUnits().size()){
                     state.getCursorPosition().increaseAndGet();
-                    updateExpressionView(true);
+                    state.setCursorVisible(true);
+                    updateExpressionView();
                 }
                 break;
             case R.id.buttonInv:
@@ -124,6 +126,7 @@ public class CalculatorActivity extends AppCompatActivity{
                 switchHyp();
                 break;
             default:
+                state.setCursorVisible(true);
                 expressionView.setText(DisplayHelper.getExpressionDisplay(
                         state.getExpression().getUnits(), state.getCursorPosition(), ((Button) view).getText().toString()));
                 scrollDown(expressionScroller);
@@ -132,7 +135,8 @@ public class CalculatorActivity extends AppCompatActivity{
     }
 
 
-    private void updateExpressionView(boolean cursorVisible) {
+    private void updateExpressionView() {
+        boolean cursorVisible = state.isCursorVisible();
         expressionView.setText(wrapText(cursorVisible));
     }
 
@@ -147,7 +151,8 @@ public class CalculatorActivity extends AppCompatActivity{
                         int line = layout.getLineForVertical(y);
                         int offset = layout.getOffsetForHorizontal(line, x);
                         state.getCursorPosition().setValue(findBlockPosition(offset));
-                        updateExpressionView(true);
+                        state.setCursorVisible(true);
+                        updateExpressionView();
                     }
                 }
                 return true;
@@ -185,13 +190,11 @@ public class CalculatorActivity extends AppCompatActivity{
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (state.isCursorVisible()) {
-                            state.setCursorVisible(false);
-                            updateExpressionView(false);
-                        } else {
-                            state.setCursorVisible(true);
-                            updateExpressionView(true);
-                        }
+                        resultView.setText((!state.isCursorVisible() ? "Visible" : "Invisible") + "\nn = " + ++n);
+
+                        state.setCursorVisible(!state.isCursorVisible());
+                        updateExpressionView();
+
                         if (state.isRefreshResultView()) {
                             state.setRefreshResultView(false);
                             refreshResultView();

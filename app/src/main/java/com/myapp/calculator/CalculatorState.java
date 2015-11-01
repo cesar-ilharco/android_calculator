@@ -15,16 +15,14 @@ public class CalculatorState implements Serializable{
     private MyInt cursorPosition;
     private boolean hyp;
     private boolean inv;
-    private boolean cursorVisible;
-    private boolean refreshResultView;
+    private transient boolean cursorVisible = true;
+    private transient boolean refreshResultView = true;
 
     public CalculatorState() {
         this.expression = new Expression();
         this.cursorPosition = new MyInt(0);
         this.hyp = false;
         this.inv = false;
-        this.cursorVisible = true;
-        this.refreshResultView = true;
     }
 
     public Expression getExpression() {
