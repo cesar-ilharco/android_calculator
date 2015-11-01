@@ -38,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 
 public class CalculatorActivity extends AppCompatActivity{
 
+    // TODO: Use a ListAdapter for the resultView, load data when it's needed.
     private TextView resultView;
     private TextView expressionView;
     ScrollView expressionScroller;
@@ -114,8 +115,7 @@ public class CalculatorActivity extends AppCompatActivity{
         int buttonId = view.getId();
         switch (buttonId) {
             case R.id.buttonEquals:
-                // TODO: Asynchronous thread.
-                resultView.setText(DisplayHelper.getResultDisplay(state.getExpression().getUnits()));
+                computeResult();
                 vibrator.vibrate(25);
                 break;
             case R.id.buttonCopy:
@@ -148,6 +148,22 @@ public class CalculatorActivity extends AppCompatActivity{
                 scrollDown(expressionScroller);
                 break;
         }
+    }
+
+    private void computeResult() {
+        final Handler handler = new Handler();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String result = DisplayHelper.getResultDisplay(state.getExpression().getUnits());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        resultView.setText(result);
+                    }
+                });
+            }
+        }).start();
     }
 
     private View.OnTouchListener onTouchUpdateCursor() {
