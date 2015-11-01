@@ -1,6 +1,5 @@
 package com.myapp.calculator;
 
-import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -27,6 +26,9 @@ import android.widget.TextView;
 import com.myapp.calculator.ast.ExpressionUnit;
 
 import java.util.Iterator;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -38,10 +40,14 @@ public class CalculatorActivity extends AppCompatActivity{
     private TextView resultView;
     private TextView expressionView;
     ScrollView expressionScroller;
-    private CalculatorState state;
-    static private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0F);
 
-    @SuppressLint("NewApi")
+    private CalculatorState state;
+    private boolean cursorVisible;
+    private boolean refreshResultView;
+
+    static private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0F);
+    ScheduledExecutorService executorService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -63,6 +69,8 @@ public class CalculatorActivity extends AppCompatActivity{
             resultView.addTextChangedListener(textAutoResizeWatcher(resultView, 25, 120));
         }
 
+        cursorVisible = true;
+        refreshResultView = true;
         if (savedInstanceState != null){
             super.onRestoreInstanceState(savedInstanceState);
             state = (CalculatorState) savedInstanceState.getSerializable("state");
@@ -75,9 +83,15 @@ public class CalculatorActivity extends AppCompatActivity{
             state = new CalculatorState();
         }
 
+        executorService = Executors.newScheduledThreadPool(1);
         blinkCursor();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        executorService.shutdown();
     }
 
     // TODO: Serialize and backup expressionUnits.
@@ -108,14 +122,14 @@ public class CalculatorActivity extends AppCompatActivity{
             case R.id.buttonBackward:
                 if (state.getCursorPosition().getValue() > 0){
                     state.getCursorPosition().decreaseAndGet();
-                    state.setCursorVisible(true);
+                    cursorVisible = true;
                     updateExpressionView();
                 }
                 break;
             case R.id.buttonForward:
                 if (state.getCursorPosition().getValue() < state.getExpression().getUnits().size()){
                     state.getCursorPosition().increaseAndGet();
-                    state.setCursorVisible(true);
+                    cursorVisible = true;
                     updateExpressionView();
                 }
                 break;
@@ -126,7 +140,7 @@ public class CalculatorActivity extends AppCompatActivity{
                 switchHyp();
                 break;
             default:
-                state.setCursorVisible(true);
+                cursorVisible = true;
                 expressionView.setText(DisplayHelper.getExpressionDisplay(
                         state.getExpression().getUnits(), state.getCursorPosition(), ((Button) view).getText().toString()));
                 scrollDown(expressionScroller);
@@ -136,8 +150,7 @@ public class CalculatorActivity extends AppCompatActivity{
 
 
     private void updateExpressionView() {
-        boolean cursorVisible = state.isCursorVisible();
-        expressionView.setText(wrapText(cursorVisible));
+        expressionView.setText(wrapText());
     }
 
     private View.OnTouchListener onTouchUpdateCursor() {
@@ -151,7 +164,7 @@ public class CalculatorActivity extends AppCompatActivity{
                         int line = layout.getLineForVertical(y);
                         int offset = layout.getOffsetForHorizontal(line, x);
                         state.getCursorPosition().setValue(findBlockPosition(offset));
-                        state.setCursorVisible(true);
+                        cursorVisible = true;
                         updateExpressionView();
                     }
                 }
@@ -182,32 +195,27 @@ public class CalculatorActivity extends AppCompatActivity{
 
     private void blinkCursor(){
         final Handler handler = new Handler();
-        new Thread(new Runnable() {
+        final Runnable blink = new Runnable() {
             @Override
             public void run() {
-                int timeToBlinkMs = 500;
-                try{Thread.sleep(timeToBlinkMs);}catch (Exception e) {}
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        resultView.setText((!state.isCursorVisible() ? "Visible" : "Invisible") + "\nn = " + ++n);
+                cursorVisible = !cursorVisible;
+                updateExpressionView();
 
-                        state.setCursorVisible(!state.isCursorVisible());
-                        updateExpressionView();
-
-                        if (state.isRefreshResultView()) {
-                            state.setRefreshResultView(false);
-                            refreshResultView();
-                        }
-                        blinkCursor();
-                    }
-                });
+                if (refreshResultView) {
+                    refreshResultView = false;
+                    refreshResultView();
+                }
             }
-
             private void refreshResultView() {
                 resultView.setText(resultView.getText().toString());
             }
-        }).start();
+        };
+        executorService.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                handler.post(blink);
+            }
+        }, 500 /*FIXME: SHOULD RELY ON TIMING TO WORK */, 500, TimeUnit.MILLISECONDS);
     }
 
     private void initializeScalePicker(){
@@ -284,7 +292,7 @@ public class CalculatorActivity extends AppCompatActivity{
         view.setTextSize(fontSizeSP);
     }
 
-    private String wrapText(boolean cursorVisible){
+    private String wrapText(){
 
         int widthLimitPixels = expressionView.getWidth() - expressionView.getPaddingLeft() - expressionView.getPaddingRight();
 

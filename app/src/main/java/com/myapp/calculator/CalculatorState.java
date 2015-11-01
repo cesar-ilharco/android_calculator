@@ -5,7 +5,7 @@ package com.myapp.calculator;
 import com.myapp.calculator.ast.Expression;
 import com.myapp.calculator.utils.MyInt;
 
-import java.io.Serializable;
+import java.io.*;
 
 /**
  * Android calculator app
@@ -15,8 +15,6 @@ public class CalculatorState implements Serializable{
     private MyInt cursorPosition;
     private boolean hyp;
     private boolean inv;
-    private transient boolean cursorVisible = true;
-    private transient boolean refreshResultView = true;
 
     public CalculatorState() {
         this.expression = new Expression();
@@ -55,22 +53,6 @@ public class CalculatorState implements Serializable{
 
     public void setInv(boolean inv) {
         this.inv = inv;
-    }
-
-    public boolean isCursorVisible() {
-        return cursorVisible;
-    }
-
-    public void setCursorVisible(boolean cursorVisible) {
-        this.cursorVisible = cursorVisible;
-    }
-
-    public boolean isRefreshResultView() {
-        return refreshResultView;
-    }
-
-    public void setRefreshResultView(boolean refreshResultView) {
-        this.refreshResultView = refreshResultView;
     }
 
 }
