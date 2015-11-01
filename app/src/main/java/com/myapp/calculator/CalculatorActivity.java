@@ -287,16 +287,18 @@ public class CalculatorActivity extends AppCompatActivity{
 
         String accumulatedText = "";
         String line = "";
-        int i = 0;
+        int blockIndex = 0;
 
         Iterator<ExpressionUnit> iterator = state.getExpression().getUnits().iterator();
 
-        while (iterator.hasNext()){
+        while (iterator.hasNext() || state.getCursorPosition().getValue() == blockIndex){
             String blockText;
-            if (state.getCursorPosition().getValue() == i){
+            // Add cursor or ExpressionUnit.
+            if (state.getCursorPosition().getValue() == blockIndex){
                 blockText = cursorVisible ? "|" : " ";
             } else {
-                blockText = iterator.next().getText();
+                ExpressionUnit nextBlock = iterator.next();
+                blockText = nextBlock.getText();
             }
             // Break line when the current width overcomes the limit:
             if (paint.measureText(line + blockText) > widthLimitPixels){
@@ -306,10 +308,8 @@ public class CalculatorActivity extends AppCompatActivity{
 
             line += blockText;
             accumulatedText += blockText;
-
-            ++i;
+            ++blockIndex;
         }
-
         return accumulatedText;
     }
 
