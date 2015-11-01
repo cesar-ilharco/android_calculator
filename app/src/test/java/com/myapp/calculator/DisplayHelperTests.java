@@ -112,7 +112,7 @@ public class DisplayHelperTests {
         for (Map.Entry<LinkedList<ExpressionUnit>, Boolean> entry : expressions.entrySet()) {
             String append = entry.getValue() ? "." : "";
             String expected = DisplayHelper.convertToString(entry.getKey()) + append;
-            DisplayHelper.getExpressionDisplay(entry.getKey(), new MyInt(entry.getKey().size()), ".");
+            DisplayHelper.updateExpression(entry.getKey(), new MyInt(entry.getKey().size()), ".");
             String actual = DisplayHelper.convertToString(entry.getKey());
             Assert.assertEquals(expected, actual);
         }
@@ -206,8 +206,8 @@ public class DisplayHelperTests {
         expressions.put(Pair.create(e.get(i), "×"), Integer.toString(i) + "×");
 
         for ( Map.Entry<Pair<LinkedList<ExpressionUnit>, String>, String>  entry : expressions.entrySet()) {
-            DisplayHelper.getExpressionDisplay(entry.getKey().getFirst(),
-                          new MyInt(entry.getKey().getFirst().size()), entry.getKey().getSecond());
+            DisplayHelper.updateExpression(entry.getKey().getFirst(),
+                    new MyInt(entry.getKey().getFirst().size()), entry.getKey().getSecond());
             String result = DisplayHelper.convertToString(entry.getKey().getFirst());
             Assert.assertEquals(entry.getValue(), result);
         }

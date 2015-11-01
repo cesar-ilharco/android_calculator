@@ -71,6 +71,7 @@ public class CalculatorActivity extends AppCompatActivity{
 
         cursorVisible = true;
         refreshResultView = true;
+
         if (savedInstanceState != null){
             super.onRestoreInstanceState(savedInstanceState);
             state = (CalculatorState) savedInstanceState.getSerializable("state");
@@ -94,7 +95,8 @@ public class CalculatorActivity extends AppCompatActivity{
         executorService.shutdown();
     }
 
-    // TODO: Serialize and backup expressionUnits.
+    // TODO: Override onPause, onResume to stop, restart executorService.
+
     @Override // Backup data before changing view.
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -102,6 +104,7 @@ public class CalculatorActivity extends AppCompatActivity{
         outState.putString("resultView", resultView.getText().toString());
     }
 
+    // TODO: split into different methods, remove switch case.
     public void handleOnClick(View view){
         final Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(25);
@@ -110,16 +113,19 @@ public class CalculatorActivity extends AppCompatActivity{
         int buttonId = view.getId();
         switch (buttonId) {
             case R.id.buttonEquals:
+                // TODO: Asynchronous thread.
                 resultView.setText(DisplayHelper.getResultDisplay(state.getExpression().getUnits()));
                 vibrator.vibrate(25);
                 break;
             case R.id.buttonCopy:
+                // TODO: pop up "Copied to clipboard message"
                 copyResult();
                 break;
             case R.id.buttonUndo:
                 // TODO: Implement button undo.
                 break;
             case R.id.buttonBackward:
+                // TODO: Move the logic to CalculatorState.
                 if (state.getCursorPosition().getValue() > 0){
                     state.getCursorPosition().decreaseAndGet();
                     cursorVisible = true;
@@ -127,6 +133,7 @@ public class CalculatorActivity extends AppCompatActivity{
                 }
                 break;
             case R.id.buttonForward:
+                // TODO: Move the logic to CalculatorState.
                 if (state.getCursorPosition().getValue() < state.getExpression().getUnits().size()){
                     state.getCursorPosition().increaseAndGet();
                     cursorVisible = true;
@@ -141,16 +148,11 @@ public class CalculatorActivity extends AppCompatActivity{
                 break;
             default:
                 cursorVisible = true;
-                expressionView.setText(DisplayHelper.getExpressionDisplay(
-                        state.getExpression().getUnits(), state.getCursorPosition(), ((Button) view).getText().toString()));
+                DisplayHelper.updateExpression(state.getExpression().getUnits(), state.getCursorPosition(), ((Button) view).getText().toString());
+                updateExpressionView();
                 scrollDown(expressionScroller);
                 break;
         }
-    }
-
-
-    private void updateExpressionView() {
-        expressionView.setText(wrapText());
     }
 
     private View.OnTouchListener onTouchUpdateCursor() {
@@ -192,7 +194,6 @@ public class CalculatorActivity extends AppCompatActivity{
         };
     }
 
-
     private void blinkCursor(){
         final Handler handler = new Handler();
         final Runnable blink = new Runnable() {
@@ -218,6 +219,7 @@ public class CalculatorActivity extends AppCompatActivity{
         }, 500 /*FIXME: SHOULD RELY ON TIMING TO WORK */, 500, TimeUnit.MILLISECONDS);
     }
 
+    // TODO: Move scale to CalculatorState, pass it as a parameter to the DisplayHelper on evaluation.
     private void initializeScalePicker(){
 
         NumberPicker scalePicker = (NumberPicker) findViewById(R.id.scalePicker);
@@ -240,14 +242,10 @@ public class CalculatorActivity extends AppCompatActivity{
     private TextWatcher textAutoResizeWatcher(final TextView view, final int minSp, final int maxSp) {
         return new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
             public void afterTextChanged(Editable editable) {
@@ -257,7 +255,7 @@ public class CalculatorActivity extends AppCompatActivity{
     }
 
     private void adjustTextSize(TextView view, int minSp, int maxSp){
-        final int widthLimitPixels = view.getWidth() - view.getPaddingRight() - view.getPaddingLeft();
+        int widthLimitPixels = getWidthLimitPixels(view);
         Paint paint = new Paint();
 
         float fontSizeSP = pixelsToSp(view.getTextSize());
@@ -270,11 +268,11 @@ public class CalculatorActivity extends AppCompatActivity{
         // Increase font size if necessary.
         if (widthPixels < widthLimitPixels){
             while (widthPixels < widthLimitPixels && fontSizeSP <= maxSp){
-                ++fontSizeSP;
+                fontSizeSP++;
                 paint.setTextSize(spToPixels(fontSizeSP));
                 widthPixels = paint.measureText(viewText);
             }
-            --fontSizeSP;
+            fontSizeSP--;
         }
         // Decrease font size if necessary.
         else {
@@ -283,7 +281,7 @@ public class CalculatorActivity extends AppCompatActivity{
                     fontSizeSP = minSp;
                     break;
                 }
-                --fontSizeSP;
+                fontSizeSP--;
                 paint.setTextSize(spToPixels(fontSizeSP));
                 widthPixels = paint.measureText(viewText);
             }
@@ -292,15 +290,21 @@ public class CalculatorActivity extends AppCompatActivity{
         view.setTextSize(fontSizeSP);
     }
 
-    private String wrapText(){
+    private void updateExpressionView() {
+        expressionView.setText(generateExpressionText());
+    }
 
-        int widthLimitPixels = expressionView.getWidth() - expressionView.getPaddingLeft() - expressionView.getPaddingRight();
+    // Generate and wrap expression text to fit the view width limit.
+    private String generateExpressionText(){
+
+        int widthLimitPixels = getWidthLimitPixels(expressionView);
 
         Paint paint = new Paint();
         paint.setTextSize(expressionView.getTextSize());
 
-        String accumulatedText = "";
-        String line = "";
+        StringBuffer accumulatedText = new StringBuffer();
+        StringBuffer line = new StringBuffer();
+        String cursor = cursorVisible ? "|" : " ";
         int blockIndex = 0;
 
         Iterator<ExpressionUnit> iterator = state.getExpression().getUnits().iterator();
@@ -309,24 +313,24 @@ public class CalculatorActivity extends AppCompatActivity{
             String blockText;
             // Add cursor or ExpressionUnit.
             if (state.getCursorPosition().getValue() == blockIndex){
-                blockText = cursorVisible ? "|" : " ";
+                blockText = cursor;
             } else {
                 ExpressionUnit nextBlock = iterator.next();
                 blockText = nextBlock.getText();
             }
             // Break line when the current width overcomes the limit:
             if (paint.measureText(line + blockText) > widthLimitPixels){
-                line = "";
-                accumulatedText += "\n";
+                line = new StringBuffer();
+                accumulatedText.append("\n");
             }
 
-            line += blockText;
-            accumulatedText += blockText;
-            ++blockIndex;
+            line.append(blockText);
+            accumulatedText.append(blockText);
+            blockIndex++;
         }
-        return accumulatedText;
-    }
 
+        return accumulatedText.toString();
+    }
 
     private void copyResult() {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -346,14 +350,12 @@ public class CalculatorActivity extends AppCompatActivity{
 
     private void updateButtons() {
 
+        // TODO: Use superscript -1 for inverse trigonometric functions.
         String prefix = state.isInv() ? "arc" : "";
         String suffix = state.isHyp() ? "h"   : "";
         ((Button) findViewById(R.id.buttonSin)).setText(prefix + "sin" + suffix);
         ((Button) findViewById(R.id.buttonCos)).setText(prefix + "cos" + suffix);
         ((Button) findViewById(R.id.buttonTan)).setText(prefix + "tan" + suffix);
-
-        int trigonometricColor = state.isHyp() || state.isInv() ? Color.BLACK : Color.WHITE;
-        int logExpColor =  state.isInv() ? Color.BLACK : Color.WHITE;
 
         if (state.isInv()){
             ((Button) findViewById(R.id.buttonInv)).setTextColor(Color.BLACK);
@@ -378,12 +380,19 @@ public class CalculatorActivity extends AppCompatActivity{
             ((Button) findViewById(R.id.buttonHyp)).setTypeface(null, Typeface.NORMAL);
         }
 
+        int trigonometricColor = state.isHyp() || state.isInv() ? Color.BLACK : Color.WHITE;
+        int logExpColor =  state.isInv() ? Color.BLACK : Color.WHITE;
+
         ((Button) findViewById(R.id.buttonLn)).setTextColor(logExpColor);
         ((Button) findViewById(R.id.buttonLog)).setTextColor(logExpColor);
         ((Button) findViewById(R.id.buttonSqrt)).setTextColor(logExpColor);
         ((Button) findViewById(R.id.buttonSin)).setTextColor(trigonometricColor);
         ((Button) findViewById(R.id.buttonCos)).setTextColor(trigonometricColor);
         ((Button) findViewById(R.id.buttonTan)).setTextColor(trigonometricColor);
+    }
+
+    private int getWidthLimitPixels(TextView view){
+        return view.getWidth() - view.getPaddingLeft() - view.getPaddingRight();
     }
 
     private float pixelsToSp(float px) {

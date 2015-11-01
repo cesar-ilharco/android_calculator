@@ -8,7 +8,6 @@ import com.myapp.calculator.utils.MyInt;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -26,14 +25,18 @@ public class DisplayHelper {
 
     static final Set<String> basicOperators = new HashSet<>(Arrays.asList("+", "-", "/", "×"));
 
-    static final Set<String> function1Operators = new HashSet<>(Arrays.asList(
+    static final Set<String> unaryOperators = new HashSet<>(Arrays.asList(
             "ln", "log", "sin", "cos", "tan", "Fib", "isPrime", "sinh", "cosh", "tanh",
             "arcsin", "arccos", "arctan", "arcsinh", "arccosh", "arctanh" ));
 
     static final Set<String> expOperators = new HashSet<>(Arrays.asList("e^x", "10^x", "x²"));
 
-    // TODO: Handle edge cases such as '.' + '.' = '.' or '-' + '-' = '+'.
-    public static String getExpressionDisplay (LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition, String buttonPressed){
+    static final String regexDecimalPoint= "\\.\\d*\\.";
+    static final Pattern patternDecimalPoint = Pattern.compile(regexDecimalPoint);
+
+
+    // Method handles edge cases in order to prevent malformed expressions.
+    public static void updateExpression(LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition, String buttonPressed){
         if (buttonPressed.equals("del")){
             if (cursorPosition.getValue() > 0){
                 expressionUnits.remove(cursorPosition.decreaseAndGet());
@@ -41,60 +44,27 @@ public class DisplayHelper {
         } else if (buttonPressed.equals("clear")){
             expressionUnits.clear();
             cursorPosition.reset();
-        } else if (isNumber(buttonPressed)){
+        } else if (numberButtons.contains(buttonPressed)){
             addDigit(expressionUnits, cursorPosition, buttonPressed);
         } else if (basicOperators.contains(buttonPressed)){
             addBasicOperator(expressionUnits, cursorPosition, buttonPressed);
         } else if (expOperators.contains(buttonPressed)) {
             addExpOperator(expressionUnits, cursorPosition, buttonPressed);
-        } else if (function1Operators.contains(buttonPressed)) {
+        } else if (unaryOperators.contains(buttonPressed)) {
             expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit(buttonPressed + "("));
             expressionUnits.add(cursorPosition.getValue(), new OperatorUnit(")"));
         } else {
             expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit(buttonPressed));
         }
-
-        return convertToString(expressionUnits, cursorPosition, true);
     }
 
-    private static void addExpOperator(LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition,String buttonPressed) {
-        if (buttonPressed.equals("e^x")){
-            expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit("exp("));
-            expressionUnits.add(cursorPosition.getValue(), new OperatorUnit(")"));
-        } else if (buttonPressed.equals("10^x")){
-            expressionUnits.add(cursorPosition.getAndIncrease(), new DigitUnit("1"));
-            expressionUnits.add(cursorPosition.getAndIncrease(), new DigitUnit("0"));
-            expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit("^"));
-        } else {
-            expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit("^"));
-            expressionUnits.add(cursorPosition.getAndIncrease(), new DigitUnit("2"));
-        }
-    }
-
+    // TODO: Receive a scale as parameter.
     public static String getResultDisplay (LinkedList<ExpressionUnit> expressionUnits){
         return Kernel.evaluate(expressionUnits);
     }
 
-    // Java iterates stack from the bottom to the top. Method adds the cursor character.
-    public static String convertToString(LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition, boolean isCursorVisible){
-        String cursor = isCursorVisible ? "|" : " ";
-        StringBuffer stringBuffer = new StringBuffer();
-        int size = expressionUnits.size();
-        Iterator<ExpressionUnit> iterator = expressionUnits.iterator();
-        for (int i=0; i<size; ++i){
-            if (cursorPosition.getValue() == i){
-                stringBuffer.append(cursor);
-            }
-            stringBuffer.append(iterator.next().getText());
-        }
-        if (cursorPosition.getValue() == size){
-            stringBuffer.append(cursor);
-        }
-        return stringBuffer.toString();
-    }
-
     // Method does not add the cursor character.
-    public static String convertToString(LinkedList<ExpressionUnit> expressionUnits){
+    private static String convertToString(LinkedList<ExpressionUnit> expressionUnits){
         StringBuffer stringBuffer = new StringBuffer();
         for (ExpressionUnit expressionUnit : expressionUnits){
             stringBuffer.append(expressionUnit.getText());
@@ -102,6 +72,15 @@ public class DisplayHelper {
         return stringBuffer.toString();
     }
 
+    private static void addDigit (LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition, String digit){
+        if (digit.equals(".")){
+            if (isDotInsertionAllowed(expressionUnits, cursorPosition.getValue())){
+                expressionUnits.add(cursorPosition.getAndIncrease(), new DigitUnit("."));
+            }
+        } else {
+            expressionUnits.add(cursorPosition.getAndIncrease(), new DigitUnit(digit));
+        }
+    }
 
     // If the last character from expression is a basic operator, replace it except for a few cases.
     // ++ = +,  +- = -,  +* = *, +/ = /, -+ = +, -/ = /, -* = *, ** = *, */ = /, // = /, /+ = +, /* = *
@@ -139,11 +118,17 @@ public class DisplayHelper {
         }
     }
 
-    private static void addDigit (LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition, String digit){
-        if (digit.equals(".") && isDotInsertionAllowed(expressionUnits, cursorPosition.getValue())){
-            expressionUnits.add(cursorPosition.getAndIncrease(), new DigitUnit("."));
-        } else if (! digit.equals(".")){
-            expressionUnits.add(cursorPosition.getAndIncrease(), new DigitUnit(digit));
+    private static void addExpOperator(LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition,String buttonPressed) {
+        if (buttonPressed.equals("e^x")){
+            expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit("e"));
+            expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit("^"));
+        } else if (buttonPressed.equals("10^x")){
+            expressionUnits.add(cursorPosition.getAndIncrease(), new DigitUnit("1"));
+            expressionUnits.add(cursorPosition.getAndIncrease(), new DigitUnit("0"));
+            expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit("^"));
+        } else {
+            expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit("^"));
+            expressionUnits.add(cursorPosition.getAndIncrease(), new DigitUnit("2"));
         }
     }
 
@@ -154,18 +139,13 @@ public class DisplayHelper {
         copy.add(location, new DigitUnit("."));
         String resultantExpression = convertToString(copy);
 
-        String regex = "\\.\\d*\\.";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(resultantExpression);
-        return ! matcher.find();
+        Matcher matcher = patternDecimalPoint.matcher(resultantExpression);
+        return !matcher.find();
     }
 
-    private static boolean isNumber (String buttonPressed){
-        return numberButtons.contains(buttonPressed);
-    }
 
     private static boolean endsWithOpenParenthesis (String s){
-        return s.charAt(s.length() - 1) == '(';
+        return !s.isEmpty() && s.charAt(s.length() - 1) == '(';
     }
 
 }
