@@ -45,7 +45,10 @@ public class CalculatorActivity extends AppCompatActivity{
     ScrollView expressionScroller;
 
     private CalculatorState state;
-    private boolean cursorVisible;
+
+    // Temporary solution, makes views refresh more quickly. TODO: Remove this hack.
+    private int cursorVisible; // 0-9 invisible, 10-19 visible.
+
     private boolean refreshResultView;
 
     static private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0F);
@@ -71,7 +74,7 @@ public class CalculatorActivity extends AppCompatActivity{
             resultView.addTextChangedListener(textAutoResizeWatcher(resultView, 25, 120));
         }
 
-        cursorVisible = true;
+        cursorVisible = 10;
         refreshResultView = true;
 
         if (savedInstanceState != null){
@@ -144,12 +147,12 @@ public class CalculatorActivity extends AppCompatActivity{
                 break;
             case R.id.buttonForward:
                 state.moveCursorForwards();
-                cursorVisible = true;
+                cursorVisible = 10;
                 updateExpressionView();
                 break;
             case R.id.buttonBackward:
                 state.moveCursorBackwards();
-                cursorVisible = true;
+                cursorVisible = 10;
                 updateExpressionView();
                 break;
             case R.id.buttonInv:
@@ -159,7 +162,7 @@ public class CalculatorActivity extends AppCompatActivity{
                 switchHyp();
                 break;
             default:
-                cursorVisible = true;
+                cursorVisible = 10;
                 String button = ((Button) view).getText().toString();
                 Expression updated = DisplayHelper.updateExpression(state.getExpression(), state.getCursorPosition(), button);
                 state.pushExpression(updated);
@@ -196,7 +199,7 @@ public class CalculatorActivity extends AppCompatActivity{
                         int line = layout.getLineForVertical(y);
                         int offset = layout.getOffsetForHorizontal(line, x);
                         state.getCursorPosition().setValue(findBlockPosition(offset));
-                        cursorVisible = true;
+                        cursorVisible = 10;
                         updateExpressionView();
                     }
                 }
@@ -229,7 +232,7 @@ public class CalculatorActivity extends AppCompatActivity{
         final Runnable blink = new Runnable() {
             @Override
             public void run() {
-                cursorVisible = !cursorVisible;
+                cursorVisible = (cursorVisible + 1) % 20;
                 updateExpressionView();
 
                 if (refreshResultView) {
@@ -246,7 +249,7 @@ public class CalculatorActivity extends AppCompatActivity{
             public void run() {
                 handler.post(blink);
             }
-        }, 500 /*FIXME: SHOULD RELY ON TIMING TO WORK */, 500, TimeUnit.MILLISECONDS);
+        }, 50 /*FIXME: SHOULD RELY ON TIMING TO WORK */, 50, TimeUnit.MILLISECONDS);
     }
 
     // TODO: Move scale to CalculatorState, pass it as a parameter to the DisplayHelper on evaluation.
@@ -324,6 +327,10 @@ public class CalculatorActivity extends AppCompatActivity{
         expressionView.setText(generateExpressionText());
     }
 
+    private boolean isCursorVisible(){
+        return cursorVisible/10 == 1;
+    }
+
     // Generate and wrap expression text to fit the view width limit.
     private String generateExpressionText(){
 
@@ -334,7 +341,7 @@ public class CalculatorActivity extends AppCompatActivity{
 
         StringBuffer accumulatedText = new StringBuffer();
         StringBuffer line = new StringBuffer();
-        String cursor = cursorVisible ? "|" : " ";
+        String cursor = isCursorVisible() ? "|" : " ";
         int blockIndex = 0;
 
         Iterator<ExpressionUnit> iterator = state.getExpression().getUnits().iterator();
