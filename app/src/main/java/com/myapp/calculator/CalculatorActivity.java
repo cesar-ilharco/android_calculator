@@ -98,6 +98,21 @@ public class CalculatorActivity extends AppCompatActivity{
         executorService.shutdown();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        executorService.shutdown();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (executorService.isShutdown()) {
+            executorService = Executors.newScheduledThreadPool(1);
+            blinkCursor();
+        }
+    }
+
     // TODO: Override onPause, onResume to stop, restart executorService.
 
     @Override // Backup data before changing view.
