@@ -14,6 +14,10 @@ public class Expression implements Serializable {
         expressionUnits = new LinkedList<>();
     }
 
+    public Expression (Expression other){
+        this.expressionUnits = new LinkedList<>(other.getUnits());
+    }
+
     public LinkedList<ExpressionUnit> getUnits() {
         return expressionUnits;
     }

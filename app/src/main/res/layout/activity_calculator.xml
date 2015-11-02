@@ -321,6 +321,7 @@
                     android:layout_weight="1"
                     android:background="#3B5998"
                     android:text="@string/buttonUndo"
+                    android:onClick="handleOnClick"
                     android:textSize="15sp" />
             </LinearLayout>
         </LinearLayout>

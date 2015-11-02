@@ -24,6 +24,7 @@ import android.graphics.Typeface;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.myapp.calculator.ast.Expression;
 import com.myapp.calculator.ast.ExpressionUnit;
 
 import java.util.Iterator;
@@ -123,7 +124,8 @@ public class CalculatorActivity extends AppCompatActivity{
                 displayCopyMessage();
                 break;
             case R.id.buttonUndo:
-                // TODO: Implement button undo.
+                state.undoExpression();
+                updateExpressionView();
                 break;
             case R.id.buttonForward:
                 state.moveCursorForwards();
@@ -143,7 +145,9 @@ public class CalculatorActivity extends AppCompatActivity{
                 break;
             default:
                 cursorVisible = true;
-                DisplayHelper.updateExpression(state.getExpression().getUnits(), state.getCursorPosition(), ((Button) view).getText().toString());
+                String button = ((Button) view).getText().toString();
+                Expression updated = DisplayHelper.updateExpression(state.getExpression(), state.getCursorPosition(), button);
+                state.pushExpression(updated);
                 updateExpressionView();
                 scrollDown(expressionScroller);
                 break;

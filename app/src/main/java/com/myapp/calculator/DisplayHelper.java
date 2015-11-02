@@ -2,6 +2,7 @@ package com.myapp.calculator;
 
 
 import com.myapp.calculator.ast.DigitUnit;
+import com.myapp.calculator.ast.Expression;
 import com.myapp.calculator.ast.ExpressionUnit;
 import com.myapp.calculator.ast.OperatorUnit;
 import com.myapp.calculator.utils.MyInt;
@@ -36,7 +37,11 @@ public class DisplayHelper {
 
 
     // Method handles edge cases in order to prevent malformed expressions.
-    public static void updateExpression(LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition, String buttonPressed){
+    public static Expression updateExpression(Expression expression, MyInt cursorPosition, String buttonPressed){
+
+        Expression updatedExpression = new Expression(expression);
+        LinkedList<ExpressionUnit> expressionUnits = updatedExpression.getUnits();
+
         if (buttonPressed.equals("del")){
             if (cursorPosition.getValue() > 0){
                 expressionUnits.remove(cursorPosition.decreaseAndGet());
@@ -56,6 +61,8 @@ public class DisplayHelper {
         } else {
             expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit(buttonPressed));
         }
+
+        return updatedExpression;
     }
 
     // TODO: Receive a scale as parameter.

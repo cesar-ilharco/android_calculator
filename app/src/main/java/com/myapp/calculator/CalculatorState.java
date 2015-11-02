@@ -6,29 +6,43 @@ import com.myapp.calculator.ast.Expression;
 import com.myapp.calculator.utils.MyInt;
 
 import java.io.*;
+import java.util.Deque;
+import java.util.LinkedList;
 
 /**
  * Android calculator app
  */
 public class CalculatorState implements Serializable{
-    private Expression expression;
+    private Deque<Expression> expressions;
     private MyInt cursorPosition;
     private boolean hyp;
     private boolean inv;
+    private final int UNDOING_LIMIT = 99;
 
     public CalculatorState() {
-        this.expression = new Expression();
+        this.expressions = new LinkedList<>();
+        this.expressions.addFirst(new Expression());
         this.cursorPosition = new MyInt(0);
         this.hyp = false;
         this.inv = false;
     }
 
     public Expression getExpression() {
-        return expression;
+        return expressions.peekFirst();
     }
 
-    public void setExpression(Expression expression) {
-        this.expression = expression;
+    public void pushExpression (Expression expression) {
+        if (expressions.size() == UNDOING_LIMIT + 1){
+            expressions.removeLast();
+        }
+        expressions.addFirst(expression);
+    }
+
+    public void undoExpression(){
+        if (expressions.size() > 1){
+            expressions.removeFirst();
+        }
+        cursorPosition.setValue(Math.min(getExpression().getUnits().size(), cursorPosition.getValue()));
     }
 
     public MyInt getCursorPosition() {
@@ -40,7 +54,7 @@ public class CalculatorState implements Serializable{
     }
 
     public void moveCursorForwards(){
-        if (cursorPosition.getValue() < expression.getUnits().size()){
+        if (cursorPosition.getValue() < getExpression().getUnits().size()){
             cursorPosition.increaseAndGet();
         }
     }
