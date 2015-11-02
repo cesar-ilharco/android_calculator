@@ -13,16 +13,20 @@ import java.util.LinkedList;
  * Android calculator app
  */
 public class CalculatorState implements Serializable{
+
     private Deque<Expression> expressions;
     private MyInt cursorPosition;
+    private int scale;
     private boolean hyp;
     private boolean inv;
-    private final int UNDOING_LIMIT = 99;
+
+    private static final int UNDOING_LIMIT = 99;
 
     public CalculatorState() {
         this.expressions = new LinkedList<>();
         this.expressions.addFirst(new Expression());
         this.cursorPosition = new MyInt(0);
+        this.scale = 10;
         this.hyp = false;
         this.inv = false;
     }
@@ -63,6 +67,14 @@ public class CalculatorState implements Serializable{
         if (cursorPosition.getValue() > 0){
             cursorPosition.decreaseAndGet();
         }
+    }
+
+    public int getScale() {
+        return scale;
+    }
+
+    public void setScale(int scale) {
+        this.scale = scale;
     }
 
     public boolean isHyp() {

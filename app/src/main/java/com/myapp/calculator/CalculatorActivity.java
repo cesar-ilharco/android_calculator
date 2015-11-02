@@ -64,7 +64,6 @@ public class CalculatorActivity extends AppCompatActivity{
         expressionView.setOnTouchListener(onTouchUpdateCursor());
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            initializeScalePicker();
             expressionView.addTextChangedListener(textAutoResizeWatcher(expressionView, 25, 55));
             resultView.addTextChangedListener(textAutoResizeWatcher(resultView, 25, 70));
         } else {
@@ -81,6 +80,7 @@ public class CalculatorActivity extends AppCompatActivity{
             updateExpressionView();
             resultView.setText(savedInstanceState.getString("resultView", ""));
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                initializeScalePicker();
                 updateButtons();
             }
         } else {
@@ -174,7 +174,7 @@ public class CalculatorActivity extends AppCompatActivity{
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final String result = DisplayHelper.getResultDisplay(state.getExpression().getUnits());
+                final String result = DisplayHelper.getResultDisplay(state.getExpression().getUnits(), state.getScale());
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -255,11 +255,11 @@ public class CalculatorActivity extends AppCompatActivity{
         NumberPicker scalePicker = (NumberPicker) findViewById(R.id.scalePicker);
         scalePicker.setMinValue(0);
         scalePicker.setMaxValue(1000);
-        scalePicker.setValue(Kernel.getScale());
+        scalePicker.setValue(state.getScale());
         scalePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker numberPicker, int oldValue, int newValue) {
-                Kernel.setScale(newValue);
+                state.setScale(newValue);
             }
         });
     }

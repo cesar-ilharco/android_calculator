@@ -66,8 +66,8 @@ public class DisplayHelper {
     }
 
     // TODO: Receive a scale as parameter.
-    public static String getResultDisplay (LinkedList<ExpressionUnit> expressionUnits){
-        return Kernel.evaluate(expressionUnits);
+    public static String getResultDisplay (LinkedList<ExpressionUnit> expressionUnits, int scale){
+        return Kernel.evaluate(expressionUnits, scale);
     }
 
     // Method does not add the cursor character.

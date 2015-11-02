@@ -29,18 +29,9 @@ public class Kernel {
         put("/", 3);
     }};
 
-    // TODO: Remove scale member.
-    private static int scale = 10;
-
-    public static void setScale(int scale) {
-        Kernel.scale = scale;
-    }
-    public static int getScale() {
-        return scale;
-    }
 
     // TODO: Implement expression evaluation from Syntax Tree. Handle exceptions properly.
-    public static String evaluate (LinkedList<ExpressionUnit> expressionUnits) {
+    public static String evaluate (LinkedList<ExpressionUnit> expressionUnits, int scale) {
 
         List<ExpressionUnit>  convertedList = digitsToNumber(expressionUnits);
 
@@ -51,7 +42,7 @@ public class Kernel {
         BigDecimal result = null;
         try {
             ExpressionNode root = parse(convertedList);
-            result = evaluateRecursive(root);
+            result = evaluateRecursive(root, scale);
         } catch (IOException e){
 
         }
@@ -59,15 +50,15 @@ public class Kernel {
         return result == null ? "" : result.toString();
     }
 
-    private static BigDecimal evaluateRecursive (ExpressionNode root){
+    private static BigDecimal evaluateRecursive (ExpressionNode root, int scale){
         if (root == null){
             return null;
         }
         switch(root.getExpressionUnit().getText()){
-            case "+": return evaluateRecursive(root.getLeft()).add(evaluateRecursive(root.getRight()));
-            case "-": return evaluateRecursive(root.getLeft()).subtract(evaluateRecursive(root.getRight()));
-            case "×": return evaluateRecursive(root.getLeft()).multiply(evaluateRecursive(root.getRight()));
-            case "/": return evaluateRecursive(root.getLeft()).divide(evaluateRecursive(root.getRight()), scale, BigDecimal.ROUND_HALF_EVEN);
+            case "+": return evaluateRecursive(root.getLeft(), scale).add(evaluateRecursive(root.getRight(), scale));
+            case "-": return evaluateRecursive(root.getLeft(), scale).subtract(evaluateRecursive(root.getRight(), scale));
+            case "×": return evaluateRecursive(root.getLeft(), scale).multiply(evaluateRecursive(root.getRight(), scale));
+            case "/": return evaluateRecursive(root.getLeft(), scale).divide(evaluateRecursive(root.getRight(), scale), scale, BigDecimal.ROUND_HALF_EVEN);
         }
         return new BigDecimal(root.getExpressionUnit().getText());
     }
