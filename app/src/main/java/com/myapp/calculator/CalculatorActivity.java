@@ -95,6 +95,7 @@ public class CalculatorActivity extends AppCompatActivity{
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
+
     @Override
     protected void onStop() {
         super.onStop();
