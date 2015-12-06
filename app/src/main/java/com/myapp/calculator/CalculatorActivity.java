@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.myapp.calculator.ast.Expression;
 import com.myapp.calculator.ast.ExpressionUnit;
+import com.myapp.calculator.utils.MyInt;
 
 import java.util.Iterator;
 import java.util.concurrent.Executors;
@@ -174,17 +175,23 @@ public class CalculatorActivity extends AppCompatActivity{
     }
 
     private void computeResult() {
-        final Handler handler = new Handler();
+        final Handler handler = new Handler(this.getMainLooper());
+        resultView.setText("", TextView.BufferType.EDITABLE);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 final String result = DisplayHelper.getResultDisplay(state.getExpression().getUnits(), state.getScale());
-                handler.post(new Runnable() {
+                final MyInt i = new MyInt(0);
+                handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        resultView.setText(result);
+                        resultView.append(result, i.getValue(), Math.min(i.getValue() + 1000, result.length()));
+                        i.setValue(i.getValue() + 2000);
+                        if (i.getValue() < result.length()){
+                            handler.postDelayed(this, 500);
+                        }
                     }
-                });
+                }, 10);
             }
         }).start();
     }
