@@ -71,7 +71,7 @@ public class DisplayHelper {
     }
 
     // Method does not add the cursor character.
-    private static String convertToString(LinkedList<ExpressionUnit> expressionUnits){
+    public static String convertToString(LinkedList<ExpressionUnit> expressionUnits){
         StringBuffer stringBuffer = new StringBuffer();
         for (ExpressionUnit expressionUnit : expressionUnits){
             stringBuffer.append(expressionUnit.getText());

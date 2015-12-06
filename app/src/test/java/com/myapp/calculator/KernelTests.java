@@ -1,6 +1,7 @@
 package com.myapp.calculator;
 
 import com.myapp.calculator.ast.DigitUnit;
+import com.myapp.calculator.ast.Expression;
 import com.myapp.calculator.ast.ExpressionNode;
 import com.myapp.calculator.ast.ExpressionUnit;
 import com.myapp.calculator.ast.NumberUnit;
@@ -59,62 +60,62 @@ public class KernelTests {
 
     @Test
     public void testKernelEvaluator() throws IOException{
-        LinkedList<ExpressionUnit> expressionUnits = new LinkedList<>();
+        Expression expression = new Expression();
         // 1 + 2 = 3
-        expressionUnits.addLast(new DigitUnit("1"));
-        expressionUnits.addLast(new OperatorUnit("+"));
-        expressionUnits.addLast(new DigitUnit("2"));
-        Assert.assertEquals("3", Kernel.evaluate(expressionUnits));
+        expression.getUnits().addLast(new DigitUnit("1"));
+        expression.getUnits().addLast(new OperatorUnit("+"));
+        expression.getUnits().addLast(new DigitUnit("2"));
+        Assert.assertEquals("3", Kernel.evaluate(expression.getUnits(), 0));
 
         // 1 + 2 × 4 - 3 = 6
-        expressionUnits.addLast(new OperatorUnit("×"));
-        expressionUnits.addLast(new DigitUnit("4"));
-        expressionUnits.addLast(new OperatorUnit("-"));
-        expressionUnits.addLast(new DigitUnit("3"));
-        Assert.assertEquals("6", Kernel.evaluate(expressionUnits));
+        expression.getUnits().addLast(new OperatorUnit("×"));
+        expression.getUnits().addLast(new DigitUnit("4"));
+        expression.getUnits().addLast(new OperatorUnit("-"));
+        expression.getUnits().addLast(new DigitUnit("3"));
+        Assert.assertEquals("6", Kernel.evaluate(expression.getUnits(), 0));
 
         // 1 × 2 × 3 × 4 × 5 = 120
-        expressionUnits.clear();
-        expressionUnits.addLast(new DigitUnit("1"));
-        expressionUnits.addLast(new OperatorUnit("×"));
-        expressionUnits.addLast(new DigitUnit("2"));
-        expressionUnits.addLast(new OperatorUnit("×"));
-        expressionUnits.addLast(new DigitUnit("3"));
-        expressionUnits.addLast(new OperatorUnit("×"));
-        expressionUnits.addLast(new DigitUnit("4"));
-        expressionUnits.addLast(new OperatorUnit("×"));
-        expressionUnits.addLast(new DigitUnit("5"));
-        Assert.assertEquals("120", Kernel.evaluate(expressionUnits));
+        expression.getUnits().clear();
+        expression.getUnits().addLast(new DigitUnit("1"));
+        expression.getUnits().addLast(new OperatorUnit("×"));
+        expression.getUnits().addLast(new DigitUnit("2"));
+        expression.getUnits().addLast(new OperatorUnit("×"));
+        expression.getUnits().addLast(new DigitUnit("3"));
+        expression.getUnits().addLast(new OperatorUnit("×"));
+        expression.getUnits().addLast(new DigitUnit("4"));
+        expression.getUnits().addLast(new OperatorUnit("×"));
+        expression.getUnits().addLast(new DigitUnit("5"));
+        Assert.assertEquals("120", Kernel.evaluate(expression.getUnits(), 0));
 
         // 1 - 2 × 3 + 4 × 5 = 15
-        expressionUnits.clear();
-        expressionUnits.addLast(new DigitUnit("1"));
-        expressionUnits.addLast(new OperatorUnit("-"));
-        expressionUnits.addLast(new DigitUnit("2"));
-        expressionUnits.addLast(new OperatorUnit("×"));
-        expressionUnits.addLast(new DigitUnit("3"));
-        expressionUnits.addLast(new OperatorUnit("+"));
-        expressionUnits.addLast(new DigitUnit("4"));
-        expressionUnits.addLast(new OperatorUnit("×"));
-        expressionUnits.addLast(new DigitUnit("5"));
-        Assert.assertEquals("15", Kernel.evaluate(expressionUnits));
+        expression.getUnits().clear();
+        expression.getUnits().addLast(new DigitUnit("1"));
+        expression.getUnits().addLast(new OperatorUnit("-"));
+        expression.getUnits().addLast(new DigitUnit("2"));
+        expression.getUnits().addLast(new OperatorUnit("×"));
+        expression.getUnits().addLast(new DigitUnit("3"));
+        expression.getUnits().addLast(new OperatorUnit("+"));
+        expression.getUnits().addLast(new DigitUnit("4"));
+        expression.getUnits().addLast(new OperatorUnit("×"));
+        expression.getUnits().addLast(new DigitUnit("5"));
+        Assert.assertEquals("15", Kernel.evaluate(expression.getUnits(), 0));
 
         // 1 / 3 = 0.333...
-        expressionUnits.clear();
-        expressionUnits.addLast(new DigitUnit("1"));
-        expressionUnits.addLast(new OperatorUnit("/"));
-        expressionUnits.addLast(new DigitUnit("3"));
-        double val = Double.valueOf(Kernel.evaluate(expressionUnits));
+        expression.getUnits().clear();
+        expression.getUnits().addLast(new DigitUnit("1"));
+        expression.getUnits().addLast(new OperatorUnit("/"));
+        expression.getUnits().addLast(new DigitUnit("3"));
+        double val = Double.valueOf(Kernel.evaluate(expression.getUnits(), 10));
         Assert.assertTrue(val > 0.33333 && val < 0.33334);
 
         // -1 × -2 = 2
-        expressionUnits.clear();
-        expressionUnits.addLast(new OperatorUnit("-"));
-        expressionUnits.addLast(new DigitUnit("1"));
-        expressionUnits.addLast(new OperatorUnit("×"));
-        expressionUnits.addLast(new OperatorUnit("-"));
-        expressionUnits.addLast(new DigitUnit("2"));
-        Assert.assertEquals("2", Kernel.evaluate(expressionUnits));
+        expression.getUnits().clear();
+        expression.getUnits().addLast(new OperatorUnit("-"));
+        expression.getUnits().addLast(new DigitUnit("1"));
+        expression.getUnits().addLast(new OperatorUnit("×"));
+        expression.getUnits().addLast(new OperatorUnit("-"));
+        expression.getUnits().addLast(new DigitUnit("2"));
+        Assert.assertEquals("2", Kernel.evaluate(expression.getUnits(), 0));
 
     }
 
