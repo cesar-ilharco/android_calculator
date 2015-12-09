@@ -1,11 +1,16 @@
 package com.myapp.calculator;
 
-import static org.junit.Assert.*;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
+import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -96,8 +101,59 @@ public class CalculationTests {
     }
 
     @Test
-    public void teste(){
-        System.out.format("%s", calc.computeCot(calc.computePhi().add(new BigDecimal(3).multiply(calc.computeE()).multiply(calc.computeAsin(calc.computePower(new BigDecimal("3.34434"), calc.computePi().negate()), AngleUnity.RADIANS))).divide(calc.computeAsech(new BigDecimal("0.43575")), new MathContext(210, RoundingMode.HALF_EVEN)), AngleUnity.RADIANS));
-    }
+
+	public void generalTest() throws FileNotFoundException, IOException {
+		BufferedReader br = new BufferedReader(new FileReader("Test.txt"));
+		String line = br.readLine();
+		MathContext mc1 = new MathContext(200, RoundingMode.HALF_EVEN);
+		Calculation calc1 = new Calculation(mc1);
+		assertEquals(line, calc1.computeCot(calc1.computePhi().add(new BigDecimal(3).multiply(calc1.computeE()).multiply(calc1.computeAsin(calc1.computePower(new BigDecimal("3.34434"), calc1.computePi().negate()).divide(calc1.computeAsech(new BigDecimal("0.43575")), new MathContext(210, RoundingMode.HALF_EVEN)), AngleUnity.RADIANS))), AngleUnity.RADIANS).round(mc1).toString());
+		
+		line = br.readLine();
+		MathContext mc2 = new MathContext(1010, RoundingMode.HALF_EVEN);
+		Calculation calc2 = new Calculation(mc2);
+		assertEquals(line, calc2.computeSin(calc2.computeAtan(calc2.computeExponential(new BigDecimal("2.54683")).divide(calc2.computeLn(new BigDecimal("4.677234")), new MathContext(1010, RoundingMode.HALF_EVEN)), AngleUnity.RADIANS), AngleUnity.RADIANS).round(new MathContext(1000, RoundingMode.HALF_EVEN)).toString());
+		
+		line = br.readLine();
+		MathContext mc3 = new MathContext(10, RoundingMode.HALF_EVEN);
+		Calculation calc3 = new Calculation(mc3);
+		assertEquals(line, calc3.computeCos(calc3.computeLn(calc3.computeAcsch(new BigDecimal("9.34945"))), AngleUnity.RADIANS).round(mc3).toString());
+		
+		line = br.readLine();
+		MathContext mc4 = new MathContext(20, RoundingMode.HALF_EVEN);
+		Calculation calc4 = new Calculation(mc4);
+		assertEquals(line, calc4.computeLog10(calc4.computePower(new BigDecimal("4.657"), calc4.computeTan(calc4.computeE(), AngleUnity.RADIANS))).round(mc4).toString());
+		
+		line = br.readLine();
+		MathContext mc5 = new MathContext(50, RoundingMode.HALF_EVEN);
+		Calculation calc5 = new Calculation(mc5);
+		assertEquals(line, calc5.computeAcos(calc5.computeAsinh(new BigDecimal("-0.4578")).add(calc5.computeAcosh(new BigDecimal("1.9438"))), AngleUnity.RADIANS).round(mc5).toString());
+		
+		line = br.readLine();
+		MathContext mc6 = new MathContext(500, RoundingMode.HALF_EVEN);
+		Calculation calc6 = new Calculation(mc6);
+		assertEquals(line, calc6.computeTanh(calc6.computeSech(calc6.computeSqrt(calc6.computeAcsc(new BigDecimal("457565869.569"), AngleUnity.RADIANS)))).round(mc6).toString());
+		
+		line = br.readLine();
+		MathContext mc7 = new MathContext(100, RoundingMode.HALF_EVEN);
+		Calculation calc7 = new Calculation(mc7);
+		assertEquals(line, calc7.computeCsc(calc7.computeSec(calc7.computeAcot(new BigDecimal("-34975.24"), AngleUnity.RADIANS), AngleUnity.RADIANS), AngleUnity.RADIANS).round(mc7).toString());
+		
+		line = br.readLine();
+		MathContext mc8 = new MathContext(1000, RoundingMode.HALF_EVEN);
+		Calculation calc8 = new Calculation(mc8);
+		assertEquals(line, calc8.computeCoth(calc8.computeAtanh(calc8.computeLn(calc8.computeAcoth(new BigDecimal("2.5685"))))).round(mc8).toString());
+		
+		line = br.readLine();
+		MathContext mc9 = new MathContext(2000, RoundingMode.HALF_EVEN);
+		Calculation calc9 = new Calculation(mc9);
+		assertEquals(line, calc9.computeSinh(calc9.computeAsec(calc9.computeCosh(new BigDecimal("2.24358")), AngleUnity.RADIANS)).round(mc9).toString());
+		
+		line = br.readLine();
+		MathContext mc10 = new MathContext(3000, RoundingMode.HALF_EVEN);
+		Calculation calc10 = new Calculation(mc10);
+		assertEquals(line, calc10.computeCsch(calc10.computeSec(calc10.computeAsin(calc10.computeLog10(new BigDecimal("8.3497")), AngleUnity.RADIANS), AngleUnity.RADIANS)).round(mc10).toString());
+		br.close();
+	}
 
 }
