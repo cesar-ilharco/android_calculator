@@ -39,8 +39,8 @@ public class Calculation {
         // TODO Choose maximum precision allowed
         if(mc.getPrecision() == 0)
             throw new IllegalArgumentException("Calculator can't calculate with unlimited precision");
-        if(mc.getPrecision() > 5010)
-            throw new IllegalArgumentException("The maximum precision allowed is 5000 digits");
+        if(mc.getPrecision() > 2010)
+            throw new IllegalArgumentException("The maximum precision allowed is 2000 digits");
         this.mc = mc;
         this.mcAux = new MathContext(mc.getPrecision() + DELTA_PRECISION, mc.getRoundingMode());
     }
@@ -170,6 +170,10 @@ public class Calculation {
     }
 
 
+    public BigDecimal computeSquare (BigDecimal x) {
+	    return x.multiply(x, getContextoAux());
+	}
+
 
     public BigDecimal computeSin (BigDecimal angle, AngleUnity unity) {
         BigDecimal pi = getPI();
@@ -279,7 +283,6 @@ public class Calculation {
     }
 
 
-    // TODO See if it gets better when we only declare the operands once
     private BigDecimal sin (BigDecimal radians) {
         int iterations = getTrigIterations(getContexto().getPrecision());
         BigDecimal result = BigDecimal.ZERO;
@@ -303,7 +306,6 @@ public class Calculation {
     }
 
 
-    // TODO See if it gets better when we only declare the operands once
     private BigDecimal cos (BigDecimal radians) {
         int iterations = getTrigIterations(getContexto().getPrecision());
         BigDecimal result = BigDecimal.ONE;
@@ -582,6 +584,11 @@ public class Calculation {
         return x.pow(y.intValue(), getContextoAux()).multiply(computeExponential(y.subtract(new BigDecimal(y.intValue())).multiply(computeLn(x), getContextoAux())), getContextoAux());
     }
 
+    //TODO Update this function so it won't be stupid when the value of x is an integer, and create a global constant ln(10)
+    public BigDecimal computePower10 (BigDecimal x) {
+		return computePower(BigDecimal.TEN, x);
+	}
+    
 
     public BigDecimal computeLn (BigDecimal x) {
         if (x.compareTo(BigDecimal.ZERO) <= 0)
