@@ -1,5 +1,6 @@
 package com.myapp.calculator;
 
+import com.myapp.calculator.ast.Expression;
 import com.myapp.calculator.ast.ExpressionNode;
 import com.myapp.calculator.ast.ExpressionUnit;
 import com.myapp.calculator.ast.NumberUnit;

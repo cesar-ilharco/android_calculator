@@ -180,7 +180,7 @@ public class CalculatorActivity extends AppCompatActivity{
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final String result = DisplayHelper.getResultDisplay(state.getExpression().getUnits(), state.getScale());
+                final String result = DisplayHelper.getResultDisplay(state.getExpression(), state.getScale());
                 final MyInt i = new MyInt(0);
                 handler.postDelayed(new Runnable() {
                     @Override
