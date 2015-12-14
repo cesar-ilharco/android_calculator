@@ -24,18 +24,25 @@ import java.util.Map;
 // Process user's input expression and computes the output result.
 public class Kernel {
 
-    public static BigDecimal evaluate (Expression expression, int scale){
+    public static BigDecimal evaluate (Expression expression, int scale, AngleUnit angleUnit) throws IOException {
 
-        Object obj = null;
-        BigDecimal lhs = null, rhs = null;
+        Calculation calculation = new Calculation();
+
+        ExpressionUnit expressionUnit = null;
+        BigDecimal lhs = null;
+        BigDecimal rhs = null;
+
+        // Maps an expression to its parent expression.
+        Map<Expression, Expression> expressionParents = new HashMap<>();
+        List<ExpressionUnit> expressionUnits = expression.getUnits();
 
         // STEP 0: Evaluate brackets to determine sub-expressions
-        for (int i = 0; i < list.size(); i++) {
-            obj = list.get(i);
+        for (int i = 0; i < expressionUnits.size(); i++) {
+            obj = expressionUnits.get(i);
             if (obj.equals(BRO)) {
                 if (this.equals(curr)) {
                     curr = new Expression(curr);
-                    list.set(i, curr);
+                    expressionUnits.set(i, curr);
                     continue;
                 } else {
                     curr = new Expression(curr);
@@ -53,15 +60,15 @@ public class Kernel {
         }
 
         if (!this.equals(curr))
-            throw new SyntaxErrorException("Unmatched brackets");
+            throw new IOException("Unmatched brackets");
 
         // STEP 1: Compute constants
         for (int i = 0; i < list.size(); i++) {
             obj = list.get(i);
             if (isConstant(obj)) switch ((byte) obj) {
-                case EUL: list.set(i, calc.computeE()); break;
-                case NPI: list.set(i, calc.computePI()); break;
-                case PHI: list.set(i, calc.computePHI()); break;
+                case EUL: list.set(i, calculation.computeE()); break;
+                case NPI: list.set(i, calculation.computePI()); break;
+                case PHI: list.set(i, calculation.computePHI()); break;
             }
         }
 
@@ -80,7 +87,7 @@ public class Kernel {
                     if (rhs.compareTo(BigDecimal.ZERO) < 0)
                         throw new ArithmeticException("Root of negative no.");
 
-                    rhs = calc.computeSqrt(rhs);
+                    rhs = calculation.computeSqrt(rhs);
                     list.set(i, rhs);
                     list.remove(i + 1);
                     i = Math.max(i - 2, -1);
@@ -91,7 +98,7 @@ public class Kernel {
                     if (isOperand(obj)) lhs = (BigDecimal) obj;
                     else if (isExpression(obj)) lhs = ((Expression) obj).eval();
                     else throw new SyntaxErrorException("Missing operand");
-                    lhs = calc.computeSquare(lhs);
+                    lhs = calculation.computeSquare(lhs);
                     list.set(i - 1, lhs);
                     list.remove(i);
                     list.remove(i);
@@ -110,7 +117,7 @@ public class Kernel {
                     if (isOperand(obj)) rhs = (BigDecimal) obj;
                     else if (isExpression(obj)) rhs = ((Expression) obj).eval();
                     else throw new SyntaxErrorException("Missing operand");
-                    lhs = calc.computePower(lhs, rhs);
+                    lhs = calculation.computePower(lhs, rhs);
                     list.set(i - 1, lhs);
                     list.remove(i);
                     list.remove(i);
@@ -155,7 +162,7 @@ public class Kernel {
                     if (isOperand(obj)) rhs = (BigDecimal) obj;
                     else if (isExpression(obj)) rhs = ((Expression) obj).eval();
                     else throw new SyntaxErrorException("Missing operand");
-                    list.set(i, calc.isPrime(rhs) ? BigDecimal.ONE : BigDecimal.ZERO);
+                    list.set(i, calculation.isPrime(rhs) ? BigDecimal.ONE : BigDecimal.ZERO);
                     list.remove(i + 1);
                     i = Math.max(i - 2, -1);
                     break;
@@ -165,7 +172,7 @@ public class Kernel {
                     if (isOperand(obj)) rhs = (BigDecimal) obj;
                     else if (isExpression(obj)) rhs = ((Expression) obj).eval();
                     else throw new SyntaxErrorException("Missing operand");
-                    rhs = calc.computeExponential(rhs);
+                    rhs = calculation.computeExponential(rhs);
                     list.set(i, rhs);
                     list.remove(i + 1);
                     break;
@@ -175,7 +182,7 @@ public class Kernel {
                     if (isOperand(obj)) rhs = (BigDecimal) obj;
                     else if (isExpression(obj)) rhs = ((Expression) obj).eval();
                     else throw new SyntaxErrorException("Missing operand");
-                    rhs = calc.computePower10(rhs);
+                    rhs = calculation.computePower10(rhs);
                     list.set(i, rhs);
                     list.remove(i + 1);
                     break;
@@ -194,20 +201,20 @@ public class Kernel {
                 else if (isExpression(obj)) rhs = ((Expression) obj).eval();
                 else throw new SyntaxErrorException("Missing operand");
                 switch ((byte) list.get(i)) {
-                    case SIN: rhs = calc.computeSin(rhs, unity); break;
-                    case COS: rhs = calc.computeCos(rhs, unity); break;
-                    case TAN: rhs = clac.computeTan(rhs, unity); break;
-                    case SIH: rhs = calc.computeSinh(rhs); break;
-                    case COH: rhs = calc.computeCosh(rhs); break;
-                    case TAH: rhs = clac.computeTanh(rhs); break;
-                    case ASN: rhs = calc.computeAsin(rhs, unity); break;
-                    case ACS: rhs = calc.computeAcos(rhs, unity); break;
-                    case ATN: rhs = clac.computeAtan(rhs, unity); break;
-                    case ASH: rhs = calc.computeAsinh(rhs); break;
-                    case ACH: rhs = calc.computeAcosh(rhs); break;
-                    case ATH: rhs = clac.computeAtanh(rhs); break;
-                    case LOG: rhs = calc.computeLog10(rhs); break;
-                    case NLG: rhs = calc.computeLn(rhs); break;
+                    case SIN: rhs = calculation.computeSin(rhs, angleUnit); break;
+                    case COS: rhs = calculation.computeCos(rhs, angleUnit); break;
+                    case TAN: rhs = calculation.computeTan(rhs, angleUnit); break;
+                    case SIH: rhs = calculation.computeSinh(rhs); break;
+                    case COH: rhs = calculation.computeCosh(rhs); break;
+                    case TAH: rhs = calculation.computeTanh(rhs); break;
+                    case ASN: rhs = calculation.computeAsin(rhs, angleUnit); break;
+                    case ACS: rhs = calculation.computeAcos(rhs, angleUnit); break;
+                    case ATN: rhs = calculation.computeAtan(rhs, angleUnit); break;
+                    case ASH: rhs = calculation.computeAsinh(rhs); break;
+                    case ACH: rhs = calculation.computeAcosh(rhs); break;
+                    case ATH: rhs = calculation.computeAtanh(rhs); break;
+                    case LOG: rhs = calculation.computeLog10(rhs); break;
+                    case NLG: rhs = calculation.computeLn(rhs); break;
                     case NEG: rhs = rhs.negate(); break;
                     default: continue;
                 }
@@ -232,10 +239,10 @@ public class Kernel {
                     else if (isExpression(obj)) rhs = ((Expression) obj).eval();
                     else throw new SyntaxErrorException("Missing operand");
                     switch ((byte) list.get(i)) {
-                        case MUL: lhs = calc.computeMultiplication(lhs, rhs); break;
-                        case DIV: lhs = calc.computeDivision(lhs, rhs); break;
-                        case ADD: lhs = calc.computeAddition(lhs, rhs); break;
-                        case SUB: lhs = calc.computeSubtraction(lhs, rhs); break;
+                        case MUL: lhs = calculation.computeMultiplication(lhs, rhs); break;
+                        case DIV: lhs = calculation.computeDivision(lhs, rhs); break;
+                        case ADD: lhs = calculation.computeAddition(lhs, rhs); break;
+                        case SUB: lhs = calculation.computeSubtraction(lhs, rhs); break;
                     }
                     list.set(i - 1, lhs);
                     list.remove(i);
@@ -245,13 +252,13 @@ public class Kernel {
                     list.set(i, rhs = ((Expression) obj).eval());
                     obj = i > 0 ? list.get(i - 1) : -1;
                     if (isOperand(obj)) {
-                        list.set(i - 1, rhs = calc.computeMultiplication(rhs, (BigDecimal) obj));
+                        list.set(i - 1, rhs = calculation.computeMultiplication(rhs, (BigDecimal) obj));
                         list.remove(i);
                         i -= 1;
                     }
                     obj = i + 1 < list.size() ? list.get(i + 1) : -1;
                     if (isOperand(obj)) {
-                        list.set(i, calc.computeMultiplication(rhs, (BigDecimal) obj));
+                        list.set(i, calculation.computeMultiplication(rhs, (BigDecimal) obj));
                         list.remove(i + 1);
                     }
                 }
@@ -273,7 +280,7 @@ public class Kernel {
                 rhs = (BigDecimal) obj;
             else throw new UnknownOperatorException();
 
-            list.set(0, calc.computeMultiplication(lhs, rhs));
+            list.set(0, calculation.computeMultiplication(lhs, rhs));
             list.remove(1);
         }
 
