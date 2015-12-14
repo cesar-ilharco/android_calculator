@@ -31,8 +31,8 @@ public class Kernel {
     }};
 
 
-    // TODO: Implement expression evaluation from Syntax Tree. Handle exceptions properly.
-    public static String evaluate (LinkedList<ExpressionUnit> expressionUnits, int scale) {
+    // Suits for parsing and evaluating basic operations only: +,-,×,/ and parenthesis.
+    public static String evaluateBasic (LinkedList<ExpressionUnit> expressionUnits, int scale) {
 
         List<ExpressionUnit>  convertedList = digitsToNumber(expressionUnits);
 

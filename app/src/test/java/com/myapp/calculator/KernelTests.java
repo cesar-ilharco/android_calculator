@@ -59,20 +59,20 @@ public class KernelTests {
     }
 
     @Test
-    public void testKernelEvaluator() throws IOException{
+    public void testKernelBasicEvaluator() throws IOException{
         Expression expression = new Expression();
         // 1 + 2 = 3
         expression.getUnits().addLast(new DigitUnit("1"));
         expression.getUnits().addLast(new OperatorUnit("+"));
         expression.getUnits().addLast(new DigitUnit("2"));
-        Assert.assertEquals("3", Kernel.evaluate(expression.getUnits(), 0));
+        Assert.assertEquals("3", Kernel.evaluateBasic(expression.getUnits(), 0));
 
         // 1 + 2 × 4 - 3 = 6
         expression.getUnits().addLast(new OperatorUnit("×"));
         expression.getUnits().addLast(new DigitUnit("4"));
         expression.getUnits().addLast(new OperatorUnit("-"));
         expression.getUnits().addLast(new DigitUnit("3"));
-        Assert.assertEquals("6", Kernel.evaluate(expression.getUnits(), 0));
+        Assert.assertEquals("6", Kernel.evaluateBasic(expression.getUnits(), 0));
 
         // 1 × 2 × 3 × 4 × 5 = 120
         expression.getUnits().clear();
@@ -85,7 +85,7 @@ public class KernelTests {
         expression.getUnits().addLast(new DigitUnit("4"));
         expression.getUnits().addLast(new OperatorUnit("×"));
         expression.getUnits().addLast(new DigitUnit("5"));
-        Assert.assertEquals("120", Kernel.evaluate(expression.getUnits(), 0));
+        Assert.assertEquals("120", Kernel.evaluateBasic(expression.getUnits(), 0));
 
         // 1 - 2 × 3 + 4 × 5 = 15
         expression.getUnits().clear();
@@ -98,14 +98,14 @@ public class KernelTests {
         expression.getUnits().addLast(new DigitUnit("4"));
         expression.getUnits().addLast(new OperatorUnit("×"));
         expression.getUnits().addLast(new DigitUnit("5"));
-        Assert.assertEquals("15", Kernel.evaluate(expression.getUnits(), 0));
+        Assert.assertEquals("15", Kernel.evaluateBasic(expression.getUnits(), 0));
 
         // 1 / 3 = 0.333...
         expression.getUnits().clear();
         expression.getUnits().addLast(new DigitUnit("1"));
         expression.getUnits().addLast(new OperatorUnit("/"));
         expression.getUnits().addLast(new DigitUnit("3"));
-        double val = Double.valueOf(Kernel.evaluate(expression.getUnits(), 10));
+        double val = Double.valueOf(Kernel.evaluateBasic(expression.getUnits(), 10));
         Assert.assertTrue(val > 0.33333 && val < 0.33334);
 
         // -1 × -2 = 2
@@ -115,7 +115,7 @@ public class KernelTests {
         expression.getUnits().addLast(new OperatorUnit("×"));
         expression.getUnits().addLast(new OperatorUnit("-"));
         expression.getUnits().addLast(new DigitUnit("2"));
-        Assert.assertEquals("2", Kernel.evaluate(expression.getUnits(), 0));
+        Assert.assertEquals("2", Kernel.evaluateBasic(expression.getUnits(), 0));
 
     }
 
