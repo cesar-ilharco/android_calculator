@@ -175,9 +175,9 @@ public class Calculation {
 	}
 
 
-    public BigDecimal computeSin (BigDecimal angle, AngleUnity unity) {
+    public BigDecimal computeSin (BigDecimal angle, AngleUnit unity) {
         BigDecimal pi = getPI();
-        if (unity.equals(AngleUnity.RADIANS)) {
+        if (unity.equals(AngleUnit.RADIANS)) {
             BigDecimal remainder = angle.remainder(pi.multiply(new BigDecimal(2)));
             remainder = remainder.round(getContextoAux());
             BigDecimal piOverFour = pi.divide(new BigDecimal(4));
@@ -194,13 +194,13 @@ public class Calculation {
                 result = sin(pi.multiply(new BigDecimal(2)).subtract(remainder)).negate();
             return result;
         }
-        return computeSin(degreesToRadians(angle), AngleUnity.RADIANS);
+        return computeSin(degreesToRadians(angle), AngleUnit.RADIANS);
     }
 
 
-    public BigDecimal computeCos (BigDecimal angle, AngleUnity unity) {
+    public BigDecimal computeCos (BigDecimal angle, AngleUnit unity) {
         BigDecimal pi = getPI();
-        if (unity.equals(AngleUnity.RADIANS)) {
+        if (unity.equals(AngleUnit.RADIANS)) {
             BigDecimal remainder = angle.remainder(pi.multiply(new BigDecimal(2)));
             remainder = remainder.round(getContextoAux());
             BigDecimal piOverFour = pi.divide(new BigDecimal(4));
@@ -217,11 +217,11 @@ public class Calculation {
                 result = sin(pi.multiply(new BigDecimal(2)).subtract(remainder)).negate();
             return result;
         }
-        return computeCos(degreesToRadians(angle), AngleUnity.RADIANS);
+        return computeCos(degreesToRadians(angle), AngleUnit.RADIANS);
     }
 
 
-    public BigDecimal computeCsc (BigDecimal angle, AngleUnity unity) {
+    public BigDecimal computeCsc (BigDecimal angle, AngleUnit unity) {
         BigDecimal pi = getPI();
         BigDecimal remainder = angle.remainder(pi);
         if (remainder.compareTo(BigDecimal.ZERO) == 0)
@@ -230,7 +230,7 @@ public class Calculation {
     }
 
 
-    public BigDecimal computeSec (BigDecimal angle, AngleUnity unity) {
+    public BigDecimal computeSec (BigDecimal angle, AngleUnit unity) {
         BigDecimal pi = getPI();
         BigDecimal remainder = angle.remainder(pi);
         if (remainder.compareTo(pi.divide(new BigDecimal(2))) == 0)
@@ -239,9 +239,9 @@ public class Calculation {
     }
 
 
-    public BigDecimal computeTan (BigDecimal angle, AngleUnity unity) {
+    public BigDecimal computeTan (BigDecimal angle, AngleUnit unity) {
         BigDecimal pi = getPI();
-        if (unity.equals(AngleUnity.RADIANS)) {
+        if (unity.equals(AngleUnit.RADIANS)) {
             BigDecimal remainder = angle.remainder(pi);
             if (remainder.compareTo(BigDecimal.ZERO) == 0)
                 return BigDecimal.ZERO;
@@ -258,9 +258,9 @@ public class Calculation {
     }
 
 
-    public BigDecimal computeCot (BigDecimal angle, AngleUnity unity) {
+    public BigDecimal computeCot (BigDecimal angle, AngleUnit unity) {
         BigDecimal pi = getPI();
-        if (unity.equals(AngleUnity.RADIANS)) {
+        if (unity.equals(AngleUnit.RADIANS)) {
             BigDecimal remainder = angle.remainder(pi);
             if (remainder.compareTo(BigDecimal.ZERO) == 0)
                 throw new IllegalArgumentException("Illegal argument: division by zero");
@@ -397,23 +397,23 @@ public class Calculation {
     }
 
 
-    public BigDecimal computeAtan (BigDecimal x, AngleUnity unity) {
+    public BigDecimal computeAtan (BigDecimal x, AngleUnit unity) {
         if (x.compareTo(BigDecimal.ZERO) == 0)
             return BigDecimal.ZERO;
         if (x.compareTo(BigDecimal.ZERO) < 0)
             return computeAtan(x.negate(), unity).negate();
         BigDecimal pi = getPI();
-        if (unity.equals(AngleUnity.DEGREE))
-            return radiansToDegrees(computeAtan(x, AngleUnity.RADIANS));
+        if (unity.equals(AngleUnit.DEGREE))
+            return radiansToDegrees(computeAtan(x, AngleUnit.RADIANS));
         if (x.compareTo(BigDecimal.ONE) == 0)
             return pi.divide(new BigDecimal(4));
         BigDecimal sqrt2 = getSqrt2();
         if (x.compareTo(BigDecimal.ONE.add(sqrt2)) > 0)
-            return pi.divide(new BigDecimal(2)).subtract(computeAtan(BigDecimal.ONE.divide(x, getContextoAux()), AngleUnity.RADIANS));
+            return pi.divide(new BigDecimal(2)).subtract(computeAtan(BigDecimal.ONE.divide(x, getContextoAux()), AngleUnit.RADIANS));
         if (x.compareTo(BigDecimal.ONE) > 0)
-            return pi.divide(new BigDecimal(4)).add(computeAtan((x.subtract(BigDecimal.ONE)).divide(x.add(BigDecimal.ONE), getContextoAux()), AngleUnity.RADIANS));
+            return pi.divide(new BigDecimal(4)).add(computeAtan((x.subtract(BigDecimal.ONE)).divide(x.add(BigDecimal.ONE), getContextoAux()), AngleUnit.RADIANS));
         if (x.compareTo(sqrt2.subtract(BigDecimal.ONE)) > 0)
-            return pi.divide(new BigDecimal(4)).subtract(computeAtan((BigDecimal.ONE.subtract(x)).divide(x.add(BigDecimal.ONE), getContextoAux()), AngleUnity.RADIANS));
+            return pi.divide(new BigDecimal(4)).subtract(computeAtan((BigDecimal.ONE.subtract(x)).divide(x.add(BigDecimal.ONE), getContextoAux()), AngleUnit.RADIANS));
         return atan(x);
     }
 
@@ -433,7 +433,7 @@ public class Calculation {
     }
 
 
-    public BigDecimal computeAsin (BigDecimal x, AngleUnity unity) {
+    public BigDecimal computeAsin (BigDecimal x, AngleUnit unity) {
         if (x.compareTo(BigDecimal.ZERO) == 0)
             return BigDecimal.ZERO;
         if (x.compareTo(BigDecimal.ZERO) < 0)
@@ -441,11 +441,11 @@ public class Calculation {
         if (x.compareTo(BigDecimal.ONE) > 0)
             throw new IllegalArgumentException("Answer not real");
         BigDecimal pi = getPI();
-        if (unity.equals(AngleUnity.DEGREE))
-            return radiansToDegrees(computeAsin(x, AngleUnity.RADIANS));
+        if (unity.equals(AngleUnit.DEGREE))
+            return radiansToDegrees(computeAsin(x, AngleUnit.RADIANS));
         BigDecimal sqrt2 = getSqrt2();
         if (x.compareTo(BigDecimal.ONE.divide(sqrt2, getContextoAux())) > 0)
-            return pi.divide(new BigDecimal(2)).subtract(computeAsin(computeSqrt(BigDecimal.ONE.subtract(x.pow(2))), AngleUnity.RADIANS));
+            return pi.divide(new BigDecimal(2)).subtract(computeAsin(computeSqrt(BigDecimal.ONE.subtract(x.pow(2))), AngleUnit.RADIANS));
         return asin(x);
     }
 
@@ -466,42 +466,42 @@ public class Calculation {
     }
 
 
-    public BigDecimal computeAcos (BigDecimal x, AngleUnity unity) {
+    public BigDecimal computeAcos (BigDecimal x, AngleUnit unity) {
         if (x.compareTo(BigDecimal.ONE) == 0)
             return BigDecimal.ZERO;
-        if (unity.equals(AngleUnity.DEGREE))
-            return new BigDecimal(90).subtract(computeAsin(x, AngleUnity.DEGREE));
+        if (unity.equals(AngleUnit.DEGREE))
+            return new BigDecimal(90).subtract(computeAsin(x, AngleUnit.DEGREE));
         BigDecimal pi = getPI();
-        return pi.divide(new BigDecimal(2), getContextoAux()).subtract(computeAsin(x, AngleUnity.RADIANS));
+        return pi.divide(new BigDecimal(2), getContextoAux()).subtract(computeAsin(x, AngleUnit.RADIANS));
     }
 
 
-    public BigDecimal computeAcsc (BigDecimal x, AngleUnity unity) {
+    public BigDecimal computeAcsc (BigDecimal x, AngleUnit unity) {
         if (x.abs().compareTo(BigDecimal.ONE) < 0)
             throw new IllegalArgumentException("Answer not real");
         return computeAsin(BigDecimal.ONE.divide(x, getContextoAux()), unity);
     }
 
 
-    public BigDecimal computeAsec (BigDecimal x, AngleUnity unity) {
+    public BigDecimal computeAsec (BigDecimal x, AngleUnit unity) {
         BigDecimal pi = getPI();
-        if (unity.equals(AngleUnity.DEGREE))
-            return radiansToDegrees(computeAsec(x, AngleUnity.RADIANS));
+        if (unity.equals(AngleUnit.DEGREE))
+            return radiansToDegrees(computeAsec(x, AngleUnit.RADIANS));
         if (x.compareTo(BigDecimal.ONE.negate()) <= 0)
-            return pi.subtract(computeAtan(computeSqrt(x.pow(2).subtract(BigDecimal.ONE)), AngleUnity.RADIANS));
+            return pi.subtract(computeAtan(computeSqrt(x.pow(2).subtract(BigDecimal.ONE)), AngleUnit.RADIANS));
         if (x.compareTo(BigDecimal.ONE) >= 0)
-            return computeAtan(computeSqrt(x.pow(2).subtract(BigDecimal.ONE)), AngleUnity.RADIANS);
+            return computeAtan(computeSqrt(x.pow(2).subtract(BigDecimal.ONE)), AngleUnit.RADIANS);
         throw new IllegalArgumentException("Answer not real");
     }
 
 
-    public BigDecimal computeAcot (BigDecimal x, AngleUnity unity) {
+    public BigDecimal computeAcot (BigDecimal x, AngleUnit unity) {
         BigDecimal pi = getPI();
-        if (unity.equals(AngleUnity.DEGREE))
-            return radiansToDegrees(computeAcot(x, AngleUnity.RADIANS));
+        if (unity.equals(AngleUnit.DEGREE))
+            return radiansToDegrees(computeAcot(x, AngleUnit.RADIANS));
         if (x.compareTo(BigDecimal.ZERO) < 0)
-            return pi.divide(new BigDecimal(-2)).subtract(computeAtan(x, AngleUnity.RADIANS));
-        return pi.divide(new BigDecimal(2)).subtract(computeAtan(x, AngleUnity.RADIANS));
+            return pi.divide(new BigDecimal(-2)).subtract(computeAtan(x, AngleUnit.RADIANS));
+        return pi.divide(new BigDecimal(2)).subtract(computeAtan(x, AngleUnit.RADIANS));
     }
 
 

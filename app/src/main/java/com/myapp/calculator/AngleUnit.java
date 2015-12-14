@@ -5,6 +5,6 @@ package com.myapp.calculator;
  */
 
 
-public enum AngleUnity {
+public enum AngleUnit {
 	DEGREE, RADIANS;
 }
