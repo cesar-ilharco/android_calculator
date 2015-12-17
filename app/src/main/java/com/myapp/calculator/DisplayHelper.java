@@ -65,9 +65,9 @@ public class DisplayHelper {
         return updatedExpression;
     }
 
-    // TODO: Receive a scale as parameter.
+    // TODO: Receive an AngleUnit as a parameter.
     public static String getResultDisplay (Expression expression, int scale){
-        return Kernel.evaluate(expression, scale).toString();
+        return Kernel.evaluate(expression, scale, AngleUnit.DEGREE).toString();
     }
 
     // Method does not add the cursor character.
