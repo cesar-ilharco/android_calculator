@@ -5,9 +5,11 @@ package com.myapp.calculator;
  */
 
 import java.math.BigDecimal;
-//import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
+
+import com.myapp.calculator.miscellanea.Factorial;
+import com.myapp.calculator.miscellanea.Fibonacci;
 
 /*
  * TODO Break algorithms for multithreading
@@ -39,7 +41,7 @@ public class Calculation {
         // TODO Choose maximum precision allowed
         if(mc.getPrecision() == 0)
             throw new IllegalArgumentException("Calculator can't calculate with unlimited precision");
-        if(mc.getPrecision() > 2010)
+        if(mc.getPrecision() > 2000)
             throw new IllegalArgumentException("The maximum precision allowed is 2000 digits");
         this.mc = mc;
         this.mcAux = new MathContext(mc.getPrecision() + DELTA_PRECISION, mc.getRoundingMode());
@@ -564,6 +566,21 @@ public class Calculation {
     }
 
 
+    private BigDecimal powInt (long n) {
+        long b = 1;
+        long max = 1 << 62;
+        BigDecimal result = BigDecimal.ONE;
+        BigDecimal pow = new BigDecimal(n.toString());
+        while (n >= b) {
+            if (n & b) result = result.multiply(pow, getContextoAux());
+            if (b == max) break;
+            pow = pow.multiply(pow, getContextoAux());
+            b <<= 1;
+        }
+        return result;
+    }
+
+
     public BigDecimal computePower (BigDecimal x, BigDecimal y) {
         if (x.compareTo(BigDecimal.ZERO) == 0) {
             if (y.compareTo(BigDecimal.ZERO) == 0)
@@ -579,15 +596,9 @@ public class Calculation {
         }
         if (x.compareTo(BigDecimal.ONE) == 0)
             return BigDecimal.ONE;
-        if (y.compareTo(new BigDecimal(2).pow(30)) > 0)
-            return computePower(x, y.divide(new BigDecimal(4))).pow(4, getContextoAux());
-        return x.pow(y.intValue(), getContextoAux()).multiply(computeExponential(y.subtract(new BigDecimal(y.intValue())).multiply(computeLn(x), getContextoAux())), getContextoAux());
+        if (y.compareTo(new BigDecimal(2).pow(63)) >= 0) throw new IllegalArgumentException("Overflow");
+        return x.powInt(y.longValue()).multiply(computeExponential(y.subtract(new BigDecimal(y.longValue().toString())).multiply(computeLn(x), getContextoAux())), getContextoAux());
     }
-
-    //TODO Update this function so it won't be stupid when the value of x is an integer, and create a global constant ln(10)
-    public BigDecimal computePower10 (BigDecimal x) {
-		return computePower(BigDecimal.TEN, x);
-	}
     
 
     public BigDecimal computeLn (BigDecimal x) {
@@ -665,9 +676,8 @@ public class Calculation {
             remainderExp = remainderExp.multiply(array[1], getContextoAux());
             n += 1;
         }
-        if (x.compareTo(new BigDecimal(2).pow(29)) > 0)
-            return computeExponential(x.divide(new BigDecimal(2))).pow(2, getContextoAux());
-        return exp.multiply(new BigDecimal(2).pow(array[0].intValue(), getContextoAux()), getContextoAux());
+        if (x.compareTo(new BigDecimal(2).pow(63)) >= 0) throw new IllegalArgumentException("Overflow");
+        return exp.multiply(new BigDecimal(2).powInt(array[0].longValue()), getContextoAux());
     }
 
 
@@ -740,28 +750,42 @@ public class Calculation {
 
 
     // Works up to 4.6*10^18
-    public boolean isPrime (BigDecimal N) {
+    public BigDecimal isPrime (BigDecimal N) {
         long n = N.longValue();
-        if (N.compareTo(new BigDecimal(n)) != 0)
-            return false;
+        if (N.compareTo(new BigDecimal(n.toString())) != 0)
+            return BigDecimal.ZERO;
         if (n == 2 || n == 3)
-            return true;
+            return BigDecimal.ONE;
         if (n < 2 || n%2 == 0)
-            return false;
+            return BigDecimal.ZERO;
         if (n < 9)
-            return true;
+            return BigDecimal.ONE;
         if (n%3 == 0)
-            return false;
+            return BigDecimal.ZERO;
         int k = 5;
         long root = computeSqrt(N).longValue();
         while (k <= root) {
             if (n%k == 0)
-                return false;
+                return BigDecimal.ZERO;
             if (n%(k+2) == 0)
-                return false;
+                return BigDecimal.ZERO;
             k += 6;
         }
-        return true;
+        return BigDecimal.ONE;
+    }
+
+
+    public BigDecimal computeFactorial (BigDecimal N) {
+        int n = N.intValueExact();
+        Integer nb = new Integer(n);
+        return Factorial.apply(nb);
+    }
+
+
+    public BigDecimal computeFibonacci (BigDecimal N) {
+        int n = N.intValueExact();
+        Integer nb = new Integer(n);
+        return Fibonacci.apply(nb);
     }
 
 }
