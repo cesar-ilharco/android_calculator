@@ -24,7 +24,7 @@ import java.util.Map;
 // Process user's input expression and computes the output result.
 public class Kernel {
 
-    public static BigDecimal evaluate (Expression expression, int scale, AngleUnit angleUnit)
+    public static BigDecimal evaluate (ExpressionNode expressionNode, int scale, AngleUnit angleUnit)
                                                  throws SyntaxErrorException, InvalidInputException {
 
         if (expressionNode == null) return BigDecimal.ZERO;
