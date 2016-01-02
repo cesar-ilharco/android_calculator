@@ -8,6 +8,7 @@ import com.myapp.calculator.ast.OperatorUnit;
 import com.myapp.calculator.miscellanea.Factorial;
 import com.myapp.calculator.miscellanea.Fibonacci;
 import com.myapp.calculator.utils.MyInt;
+import com.myapp.calculator.Calculation;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -24,15 +25,14 @@ import java.util.Map;
 // Process user's input expression and computes the output result.
 public class Kernel {
 
-    public static BigDecimal evaluate (ExpressionNode expressionNode, int scale, AngleUnit angleUnit)
+    public static BigDecimal evaluate (ExpressionNode expressionNode, Calculation calculation, AngleUnit angleUnit)
                                                  throws SyntaxErrorException, InvalidInputException {
 
         if (expressionNode == null) return BigDecimal.ZERO;
         if (expressionNode.getExpressionUnit().getText().equals("-"))
-            expressionNode = new ExpressionNode(new NumberUnit(BigDecimal.ONE.negate()), null, expressionNode.getRight();
+            expressionNode = new ExpressionNode(new NumberUnit(BigDecimal.ONE.negate()), null, expressionNode.getRight());
 
 
-        Calculation calculation = new Calculation();
         ExpressionUnit expressionUnit = null;
         BigDecimal lhs = null;
         BigDecimal rhs = null;
@@ -45,13 +45,15 @@ public class Kernel {
         ExpressionNode curr = expressionNode;
         while (curr != null) {
             expressionUnit = curr.getExpressionUnit();
+            //###########################################
             if (expressionUnit instanceof Constants) {
                 switch (expressionUnit.getText()) {
-                    case "e": lhr = calculation.computeE(); break;
-                    case "pi": lhr = calculation.computePI(); break;
-                    case "phi": lhr = calculation.computePHI(); break;
+                    // TODO change to getE()...
+                    case "e": lhs = calculation.computeE(); break;
+                    case "pi": lhs = calculation.computePI(); break;
+                    case "phi": lhs = calculation.computePHI(); break;
                 }
-                curr = new ExpressionNode(new NumberUnit(lhr.toString()), curr.getLeft(), curr.getRight());
+                curr = new ExpressionNode(new NumberUnit(lhs.toString()), curr.getLeft(), curr.getRight());
                 if (curr.getLeft() == null) expressionNode = curr;
             }
             curr = curr.getRight();
@@ -84,6 +86,7 @@ public class Kernel {
                     } else {
                         // Adds node curr to child and updates currChild
                         currChild.setRight(new ExpressionNode(expressionUnit));
+                        currChild.getRight().setLeft(currChild);
                         currChild = currChild.getRight();
                     }
                     // Updates current node
@@ -94,7 +97,7 @@ public class Kernel {
                 // Computes the child expression
                 next = curr.getRight();
                 curr.getLeft().setRight(null);
-                resultChild = evaluate(headChild, scale, angleUnit);
+                resultChild = evaluate(headChild, calculation, angleUnit);
                 // Updates original expression with the result of the child expression
                 curr = new ExpressionNode(new NumberUnit(resultChild.toString()), last, next);
                 if (last == null) expressionNode = curr;
@@ -109,7 +112,6 @@ public class Kernel {
         curr = expressionNode;
         while (curr != null) {
             expressionUnit = curr.getExpressionUnit();
-            //############################################################
             if (isUnaryOperator(expressionUnit)) {
                 last = curr.getLeft();
                 curr = curr.getRight();
@@ -126,7 +128,8 @@ public class Kernel {
                 next = curr.getRight();
                 while (!curr.getLeft().equals(last)) {
                     curr = curr.getLeft();
-                    rhs = compute(curr.getExpressionUnit(), rhs);
+                    //################################################################################
+                    rhs = compute(curr.getExpressionUnit().getText(), rhs, calculation, angleUnit);
                 }
                 curr = new ExpressionNode(new NumberUnit(rhs.toString()), last, next);
                 if (last == null) expressionNode = curr;
@@ -140,7 +143,7 @@ public class Kernel {
         while (curr != null) {
             expressionUnit = curr.getExpressionUnit();
             operand = expressionUnit.getText();
-            if (operand == "sqr" || operand == "!" || operand == "^") {
+            if (operand == "²" || operand == "!" || operand == "^") {
                 next = curr.getRight();
                 curr = curr.getLeft();
                 if (curr == null) throw new SyntaxErrorException("Missing operand");
@@ -149,10 +152,12 @@ public class Kernel {
                 lhs = new BigDecimal(expressionUnit.getText());
                 last = curr.getLeft();
                 switch (operand) {
-                    case "sqr":
-                        lhs = calculation.computeSqr(lhs);
+                    case "²":
+                        lhs = calculation.computeSquare(lhs);
+                        break;
                     case "!":
                         lhs = calculation.computeFactorial(lhs);
+                        break;
                     case "^":
                         if (next == null || next.getExpressionUnit() instanceof OperatorUnit)
                             throw new SyntaxErrorException("Missing operand");
@@ -172,7 +177,7 @@ public class Kernel {
             curr = expressionNode;
             while (curr != null) {
                 operand = curr.getExpressionUnit().getText();
-                if (s == 0 && (operand.equals("*") || operand.equals("/")) ||
+                if (s == 0 && (operand.equals("×") || operand.equals("/")) ||
                                     s == 1 && (operand.equals("+") || operand.equals("-"))) {
                     last = curr.getLeft();
                     next = curr.getRight();
@@ -182,7 +187,7 @@ public class Kernel {
                     lhs = new BigDecimal(last.getExpressionUnit().getText());
                     rhs = new BigDecimal(next.getExpressionUnit().getText());
                     switch (operand) {
-                        case "*": lhs = calculation.computeMultiplication(lhs, rhs); break;
+                        case "×": lhs = calculation.computeMultiplication(lhs, rhs); break;
                         case "/": lhs = calculation.computeDivision(lhs, rhs); break;
                         case "+": lhs = calculation.computeAddition(lhs, rhs); break;
                         case "-": lhs = calculation.computeSubtraction(lhs, rhs); break;
@@ -204,8 +209,46 @@ public class Kernel {
             curr = curr.getRight();
         }
         return lhs.stripTrailingZeros();
-}
+    }
 
+    
+    private static boolean isUnaryOperator (ExpressionUnit expressionUnit) {
+        if (expressionUnit instanceof NumberUnit) return false;
+        switch (expressionUnit.getText()) {
+            case "^":
+            case "²":
+            case "!":
+            case "+":
+            case "-":
+            case "×":
+            case "/": return false;
+            default: return true;
+        }
+    }
+
+
+    private static BigDecimal compute (String operator, BigDecimal rhs, Calculation calculation, AngleUnit angleUnit) {
+        switch (operator) {
+            case "sin": return calculation.computeSin(rhs, angleUnit);
+            case "cos": return calculation.computeCos(rhs, angleUnit);
+            case "tan": return calculation.computeTan(rhs, angleUnit);
+            case "asin": return calculation.computeAsin(rhs, angleUnit);
+            case "acos": return calculation.computeAcos(rhs, angleUnit);
+            case "atan": return calculation.computeAtan(rhs, angleUnit);
+            case "sinh": return calculation.computeSinh(rhs);
+            case "cosh": return calculation.computeCosh(rhs);
+            case "tanh": return calculation.computeTanh(rhs);
+            case "asinh": return calculation.computeAsinh(rhs);
+            case "acosh": return calculation.computeAcosh(rhs);
+            case "atanh": return calculation.computeAtanh(rhs);
+            case "exp": return calculation.computeExponential(rhs);
+            case "ln": return calculation.computeLn(rhs);
+            case "log": return calculation.computeLog10(rhs);
+            case "sqrt": return calculation.computeSqrt(rhs);
+            case "Fib": return calculation.computeFibonacci(rhs);
+            case "isPrime": return calculation.isPrimes(rhs);
+        }
+    }
 
 
     // TODO: Create a global operator precedence and generalize the Syntax Tree construction (parse method).
