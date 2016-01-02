@@ -22,6 +22,8 @@ public class ExpressionNode {
         this.expressionUnit = expressionUnit;
         this.left = left;
         this.right = right;
+        if (left != null) left.setRight(this);
+        if (right != null) right.setLeft(this);
     }
 
     public ExpressionUnit getExpressionUnit() {
