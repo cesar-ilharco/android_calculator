@@ -1,5 +1,6 @@
 package com.myapp.calculator.ast;
 
+import java.util.LinkedList;
 
 /**
  * Android calculator app
@@ -24,6 +25,16 @@ public class ExpressionNode {
         this.right = right;
         if (left != null) left.setRight(this);
         if (right != null) right.setLeft(this);
+    }
+
+    public ExpressionNode constructExpressionNodes (Expression expression) {
+        LinkedList<ExpressionUnit> list = expression.getUnits();
+        if (list.size() == 0) return null;
+        ExpressionNode head = new ExpressionNode(list.get(0));
+        ExpressionNode curr = head;
+        for (int i = 1; i < list.size(); i++)
+            curr = new ExpressionNode(list.get(i), curr, null);
+        return head;
     }
 
     public ExpressionUnit getExpressionUnit() {
