@@ -24,280 +24,186 @@ import java.util.Map;
 // Process user's input expression and computes the output result.
 public class Kernel {
 
-    public static BigDecimal evaluate (Expression expression, int scale, AngleUnit angleUnit) {
+    public static BigDecimal evaluate (Expression expression, int scale, AngleUnit angleUnit)
+                                                 throws SyntaxErrorException, InvalidInputException {
+
+        if (expressionNode == null) return BigDecimal.ZERO;
+        if (expressionNode.getExpressionUnit().getText().equals("-"))
+            expressionNode = new ExpressionNode(new NumberUnit(BigDecimal.ONE.negate()), null, expressionNode.getRight();
+
 
         Calculation calculation = new Calculation();
-
         ExpressionUnit expressionUnit = null;
         BigDecimal lhs = null;
         BigDecimal rhs = null;
+        ExpressionNode last = null;
+        ExpressionNode next = null;
+        String operator = null;
+        
 
-        // Maps an expression to its parent expression.
-        Map<Expression, Expression> expressionParents = new HashMap<>();
-        List<ExpressionUnit> expressionUnits = expression.getUnits();
+        // STEP 1: Compute constants
+        ExpressionNode curr = expressionNode;
+        while (curr != null) {
+            expressionUnit = curr.getExpressionUnit();
+            if (expressionUnit instanceof Constants) {
+                switch (expressionUnit.getText()) {
+                    case "e": lhr = calculation.computeE(); break;
+                    case "pi": lhr = calculation.computePI(); break;
+                    case "phi": lhr = calculation.computePHI(); break;
+                }
+                curr = new ExpressionNode(new NumberUnit(lhr.toString()), curr.getLeft(), curr.getRight());
+                if (curr.getLeft() == null) expressionNode = curr;
+            }
+            curr = curr.getRight();
+        }
 
 
-        // TODO: Finish evaluate implementation.
-        // For now use OperatorUnit.getText() and string comparison to identify operators
-        // such as "log", "arctanh", "^" or "√". Check strings.xml and DisplayHelper for more information.
+        // STEP 2: Evaluate brackets to determine sub-expressions
+        curr = expressionNode;
+        while (curr != null) {
+            expressionUnit = curr.getExpressionUnit();
+            if (expressionUnit.getText().equals('(')) {
+                // Initialization
+                last = curr.getLeft();
+                curr = curr.getRight();
+                int nbBrackets = 1;
+                ExpressionNode currChild = null;
+                ExpressionNode headChild = null;
+                // Loop will break when expression is finished or all brackets are matched
+                while (curr != null) {
+                    expressionUnit = curr.getExpressionUnit();
+                    if (expressionUnit.getText().equals(')') {
+                        nbBrackets--;
+                        // Breaks if brackets are all matched
+                        if (nbBrackets == 0) break;
+                    } else if (expressionUnit.getText().equals('(')) nbBrackets++;
+                    // Initialization of the child expression
+                    if (currChild == null) {
+                        currChild = new ExpressionNode(expressionUnit);
+                        headChild = currChild;
+                    } else {
+                        // Adds node curr to child and updates currChild
+                        currChild.setRight(new ExpressionNode(expressionUnit));
+                        currChild = currChild.getRight();
+                    }
+                    // Updates current node
+                    curr = curr.getRight();
+                }
+                // If there are more open brackets than close brackets
+                if (curr == null) throw new SyntaxErrorException("Unmatched brackets");
+                // Computes the child expression
+                next = curr.getRight();
+                curr.getLeft().setRight(null);
+                resultChild = evaluate(headChild, scale, angleUnit);
+                // Updates original expression with the result of the child expression
+                curr = new ExpressionNode(new NumberUnit(resultChild.toString()), last, next);
+                if (last == null) expressionNode = curr;
+            } else if (expressionUnit.getText().equals(')'))
+                // If there are more close brackets than open brackets
+                throw new SyntaxErrorException("Unmatched brackets");
+            curr = curr.getRight();
+        }
 
-        // STEP 0: Evaluate brackets to determine sub-expressions
-//        for (int i = 0; i < expressionUnits.size(); i++) {
-//            obj = expressionUnits.get(i);
-//            if (obj.equals(BRO)) {
-//                if (this.equals(curr)) {
-//                    curr = new Expression(curr);
-//                    expressionUnits.set(i, curr);
-//                    continue;
-//                } else {
-//                    curr = new Expression(curr);
-//                    curr.getParent().push(curr);
-//                }
-//            } else if (obj.equals(BRC)) {
-//                curr = curr.getParent();
-//                if (curr == null) break;
-//            } else if (this.equals(curr)) {
-//                if (!(isOperator(obj) || isExpression(obj)))
-//                    list.set(i, new BigDecimal(obj.toString()));
-//                continue;
-//            } else curr.push(obj);
-//            list.remove(i--);
-//        }
-//
-//        if (!this.equals(curr))
-//            throw new IOException("Unmatched brackets");
-//
-//        // STEP 1: Compute constants
-//        for (int i = 0; i < list.size(); i++) {
-//            obj = list.get(i);
-//            if (isConstant(obj)) switch ((byte) obj) {
-//                case EUL: list.set(i, calculation.computeE()); break;
-//                case NPI: list.set(i, calculation.computePI()); break;
-//                case PHI: list.set(i, calculation.computePHI()); break;
-//            }
-//        }
-//
-//
-//        // STEP 2: Roots, powers, factorial, Fibonacci, isPrime.
-//        for (int i = 0; i < list.size(); i++) {
-//            obj = list.get(i);
-//            if (isOperator(obj)) switch ((byte) obj) {
-//                case SQUARE_ROOT:
-//                    obj = i + 1 < list.size() ? list.get(i + 1) : -1;
-//                    if (obj.equals(SRT)) continue;
-//                    else if (isOperand(obj)) rhs = (BigDecimal) obj;
-//                    else if (isExpression(obj)) rhs = ((Expression) obj).eval();
-//                    else throw new SyntaxErrorException("Missing operand");
-//
-//                    if (rhs.compareTo(BigDecimal.ZERO) < 0)
-//                        throw new ArithmeticException("Root of negative no.");
-//
-//                    rhs = calculation.computeSqrt(rhs);
-//                    list.set(i, rhs);
-//                    list.remove(i + 1);
-//                    i = Math.max(i - 2, -1);
-//                    break;
-//
-//                case SQUARED:
-//                    obj = i > 0 ? list.get(i - 1) : -1;
-//                    if (isOperand(obj)) lhs = (BigDecimal) obj;
-//                    else if (isExpression(obj)) lhs = ((Expression) obj).eval();
-//                    else throw new SyntaxErrorException("Missing operand");
-//                    lhs = calculation.computeSquare(lhs);
-//                    list.set(i - 1, lhs);
-//                    list.remove(i);
-//                    list.remove(i);
-//                    // Must test, possibly wrong
-//                    i = Math.max(i - 2, -1);
-//                    break;
-//
-//                case POWER:
-//                    obj = i + 2 < list.size() ? list.get(i + 2) : -1;
-//                    if (obj.equals(POW)) continue;
-//                    obj = i > 0 ? list.get(i - 1) : -1;
-//                    if (isOperand(obj)) lhs = (BigDecimal) obj;
-//                    else if (isExpression(obj)) lhs = ((Expression) obj).eval();
-//                    else throw new SyntaxErrorException("Missing operand");
-//                    obj = i + 1 < list.size() ? list.get(i + 1) : -1;
-//                    if (isOperand(obj)) rhs = (BigDecimal) obj;
-//                    else if (isExpression(obj)) rhs = ((Expression) obj).eval();
-//                    else throw new SyntaxErrorException("Missing operand");
-//                    lhs = calculation.computePower(lhs, rhs);
-//                    list.set(i - 1, lhs);
-//                    list.remove(i);
-//                    list.remove(i);
-//                    i = Math.max(i - 3, -1);
-//                    break;
-//
-//                case FACTORIAL:
-//                    obj = i > 0 ? list.get(i - 1) : -1;
-//                    if (isOperand(obj)) lhs = (BigDecimal) obj;
-//                    else if (isExpression(obj)) lhs = ((Expression) obj).eval();
-//                    else throw new SyntaxErrorException("Missing operand");
-//                    //if (lhs.compareTo(BigDecimal.ZERO) < 0)
-//                    //	throw new InvalidInputException("Factorial input less than zero");
-//                    //else if (lhs.compareTo(new BigDecimal(5000)) > 0)
-//                    //	throw new InvalidInputException("Factorial input too large (>5000)");
-//
-//                    //#################################################################################
-//                    // Test if lhs has integer value
-//                    lhs = Factorial.apply(lhs.intValue())
-//                    list.set(i - 1, lhs);
-//                    //#################################################################################
-//
-//                    list.remove(i);
-//                    i -= 1;
-//                    break;
-//
-//                case FIBONACCI:
-//                    obj = i + 1 < list.size() ? list.get(i + 1) : -1;
-//                    if (obj.equals(FIB)) continue;
-//                    else if (isOperand(obj)) rhs = (BigDecimal) obj;
-//                    else if (isExpression(obj)) rhs = ((Expression) obj).eval();
-//                    else throw new SyntaxErrorException("Missing operand");
-//                    //#########################################################
-//                    rhs = Fibonacci.apply(rhs);
-//                    list.set(i, rhs);
-//                    list.remove(i + 1);
-//                    i = Math.max(i - 2, -1);
-//                    break;
-//
-//                case IS_PRIME:
-//                    obj = i + 1 < list.size() ? list.get(i + 1) : -1;
-//                    if (isOperand(obj)) rhs = (BigDecimal) obj;
-//                    else if (isExpression(obj)) rhs = ((Expression) obj).eval();
-//                    else throw new SyntaxErrorException("Missing operand");
-//                    list.set(i, calculation.isPrime(rhs) ? BigDecimal.ONE : BigDecimal.ZERO);
-//                    list.remove(i + 1);
-//                    i = Math.max(i - 2, -1);
-//                    break;
-//
-//                case EXPONENTIAL:
-//                    obj = i + 1 < list.size() ? list.get(i + 1) : -1;
-//                    if (isOperand(obj)) rhs = (BigDecimal) obj;
-//                    else if (isExpression(obj)) rhs = ((Expression) obj).eval();
-//                    else throw new SyntaxErrorException("Missing operand");
-//                    rhs = calculation.computeExponential(rhs);
-//                    list.set(i, rhs);
-//                    list.remove(i + 1);
-//                    break;
-//
-//                case POWER_OF_TEN:
-//                    obj = i + 1 < list.size() ? list.get(i + 1) : -1;
-//                    if (isOperand(obj)) rhs = (BigDecimal) obj;
-//                    else if (isExpression(obj)) rhs = ((Expression) obj).eval();
-//                    else throw new SyntaxErrorException("Missing operand");
-//                    rhs = calculation.computePower10(rhs);
-//                    list.set(i, rhs);
-//                    list.remove(i + 1);
-//                    break;
-//            }
-//        }
-//
-//        // STEP 3: Common mathematical functions.
-//        for (int i = list.size() - 1; i >= 0; i--) {
-//            obj = list.get(i);
-//            if (obj.equals(SIN) || obj.equals(COS) || obj.equals(TAN) ||
-//                    obj.equals(LOG) || obj.equals(NLG) || obj.equals(FIB) ||
-//                    obj.equals(NEG))
-//            {
-//                obj = i + 1 < list.size() ? list.get(i + 1) : -1;
-//                if (isOperand(obj)) rhs = (BigDecimal) obj;
-//                else if (isExpression(obj)) rhs = ((Expression) obj).eval();
-//                else throw new SyntaxErrorException("Missing operand");
-//                switch ((byte) list.get(i)) {
-//                    case SIN: rhs = calculation.computeSin(rhs, angleUnit); break;
-//                    case COS: rhs = calculation.computeCos(rhs, angleUnit); break;
-//                    case TAN: rhs = calculation.computeTan(rhs, angleUnit); break;
-//                    case SIH: rhs = calculation.computeSinh(rhs); break;
-//                    case COH: rhs = calculation.computeCosh(rhs); break;
-//                    case TAH: rhs = calculation.computeTanh(rhs); break;
-//                    case ASN: rhs = calculation.computeAsin(rhs, angleUnit); break;
-//                    case ACS: rhs = calculation.computeAcos(rhs, angleUnit); break;
-//                    case ATN: rhs = calculation.computeAtan(rhs, angleUnit); break;
-//                    case ASH: rhs = calculation.computeAsinh(rhs); break;
-//                    case ACH: rhs = calculation.computeAcosh(rhs); break;
-//                    case ATH: rhs = calculation.computeAtanh(rhs); break;
-//                    case LOG: rhs = calculation.computeLog10(rhs); break;
-//                    case NLG: rhs = calculation.computeLn(rhs); break;
-//                    case NEG: rhs = rhs.negate(); break;
-//                    default: continue;
-//                }
-//                list.set(i, rhs);
-//                list.remove(i + 1);
-//            }
-//        }
-//
-//        // STEP 4: Multiplicative and additive operations.
-//        for (int s = 0; s < 2; s++)
-//            for (int i = 0; i < list.size(); i++) {
-//                obj = list.get(i);
-//                if (s == 0 && (obj.equals(MUL) || obj.equals(DIV) ||
-//                        s == 1 && (obj.equals(ADD) || obj.equals(SUB)))
-//                {
-//                    obj = i > 0 ? list.get(i - 1) : -1;
-//                    if (isOperand(obj)) lhs = (BigDecimal) obj;
-//                    else if (isExpression(obj)) lhs = ((Expression) obj).eval();
-//                    else throw new SyntaxErrorException("Missing operand");
-//                    obj = i + 1 < list.size() ? list.get(i + 1) : -1;
-//                    if (isOperand(obj)) rhs = (BigDecimal) obj;
-//                    else if (isExpression(obj)) rhs = ((Expression) obj).eval();
-//                    else throw new SyntaxErrorException("Missing operand");
-//                    switch ((byte) list.get(i)) {
-//                        case MUL: lhs = calculation.computeMultiplication(lhs, rhs); break;
-//                        case DIV: lhs = calculation.computeDivision(lhs, rhs); break;
-//                        case ADD: lhs = calculation.computeAddition(lhs, rhs); break;
-//                        case SUB: lhs = calculation.computeSubtraction(lhs, rhs); break;
-//                    }
-//                    list.set(i - 1, lhs);
-//                    list.remove(i);
-//                    list.remove(i);
-//                    i -= 1;
-//                } else if (isExpression(obj)) {
-//                    list.set(i, rhs = ((Expression) obj).eval());
-//                    obj = i > 0 ? list.get(i - 1) : -1;
-//                    if (isOperand(obj)) {
-//                        list.set(i - 1, rhs = calculation.computeMultiplication(rhs, (BigDecimal) obj));
-//                        list.remove(i);
-//                        i -= 1;
-//                    }
-//                    obj = i + 1 < list.size() ? list.get(i + 1) : -1;
-//                    if (isOperand(obj)) {
-//                        list.set(i, calculation.computeMultiplication(rhs, (BigDecimal) obj));
-//                        list.remove(i + 1);
-//                    }
-//                }
-//            }
-//
-//        // STEP 5: Multiply any remaining items. A cheap way to get my math right :)
-//        // For example, 2 sin 30 == 2 * sin 30
-//        while (list.size() > 1) {
-//            obj = list.get(0);
-//            if (isExpression(obj))
-//                lhs = ((Expression) obj).eval();
-//            else if (isOperand(obj))
-//                lhs = (BigDecimal) obj;
-//            else throw new UnknownOperatorException();
-//            obj = list.get(1);
-//            if (isExpression(obj))
-//                rhs = ((Expression) obj).eval();
-//            else if (isOperand(obj))
-//                rhs = (BigDecimal) obj;
-//            else throw new UnknownOperatorException();
-//
-//            list.set(0, calculation.computeMultiplication(lhs, rhs));
-//            list.remove(1);
-//        }
-//
-//        if (list.size() == 0)
-//            throw new SyntaxErrorException("Empty "
-//                    + (this.hasParent() ? "brackets" : "expression"));
-//        else if (isExpression(list.get(0)))
-//            list.set(0, ((Expression) list.get(0)).eval());
-//
-//        lhs = (BigDecimal) list.get(0);
-//        return lhs.stripTrailingZeros();
-        return BigDecimal.ZERO;
+
+        // STEP 3: Unary operators (to the left)
+        curr = expressionNode;
+        while (curr != null) {
+            expressionUnit = curr.getExpressionUnit();
+            //############################################################
+            if (isUnaryOperator(expressionUnit)) {
+                last = curr.getLeft();
+                curr = curr.getRight();
+                if (curr == null) throw new SyntaxErrorException("Missing operand");
+                expressionUnit = curr.getExpressionUnit();
+                
+                while (isUnaryOperator(expressionUnit)) {
+                    curr = curr.getRight();
+                    if (curr == null) throw new SyntaxErrorException("Missing operand");
+                    expressionUnit = curr.getExpressionUnit();
+                }
+                if (expressionUnit instanceof OperatorUnit) throw new SyntaxErrorException("Missing operand");
+                rhs = new BigDecimal(expressionUnit.getText());
+                next = curr.getRight();
+                while (!curr.getLeft().equals(last)) {
+                    curr = curr.getLeft();
+                    rhs = compute(curr.getExpressionUnit(), rhs);
+                }
+                curr = new ExpressionNode(new NumberUnit(rhs.toString()), last, next);
+                if (last == null) expressionNode = curr;
+            }
+            curr = curr.getRight();
+        }
+
+
+        // STEP 4: Square, factorial and power
+        curr = expressionNode;
+        while (curr != null) {
+            expressionUnit = curr.getExpressionUnit();
+            operand = expressionUnit.getText();
+            if (operand == "sqr" || operand == "!" || operand == "^") {
+                next = curr.getRight();
+                curr = curr.getLeft();
+                if (curr == null) throw new SyntaxErrorException("Missing operand");
+                expressionUnit = curr.getExpressionUnit();
+                if (expressionUnit instanceof OperatorUnit) throw new SyntaxErrorException("Missing operand");
+                lhs = new BigDecimal(expressionUnit.getText());
+                last = curr.getLeft();
+                switch (operand) {
+                    case "sqr":
+                        lhs = calculation.computeSqr(lhs);
+                    case "!":
+                        lhs = calculation.computeFactorial(lhs);
+                    case "^":
+                        if (next == null || next.getExpressionUnit() instanceof OperatorUnit)
+                            throw new SyntaxErrorException("Missing operand");
+                        rhs = new BigDecimal(next.getExpressionUnit().getText());
+                        lhs = calculation.computePower(lhs, rhs);
+                        next = next.getRight();
+                }       
+                curr = new ExpressionNode(new NumberUnit(lhs.toString()), last, next);
+                if (last == null) expressionNode = curr;
+            }
+            curr = curr.getRight();
+        }   
+            
+
+        // STEP 5: Multiplicative and additive operations
+        for (int s = 0; s < 2; s++) {
+            curr = expressionNode;
+            while (curr != null) {
+                operand = curr.getExpressionUnit().getText();
+                if (s == 0 && (operand.equals("*") || operand.equals("/")) ||
+                                    s == 1 && (operand.equals("+") || operand.equals("-"))) {
+                    last = curr.getLeft();
+                    next = curr.getRight();
+                    if (last == null || next == null) throw new SyntaxErrorException("Missing operand");
+                    if (last.getExpressionUnit() instanceof OperatorUnit || next.getExpressionUnit() instanceof OperatorUnit)
+                        throw new SyntaxErrorException("Missing operand");
+                    lhs = new BigDecimal(last.getExpressionUnit().getText());
+                    rhs = new BigDecimal(next.getExpressionUnit().getText());
+                    switch (operand) {
+                        case "*": lhs = calculation.computeMultiplication(lhs, rhs); break;
+                        case "/": lhs = calculation.computeDivision(lhs, rhs); break;
+                        case "+": lhs = calculation.computeAddition(lhs, rhs); break;
+                        case "-": lhs = calculation.computeSubtraction(lhs, rhs); break;
+                    }
+                    curr = new ExpressionNode(new NumberUnit(lhs.toString()), last.getLeft(), next.getRight());
+                    if (last.getLeft() == null) expressionNode = curr;
+                }
+                curr = curr.getRight();
+            }
+        }
+
+
+        // STEP 6: Multiply the remaining items, if any
+        lhs = new BigDecimal(expressionNode.getExpressionUnit().getText());
+        curr = expressionNode.getRight();
+        while (curr != null) {
+            rhs = new BigDecimal(curr.getExpressionUnit().getText());
+            lhs = calculation.computeMultiplication(lhs, rhs);
+            curr = curr.getRight();
+        }
+        return lhs.stripTrailingZeros();
 }
 
 
