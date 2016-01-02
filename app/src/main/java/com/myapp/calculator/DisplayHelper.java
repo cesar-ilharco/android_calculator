@@ -67,7 +67,11 @@ public class DisplayHelper {
 
     // TODO: Receive an AngleUnit as a parameter.
     public static String getResultDisplay (Expression expression, int scale){
-        return Kernel.evaluate(expression, scale, AngleUnit.DEGREE).toString();
+        MathContext context = new MathContext(scale, RoundingMode.HALF_EVEN);
+        Calculation calculation = new Calculation(context);
+        ExpressionNode expressionNode = ExpressionNode.constructExpressionNodes(expression);
+        BigDecimal result = Kernel.evaluate(expressionNode, calculation, AngleUnit.DEGREE).round(context);
+        return result.toString();
     }
 
     // Method does not add the cursor character.
