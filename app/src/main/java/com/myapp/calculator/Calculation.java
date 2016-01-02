@@ -566,13 +566,13 @@ public class Calculation {
     }
 
 
-    private BigDecimal powInt (long n) {
+    private BigDecimal powInt (BigDecimal x, long n) {
         long b = 1;
         long max = 1 << 62;
         BigDecimal result = BigDecimal.ONE;
-        BigDecimal pow = new BigDecimal(n.toString());
+        BigDecimal pow = x;
         while (n >= b) {
-            if (n & b) result = result.multiply(pow, getContextoAux());
+            if ((n&b) != 0) result = result.multiply(pow, getContextoAux());
             if (b == max) break;
             pow = pow.multiply(pow, getContextoAux());
             b <<= 1;
@@ -597,7 +597,7 @@ public class Calculation {
         if (x.compareTo(BigDecimal.ONE) == 0)
             return BigDecimal.ONE;
         if (y.compareTo(new BigDecimal(2).pow(63)) >= 0) throw new IllegalArgumentException("Overflow");
-        return x.powInt(y.longValue()).multiply(computeExponential(y.subtract(new BigDecimal(y.longValue().toString())).multiply(computeLn(x), getContextoAux())), getContextoAux());
+        return powInt(x, y.longValue()).multiply(computeExponential(y.subtract(new BigDecimal(y.toBigInteger())).multiply(computeLn(x), getContextoAux())), getContextoAux());
     }
     
 
@@ -655,7 +655,6 @@ public class Calculation {
     }
 
 
-    // Ask 10 digits more than demanded by the user
     public BigDecimal computeExponential (BigDecimal x) {
         int iterations = getExpIterations(getContexto().getPrecision());
         if (x.compareTo(BigDecimal.ZERO) < 0) {
@@ -677,7 +676,7 @@ public class Calculation {
             n += 1;
         }
         if (x.compareTo(new BigDecimal(2).pow(63)) >= 0) throw new IllegalArgumentException("Overflow");
-        return exp.multiply(new BigDecimal(2).powInt(array[0].longValue()), getContextoAux());
+        return exp.multiply(powInt(new BigDecimal(2), array[0].longValue()), getContextoAux());
     }
 
 
