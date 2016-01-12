@@ -38,7 +38,6 @@ public class Calculation {
 
     public Calculation (MathContext mc) {
         super();
-        // TODO Choose maximum precision allowed
         if(mc.getPrecision() == 0)
             throw new IllegalArgumentException("Calculator can't calculate with unlimited precision");
         if(mc.getPrecision() > 2000)
@@ -568,7 +567,8 @@ public class Calculation {
 
     private BigDecimal powInt (BigDecimal x, long n) {
         long b = 1;
-        long max = 1 << 62;
+        long max = 1;
+        max <<= 62;
         BigDecimal result = BigDecimal.ONE;
         BigDecimal pow = x;
         while (n >= b) {
@@ -616,7 +616,7 @@ public class Calculation {
             exp2 = exp2.multiply(two);
             k += 1;
         }
-        return ln2.multiply(new BigDecimal(k)).add(ln(x.divide(exp2))).round(getContextoAux());
+        return ln2.multiply(new BigDecimal(k)).add(ln(x.divide(exp2, getContextoAux()))).round(getContextoAux());
     }
 
 
@@ -750,41 +750,55 @@ public class Calculation {
 
     // Works up to 4.6*10^18
     public BigDecimal isPrime (BigDecimal N) {
-        long n = N.longValue();
-        if (N.compareTo(new BigDecimal(n.toString())) != 0)
-            return BigDecimal.ZERO;
-        if (n == 2 || n == 3)
-            return BigDecimal.ONE;
-        if (n < 2 || n%2 == 0)
-            return BigDecimal.ZERO;
-        if (n < 9)
-            return BigDecimal.ONE;
-        if (n%3 == 0)
-            return BigDecimal.ZERO;
-        int k = 5;
-        long root = computeSqrt(N).longValue();
-        while (k <= root) {
-            if (n%k == 0)
+        try {
+
+            long n = N.longValueExact();
+            if (n == 2 || n == 3)
+                return BigDecimal.ONE;
+            if (n < 2 || n%2 == 0)
                 return BigDecimal.ZERO;
-            if (n%(k+2) == 0)
+            if (n < 9)
+                return BigDecimal.ONE;
+            if (n%3 == 0)
                 return BigDecimal.ZERO;
-            k += 6;
+            int k = 5;
+            long root = computeSqrt(N).longValue();
+            while (k <= root) {
+                if (n%k == 0)
+                    return BigDecimal.ZERO;
+                if (n%(k+2) == 0)
+                    return BigDecimal.ZERO;
+                k += 6;
+            }
+            return BigDecimal.ONE;
+
+        } catch (ArithmeticException e) {
+
+            return BigDecimal.ZERO;
+
         }
-        return BigDecimal.ONE;
     }
 
 
     public BigDecimal computeFactorial (BigDecimal N) {
-        int n = N.intValueExact();
-        Integer nb = new Integer(n);
-        return Factorial.apply(nb);
+        try {
+            int n = N.intValueExact();
+            Integer nb = new Integer(n);
+            return Factorial.apply(nb);
+        } catch (ArithmeticException e) {
+            throw new ArithmeticException("Number must be an integer");
+        }
     }
 
 
     public BigDecimal computeFibonacci (BigDecimal N) {
-        int n = N.intValueExact();
-        Integer nb = new Integer(n);
-        return Fibonacci.apply(nb);
+        try {
+            int n = N.intValueExact();
+            Integer nb = new Integer(n);
+            return Fibonacci.apply(nb);
+        }catch (ArithmeticException e) {
+            throw new ArithmeticException("Number must be an integer");
+        }
     }
 
 }
