@@ -4,6 +4,7 @@ package com.myapp.calculator;
 import com.myapp.calculator.ast.DigitUnit;
 import com.myapp.calculator.ast.Expression;
 import com.myapp.calculator.ast.ExpressionUnit;
+import com.myapp.calculator.ast.ExpressionNode;
 import com.myapp.calculator.ast.OperatorUnit;
 import com.myapp.calculator.utils.MyInt;
 
@@ -13,6 +14,10 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 /**
  * Android calculator app
@@ -65,7 +70,7 @@ public class DisplayHelper {
         return updatedExpression;
     }
 
-    // TODO: Receive an AngleUnit as a parameter.
+    // TODO: Receive an AngleUnit as a parameter and add try/catch
     public static String getResultDisplay (Expression expression, int scale){
         MathContext context = new MathContext(scale, RoundingMode.HALF_EVEN);
         Calculation calculation = new Calculation(context);
@@ -129,7 +134,9 @@ public class DisplayHelper {
         }
     }
 
+
     private static void addExpOperator(LinkedList<ExpressionUnit> expressionUnits, MyInt cursorPosition,String buttonPressed) {
+        // TODO Change e^x to exp(x)
         if (buttonPressed.equals("e^x")){
             expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit("e"));
             expressionUnits.add(cursorPosition.getAndIncrease(), new OperatorUnit("^"));
