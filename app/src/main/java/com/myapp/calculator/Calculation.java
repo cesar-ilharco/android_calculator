@@ -784,7 +784,7 @@ public class Calculation {
         try {
             int n = N.intValueExact();
             Integer nb = new Integer(n);
-            return Factorial.apply(nb);
+            return Factorial.rawFactorial(nb);
         } catch (ArithmeticException e) {
             throw new ArithmeticException("Number must be an integer");
         }
@@ -795,7 +795,7 @@ public class Calculation {
         try {
             int n = N.intValueExact();
             Integer nb = new Integer(n);
-            return Fibonacci.apply(nb);
+            return Fibonacci.fibonacciEfficientIteration(nb);
         }catch (ArithmeticException e) {
             throw new ArithmeticException("Number must be an integer");
         }
