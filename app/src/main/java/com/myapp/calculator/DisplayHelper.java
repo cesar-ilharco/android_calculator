@@ -11,6 +11,7 @@ import com.myapp.calculator.utils.MyInt;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,7 +75,8 @@ public class DisplayHelper {
     public static String getResultDisplay (Expression expression, int scale){
         MathContext context = new MathContext(scale, RoundingMode.HALF_EVEN);
         Calculation calculation = new Calculation(context);
-        ExpressionNode expressionNode = ExpressionNode.constructExpressionNodes(expression);
+        List<ExpressionUnit> expressionUnits = Kernel.digitsToNumber(expression.getUnits());
+        ExpressionNode expressionNode = ExpressionNode.constructExpressionNodes(expressionUnits);
         BigDecimal result = Kernel.evaluate(expressionNode, calculation, AngleUnit.DEGREE).round(context);
         return result.toString();
     }

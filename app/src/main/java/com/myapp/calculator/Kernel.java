@@ -7,6 +7,9 @@ import com.myapp.calculator.ast.OperatorUnit;
 import com.myapp.calculator.ast.ConstantUnit;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Android calculator app
@@ -237,6 +240,44 @@ public class Kernel {
             case "isPrime": return calculation.isPrime(rhs);
             default: return null;
         }
+    }
+
+    // TODO: Interpret sign - always as an operator (subtraction or negation).
+    // Convert DigitUnits into NumberInit and return it as an ArrayList.
+    public static List<ExpressionUnit> digitsToNumber (LinkedList<ExpressionUnit> expressionUnits){
+        List<ExpressionUnit> result = new ArrayList<>();
+
+        StringBuilder currentNumber = new StringBuilder();
+        for (ExpressionUnit expressionUnit : expressionUnits){
+            if (expressionUnit instanceof OperatorUnit){
+                // Operator "-" can sometimes be the prefix of a negative number.
+                if (expressionUnit.getText().equals("-") && currentNumber.length() == 0){
+                    currentNumber.append("-");
+                }
+                // Check if a number was being built. If so, add it to the result.
+                else {
+                    if (currentNumber.length() > 0){
+                        // "-" might negate an expression rather then a number, e.g. 1*-(2+3)
+                        if (currentNumber.equals("-")){
+                            result.add(new OperatorUnit("-"));
+                        } else {
+                            result.add(new NumberUnit(currentNumber.toString()));
+                        }
+                        currentNumber = new StringBuilder();
+                    }
+                    result.add(expressionUnit);
+                }
+            }
+            // If it's a digit, append it to the currentNumber.
+            else {
+                currentNumber.append(expressionUnit.getText());
+            }
+        }
+        // Add last number if existent.
+        if (currentNumber.length() > 0){
+            result.add(new NumberUnit(currentNumber.toString()));
+        }
+        return result;
     }
 
 }
