@@ -1,4 +1,4 @@
 # android_calculator
 
-Calculator app for Android
+Scientific Calculator app for Android, in progress  <br />
 Includes arbitrary precision for integers and floating numbers
