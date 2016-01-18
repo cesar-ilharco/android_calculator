@@ -103,7 +103,9 @@ public class CalculationTests {
     @Test
 
 	public void generalTest() throws FileNotFoundException, IOException {
-		BufferedReader br = new BufferedReader(new FileReader("Test.txt"));
+        String path = "src/test/java/com/myapp/calculator";
+        String file_name = "Test.txt";
+		BufferedReader br = new BufferedReader(new FileReader(path + "/" + file_name));
 		String line = br.readLine();
 		MathContext mc1 = new MathContext(200, RoundingMode.HALF_EVEN);
 		Calculation calc1 = new Calculation(mc1);
