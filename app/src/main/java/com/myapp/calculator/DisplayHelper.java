@@ -78,7 +78,7 @@ public class DisplayHelper {
         List<ExpressionUnit> expressionUnits = Kernel.digitsToNumber(expression.getUnits());
         ExpressionNode expressionNode = ExpressionNode.constructExpressionNodes(expressionUnits);
         BigDecimal result = Kernel.evaluate(expressionNode, calculation, AngleUnit.DEGREE).round(context);
-        return result.toString();
+        return result.toPlainString();
     }
 
     // Method does not add the cursor character.

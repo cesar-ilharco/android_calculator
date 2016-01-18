@@ -29,7 +29,7 @@ public class KernelTests {
         expression.getUnits().addLast(new DigitUnit("1"));
         expression.getUnits().addLast(new OperatorUnit("+"));
         expression.getUnits().addLast(new DigitUnit("2"));
-        Assert.assertEquals("3", DisplayHelper.getResultDisplay(expression, 0));
+        Assert.assertEquals("3", DisplayHelper.getResultDisplay(expression, 1));
         Assert.assertEquals("3", DisplayHelper.getResultDisplay(expression, 1000));
 
         // 1 + 2 × 4 - 3 = 6
@@ -37,7 +37,7 @@ public class KernelTests {
         expression.getUnits().addLast(new DigitUnit("4"));
         expression.getUnits().addLast(new OperatorUnit("-"));
         expression.getUnits().addLast(new DigitUnit("3"));
-        Assert.assertEquals("6", DisplayHelper.getResultDisplay(expression, 0));
+        Assert.assertEquals("6", DisplayHelper.getResultDisplay(expression, 1));
         Assert.assertEquals("6", DisplayHelper.getResultDisplay(expression, 1000));
 
         // 1 × 2 × 3 × 4 × 5 = 120
@@ -51,7 +51,9 @@ public class KernelTests {
         expression.getUnits().addLast(new DigitUnit("4"));
         expression.getUnits().addLast(new OperatorUnit("×"));
         expression.getUnits().addLast(new DigitUnit("5"));
-        Assert.assertEquals("120", DisplayHelper.getResultDisplay(expression, 0));
+//        Assert.assertEquals("1E2", DisplayHelper.getResultDisplay(expression, 1));
+//        Assert.assertEquals("1.2E2", DisplayHelper.getResultDisplay(expression, 2));
+        Assert.assertEquals("120", DisplayHelper.getResultDisplay(expression, 3));
         Assert.assertEquals("120", DisplayHelper.getResultDisplay(expression, 1000));
 
         // 1 - 2 × 3 + 4 × 5 = 15
@@ -65,7 +67,8 @@ public class KernelTests {
         expression.getUnits().addLast(new DigitUnit("4"));
         expression.getUnits().addLast(new OperatorUnit("×"));
         expression.getUnits().addLast(new DigitUnit("5"));
-        Assert.assertEquals("15", DisplayHelper.getResultDisplay(expression, 0));
+//        Assert.assertEquals("1E1", DisplayHelper.getResultDisplay(expression, 1));
+        Assert.assertEquals("15", DisplayHelper.getResultDisplay(expression, 2));
         Assert.assertEquals("15", DisplayHelper.getResultDisplay(expression, 1000));
 
         // 1 / 3 = 0.333...
@@ -73,8 +76,8 @@ public class KernelTests {
         expression.getUnits().addLast(new DigitUnit("1"));
         expression.getUnits().addLast(new OperatorUnit("/"));
         expression.getUnits().addLast(new DigitUnit("3"));
-        Assert.assertEquals("0", DisplayHelper.getResultDisplay(expression, 0));
         Assert.assertEquals("0.3", DisplayHelper.getResultDisplay(expression, 1));
+        Assert.assertEquals("0.33", DisplayHelper.getResultDisplay(expression, 2));
         Assert.assertEquals("0.3333333333", DisplayHelper.getResultDisplay(expression, 10));
 
         StringBuilder oneThird = new StringBuilder("0.");
@@ -92,10 +95,10 @@ public class KernelTests {
         expression.getUnits().addLast(new OperatorUnit("×"));
         expression.getUnits().addLast(new OperatorUnit("-"));
         expression.getUnits().addLast(new DigitUnit("2"));
-        Assert.assertEquals("2", DisplayHelper.getResultDisplay(expression, 0));
+        Assert.assertEquals("2", DisplayHelper.getResultDisplay(expression, 1));
         Assert.assertEquals("2", DisplayHelper.getResultDisplay(expression, 1000));
 
-        // TODO: Add parsing for more complex expressions:
+        // TODO: Add more complex expressions:
 
     }
 
