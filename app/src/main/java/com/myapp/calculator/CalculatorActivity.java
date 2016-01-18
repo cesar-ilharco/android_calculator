@@ -264,8 +264,8 @@ public class CalculatorActivity extends AppCompatActivity{
     private void initializeScalePicker(){
 
         NumberPicker scalePicker = (NumberPicker) findViewById(R.id.scalePicker);
-        scalePicker.setMinValue(0);
-        scalePicker.setMaxValue(1000);
+        scalePicker.setMinValue(1);
+        scalePicker.setMaxValue(2000);
         scalePicker.setValue(state.getScale());
         scalePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
