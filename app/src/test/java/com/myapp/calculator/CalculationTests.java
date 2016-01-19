@@ -1,11 +1,9 @@
 package com.myapp.calculator;
 
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -23,7 +21,6 @@ public class CalculationTests {
     Calculation calc = new Calculation(mc);
 
     @Test
-    @Ignore
     public void testAssertTrigonometric() {
         BigDecimal PI = calc.computePi();
 
@@ -63,42 +60,20 @@ public class CalculationTests {
         assertTrue(calc.computeCot(PI.divide(new BigDecimal(2)), AngleUnit.RADIANS).round(mc).compareTo(BigDecimal.ZERO) == 0);
         assertTrue(calc.computeCot(new BigDecimal(90), AngleUnit.DEGREE).round(mc).compareTo(BigDecimal.ZERO) == 0);
     }
-
-
-    @Test
-    @Ignore
-    public void testTrigonometric(){
-        String[] vector1 = new String[] {"-23525642.432", "655427.342", "1834297943.344", "-1.34", "1"};
-        for(String i : vector1){
-            System.out.format("%s:\n sin: %s\n cos: %s\n tan: %s\n", i, calc.computeSin(new BigDecimal(i), AngleUnit.RADIANS), calc.computeCos(new BigDecimal(i), AngleUnit.RADIANS), calc.computeTan(new BigDecimal(i), AngleUnit.RADIANS));
-            //System.out.format("%s:\n %s\n %s\n %s\n", i, calc.computeMultiplication(calc.computeSin(new BigDecimal(i), AngleUnit.RADIANS), calc.computeCsc(new BigDecimal(i), AngleUnit.RADIANS)).subtract(BigDecimal.ONE), calc.computeMultiplication(calc.computeCos(new BigDecimal(i), AngleUnit.RADIANS), calc.computeSec(new BigDecimal(i), AngleUnit.RADIANS)).subtract(BigDecimal.ONE), calc.computeMultiplication(calc.computeTan(new BigDecimal(i), AngleUnit.RADIANS), calc.computeCot(new BigDecimal(i), AngleUnit.RADIANS)).subtract(BigDecimal.ONE));
-        }
-
-        String[] vector2 = new String[] {"-4", "-3.5", "-3", "-2.5", "-2", "-1.5", "-1", "-0.5", "0"};
-        for(String i : vector2){
-            System.out.format("%s:\n sin: %s\n cos: %s\n tan: %s\n", i, calc.computeSin(new BigDecimal(i), AngleUnit.RADIANS), calc.computeCos(new BigDecimal(i), AngleUnit.RADIANS), calc.computeTan(new BigDecimal(i), AngleUnit.RADIANS));
-        }
-
-    }
-
+    
 
     @Test
     @Ignore
     public void testTrigonometricExtremes(){
+    	//TODO Check if exceptions are being correctly handled
         BigDecimal pi = calc.computePi();
 
-        //System.out.format("%s", calc.computeTan(pi.divide(new BigDecimal(2)), AngleUnit.RADIANS));
-        //System.out.format("%s", calc.computeSec(pi.divide(new BigDecimal(2)), AngleUnit.RADIANS));
-        //System.out.format("%s", calc.computeCsc(pi, AngleUnit.RADIANS));
+        System.out.format("%s", calc.computeTan(pi.divide(new BigDecimal(2)), AngleUnit.RADIANS));
+        System.out.format("%s", calc.computeSec(pi.divide(new BigDecimal(2)), AngleUnit.RADIANS));
+        System.out.format("%s", calc.computeCsc(pi, AngleUnit.RADIANS));
         System.out.format("%s", calc.computeCot(pi, AngleUnit.RADIANS));
     }
 
-
-    @Test
-    @Ignore
-    public void testConstants(){
-        System.out.format("%s\n%s\n%s", calc.computePi(), calc.computeE(), calc.computePhi());
-    }
 
     @Test
 
@@ -112,7 +87,7 @@ public class CalculationTests {
 		assertEquals(line, calc1.computeCot(calc1.computePhi().add(new BigDecimal(3).multiply(calc1.computeE()).multiply(calc1.computeAsin(calc1.computePower(new BigDecimal("3.34434"), calc1.computePi().negate()).divide(calc1.computeAsech(new BigDecimal("0.43575")), new MathContext(210, RoundingMode.HALF_EVEN)), AngleUnit.RADIANS))), AngleUnit.RADIANS).round(mc1).toString());
 		
 		line = br.readLine();
-		MathContext mc2 = new MathContext(1010, RoundingMode.HALF_EVEN);
+		MathContext mc2 = new MathContext(1000, RoundingMode.HALF_EVEN);
 		Calculation calc2 = new Calculation(mc2);
 		assertEquals(line, calc2.computeSin(calc2.computeAtan(calc2.computeExponential(new BigDecimal("2.54683")).divide(calc2.computeLn(new BigDecimal("4.677234")), new MathContext(1010, RoundingMode.HALF_EVEN)), AngleUnit.RADIANS), AngleUnit.RADIANS).round(new MathContext(1000, RoundingMode.HALF_EVEN)).toString());
 		
@@ -152,10 +127,11 @@ public class CalculationTests {
 		assertEquals(line, calc9.computeSinh(calc9.computeAsec(calc9.computeCosh(new BigDecimal("2.24358")), AngleUnit.RADIANS)).round(mc9).toString());
 		
 		line = br.readLine();
-		MathContext mc10 = new MathContext(3000, RoundingMode.HALF_EVEN);
+		MathContext mc10 = new MathContext(1500, RoundingMode.HALF_EVEN);
 		Calculation calc10 = new Calculation(mc10);
 		assertEquals(line, calc10.computeCsch(calc10.computeSec(calc10.computeAsin(calc10.computeLog10(new BigDecimal("8.3497")), AngleUnit.RADIANS), AngleUnit.RADIANS)).round(mc10).toString());
 		br.close();
+
 	}
 
 }
