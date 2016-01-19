@@ -566,6 +566,7 @@ public class Calculation {
 
 
     private BigDecimal powInt (BigDecimal x, long n) {
+    	if (n < 0) return BigDecimal.ONE.divide(powInt(x, -n), getContextoAux());
         long b = 1;
         long max = 1;
         max <<= 62;
